@@ -1,12 +1,14 @@
 <div align="center">
 
-# 🦀 SiapAja.id: The Invisible Blockchain Gig Economy
+# 🦀 SiapAja.id: The Ultra-Fast Real-time Gig Economy
 **"Scroll medsos dapet duit. Posting butuh bantuan langsung ada yang nyamber. 0% Komisi. 100% Keadilan."**
 
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](#)
 [![Rust Version](https://img.shields.io/badge/Rust-1.75%2B-orange.svg)](#)
-[![Flutter](https://img.shields.io/badge/Flutter-3.19%2B-blue.svg)](#)
-[![Blockchain](https://img.shields.io/badge/Solana-Mainnet_Ready-purple.svg)](#)
+[![React](https://img.shields.io/badge/React-18%2B-61DAFB.svg)](#)
+[![Vite](https://img.shields.io/badge/Vite-5%2B-646CFF.svg)](#)
+[![Tailwind](https://img.shields.io/badge/Tailwind-3%2B-06B6D4.svg)](#)
+[![Real-time](https://img.shields.io/badge/Engine-SpacetimeDB-red.svg)](#)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Corporate: SSPL](https://img.shields.io/badge/Corporate_License-SSPL-red.svg)](#)
 
@@ -16,9 +18,9 @@
 
 ---
 
-Selamat datang di *Ground Zero* pemberontakan gig economy. Repository ini bukan sekadar *source code* aplikasi ojol atau marketplace jasa biasa. Ini adalah **senjata digital** yang dibangun menggunakan performa brutal dari **Rust**, kecepatan antarmuka **Flutter**, dan desentralisasi finansial tanpa batas dari **Solana**. 
+Selamat datang di *Ground Zero* pemberontakan gig economy. Repository ini bukan sekadar *source code* aplikasi ojol atau marketplace jasa biasa. Ini adalah **senjata digital** yang dibangun menggunakan performa brutal dari **Rust**, kecepatan antarmuka **React PWA**, dan real-time sync super cepat dari **SpacetimeDB**. 
 
-Kita membangun platform di mana **komisi pekerja adalah 0%**, harga dilindungi oleh AI dari perang tarif, transaksi aman pakai *Escrow Smart Contract* (tapi user tetap melihatnya sebagai Rupiah), dan setiap baris kode yang kalian sumbangkan akan diubah menjadi kepemilikan saham (*Equity*) masa depan.
+Kita membangun platform di mana **komisi 0% untuk rakyat kecil, tiered fee untuk proyek besar**, harga dilindungi oleh AI dari perang tarif, transaksi aman pakai *Virtual Ledger Escrow* (tapi user tetap melihatnya sebagai Rupiah), dan setiap baris kode yang kalian sumbangkan akan diubah menjadi kepemilikan saham (*Equity*) masa depan.
 
 ---
 
@@ -38,12 +40,18 @@ Platform sebelah isinya katalog jasa. Tukang AC, *driver*, dan *cleaner* harus b
 
 SiapAja.id membalik logika itu. Kita pakai sistem **Demand-Only Feed** yang bentuknya persis kayak timeline X/Threads. Isinya bukan orang pamer liburan, tapi kumpulan orang di radius 5km yang teriak: *"Genset mati nih, siapa bisa benerin sekarang? Budget Rp200.000!"* Worker tinggal *scroll*, nemu yang cocok, klik "Terima", dan langsung berangkat.
 
-### 1.3. Zero-Commission Reality (0% Potongan)
-Ini bukan *gimmick* marketing. Kalau customer bayar Rp150.000, worker nerima **utuh Rp150.000**. 
-Gimana platform hidup? Kita nggak ngambil untung dari keringat pekerja. Infrastruktur server kita sangat irit (karena pakai Rust), biaya blockchain hampir gratis (Solana), dan pendapatan platform murni dari:
-1.  *Posting fee* receh dari customer.
-2.  B2B API untuk korporasi besar.
-3.  Lisensi komersial (SSPL) untuk BUMN/Korporat yang mau pakai *tech-stack* kita.
+### 1.3. Zero-Commission & Tiered Scalability
+Platform tetap gratis buat rakyat kecil. Tapi untuk menjaga keberlanjutan infrastruktur, kita menerapkan **Tiered Fee** hanya untuk transaksi kelas menengah ke atas:
+
+| Budget Pekerjaan | Fee Platform | Potongan
+|------------------|--------------|----------
+| Dibawah Rp500.000 | **0%** | Gratis total
+| Rp500rb - Rp2jt | 2.5% | Split 50:50 (customer + worker)
+| Rp2jt - Rp10jt | 5% | Split 50:50
+| Diatas Rp10jt | 10% | Split 50:50
+
+**Untuk transaksi di bawah Rp500.000, worker tetap terima 100% UTUH.**
+Fee untuk transaksi besar dibebankan secara *adil* ke kedua belah pihak (split fee), bukan cuma memeras worker.
 
 ### 1.4. Anti-Bakar Duit (Guerrilla Bootstrapping)
 Kita nggak punya VC (*Venture Capitalist*) yang ngasih triliunan buat bakar duit ngasih promo diskon. Dan kita emang nggak butuh.
@@ -55,13 +63,10 @@ Strategi kita adalah **Hyper-Local Density**. Kita nggak akan rilis se-Indonesia
 
 ### 2.1. Timeline "Pay-to-Post" (Anti-Spam Mutlak)
 Di sini, nggak ada cerita "Customer PHP" atau nanya-nanya doang trus ngilang. 
-Mau bikin postingan butuh bantuan? **Duitnya harus di-lock di depan.** Kalau budget kerjaannya Rp100.000, sistem akan narik saldo Rp100.000 itu detik itu juga dan dikunci di *Escrow Solana*. Feed kita 100% berisi duit mateng. Begitu worker klik "Selesai", dana otomatis cair. 
+Mau bikin postingan butuh bantuan? **Duitnya harus di-lock di depan.** Kalau budget kerjaannya Rp100.000, sistem akan narik saldo Rp100.000 itu detik itu juga dan dikunci di *Virtual Escrow*. Feed kita 100% berisi duit mateng. Begitu worker klik "Selesai", dana otomatis cair. 
 
-### 2.2. Invisible Blockchain (Solana Under The Hood)
-Kita pakai Solana, tapi 99% user nggak akan sadar. 
-*   Nggak ada tulisan *Crypto*, nggak ada *Seed Phrase*, nggak perlu install *Phantom Wallet*. 
-*   User cuma lihat saldo "Rupiah". 
-*   Di belakang layar, sistem otomatis membuatkan *wallet* terenkripsi lewat OTP No HP, dan melakukan *minting stablecoin* IDR. Biaya "Gas Fee" Solana yang cuma seperseribu perak itu ditanggung penuh oleh dompet *Relayer* perusahaan. *Magic!*
+### 2.2. Ultra-Fast State Sync
+Data sinkron instan, tanpa loading, secepat aplikasi chat. User cuma lihat saldo "Rupiah", tapi di belakang layar sistem mengelola Virtual Ledger dengan latensi milidetik. Semua perubahan langsung terpropagasi ke semua client tanpa polling. *Magic!*
 
 ### 2.3. AI Man-Power Estimator (Perlindungan K3)
 Sering terjadi: Customer pelit minta pindahan kosan 3 lantai, barangnya ada kulkas 2 pintu, tapi bayarnya cuma buat 1 orang.
@@ -69,19 +74,15 @@ Di SiapAja.id, AI berbasis NLP dan *Image Recognition* kita bakal baca postingan
 *   **Output AI:** *"Deteksi beban >70kg + Tangga. Risiko cedera tinggi. Pekerjaan ini wajib dikerjakan minimal 3 Worker. Harga dasar dikunci di Rp350.000."*
 *   Sistem menolak postingan jika customer memaksa menawar di bawah *Price Floor* (Harga Bawah) yang sudah dihitung AI. Kita jaga tulang punggung pekerja!
 
-### 2.4. Time-Banking (Tukar Waktu Tanpa Rupiah)
-Ekonomi lagi hancur? Orang nggak pegang Rupiah? Nggak masalah.
-Kita punya fitur Barter Jasa. Si A (Tukang Listrik) benerin kabel di rumah Si B selama 2 jam. Si A dapet saldo `2 Jam Waktu`. Besoknya, Si A bisa pakai `2 Jam Waktu` itu buat bayar Si C (Mahasiswa) untuk ngajarin anaknya matematika. Semua dicatat transparan dan abadi di blockchain Solana. Ekonomi tetap berputar tanpa intervensi bank sentral.
-
-### 2.5. Pembentukan Tim Otomatis (Squad Formation)
-Kalau AI mendeteksi butuh 3 orang untuk angkat lemari raksasa, sistem nggak akan nge-lempar kerjaan ini ke 1 orang. Sistem otomatis bikin "Lobby" pencarian 3 worker terdekat. Begitu 3 orang kumpul, mereka jalan bareng. Setelah kerjaan selesai, Smart Contract Solana otomatis memecah pembayaran ke 3 *wallet* worker tersebut secara adil dalam waktu 400 milidetik. Nggak ada lagi rebutan jatah di lapangan.
+### 2.4. Pembentukan Tim Otomatis (Squad Formation)
+Kalau AI mendeteksi butuh 3 orang untuk angkat lemari raksasa, sistem nggak akan nge-lempar kerjaan ini ke 1 orang. Sistem otomatis bikin "Lobby" pencarian 3 worker terdekat. Begitu 3 orang kumpul, mereka jalan bareng. Setelah kerjaan selesai, Virtual Ledger otomatis memecah pembayaran ke 3 akun worker tersebut secara adil dalam waktu milidetik. Nggak ada lagi rebutan jatah di lapangan.
 
 ---
 
 ## BAB 3: 🏗️ Arsitektur "God Mode" (The Tech Stack)
 
 ### 3.1. Filosofi Pemilihan Stack
-Kita punya satu prinsip: **"Performance of C++, Safety of Rust, Speed of Solana, Cross-platform of Flutter."**
+Kita punya satu prinsip: **"Performance of C++, Safety of Rust, Speed of SpacetimeDB, Modern PWA with React."**
 Kita nggak mau bakar duit puluhan juta tiap bulan cuma buat bayar server AWS kayak *startup* sebelah. Dengan tumpukan teknologi ini, kita bisa menampung transaksi satu negara hanya dengan biaya server setara harga kopi *specialty* sebulan.
 
 ### 3.2. Backend (Rust + Axum)
@@ -89,53 +90,41 @@ API Gateway dan *Matching Engine* kita ditulis 100% menggunakan **Rust** dengan 
 *   **Kenapa Rust?** *Memory-safe*, nggak ada *Garbage Collector* yang bikin server *freeze* tiba-tiba, dan sanggup memproses ratusan ribu *concurrent requests* secara asinkron.
 *   **Efisiensi Gila:** Backend kita bisa di-*deploy* di VPS seharga $5 (Rp75.000) per bulan dengan RAM cuma 1GB, tapi sanggup melayani puluhan ribu user aktif sekaligus. Bandingkan dengan platform sebelah yang butuh cluster server raksasa cuma buat nampung chat customer.
 
-### 3.3. Frontend (Flutter + Rust Bridge FFI)
-UI kita pakai **Flutter** biar bisa jalan di Android, iOS, dan Web (PWA) dari satu basis kode. Tapi, kita nggak mau logika enkripsi dan komunikasi blockchain bikin HP user panas.
-*   **Rust FFI:** Logika paling berat (kriptografi, penandatanganan transaksi, enkripsi lokal) kita tulis pakai Rust dan kita "jembatani" ke Flutter via FFI (*Foreign Function Interface*). 
-*   **Hasilnya:** Aplikasi enteng banget, animasi tetap 120 FPS biarpun HP user spek "kentang".
+### 3.3. Frontend (React PWA + Vite + SWC + Tailwind)
+UI kita pakai **React 18+** dengan **Vite** (build tool super cepat), **SWC** (compiler Rust-based), dan **Tailwind CSS** untuk styling.
+*   **Non-Blocking PWA:** Aplikasi berjalan sebagai Progressive Web App yang bisa di-install di HP Android/iOS tanpa perlu Play Store/App Store.
+*   **OpenAPI Generated Client:** Backend Rust auto-generate dokumentasi API. Client TypeScript di-generate otomatis dari spec OpenAPI.
+*   **Type-Safe:** Full TypeScript dengan type-safe API calls, nggak ada manual JSON mapping.
+*   **Catatan:** SpacetimeDB client tidak mendukung Dart, sehingga Flutter tidak digunakan. Web PWA adalah pilihan yang lebih native untuk real-time sync.
 
-### 3.4. Database & Caching (PostgreSQL + Redis)
-*   **PostgreSQL + SQLx:** Data permanen disimpan di Postgres. Kita pakai *SQLx* di Rust supaya query database dicek saat proses *compile*. Kalau ada typo di query, kodenya nggak akan bisa jadi aplikasi. Aman dari bug database!
-*   **Redis:** Digunakan untuk *Matching Engine* real-time. Lokasi GPS jutaan worker di-*update* setiap detik di sini supaya proses pencarian worker terdekat jadi *instan*.
+### 3.4. Data Layer (PostgreSQL + SpacetimeDB)
+*   **PostgreSQL:** Data permanen (profil, transaksi, saldo akhir). Pakai SQLx biar query dicek saat compile - kalau ada typo, kode nggak akan jadi.
+*   **SpacetimeDB:** Data real-time (GPS, status order, matching). In-memory dengan persistence, jadi kencang tapi tetap aman.
 
-### 3.5. Blockchain Layer (Solana via Anchor)
-Kenapa Solana? Karena kita butuh kecepatan 65.000 transaksi per detik dengan biaya yang lebih murah daripada harga sebungkus permen. Kita pakai **Anchor Framework** (Framework Rust untuk Solana) buat bikin Smart Contract yang aman dan teruji.
-
-### 3.6. System Architecture Diagram
+### 3.5. System Architecture Diagram
 ```mermaid
 graph TD
-    User[App Flutter] -- HTTPS/WSS --> Axum[Backend Rust Axum]
-    Axum -- Check --> Redis[Redis Real-time Location]
-    Axum -- Query --> Postgres[PostgreSQL Data User]
-    Axum -- Sign Tx --> SolanaRPC[Solana Mainnet RPC]
-    SolanaRPC -- Verify --> SmartContract[Anchor Smart Contract]
-    SmartContract -- Lock/Release --> Escrow[Escrow Wallet]
+    User[React PWA] -- Auto-gen API --> Axum[Backend Rust Axum]
+    Axum -- Persistence --> Postgres[PostgreSQL Finansial/User]
+    Axum -- Real-time Logic --> STDB[SpacetimeDB Matching Engine]
+    STDB -- Live State Sync --> User
+    Postgres -- Backup/Restore --> STDB
 ```
 
 ---
 
-## BAB 4: 👻 Deep Dive: Invisible Blockchain & Account Abstraction
+## BAB 4: ⚡ Virtual Ledger & State Sync
 
-Banyak platform gagal karena maksa user simpan *Seed Phrase* 12 kata. Di SiapAja.id, itu semua **DIBUANG**.
+User login pakai No HP (OTP) atau Google Login. Di belakang layar, sistem langsung membuat session real-time.
 
-### 4.1. The "Wallet-less" Experience
-User login pakai No HP (OTP) atau Google Login. Di belakang layar, sistem kita menggunakan **Web3Auth** atau **Privy** yang diintegrasikan ke server Rust. 
-*   **Identity to Key:** Identitas user diubah jadi kunci kriptografi secara otomatis. 
-*   **User Knowledge:** User cuma tau mereka punya "Saldo Rupiah". Mereka nggak perlu tau kalau di belakangnya ada dompet digital Solana yang terenkripsi tingkat tinggi.
+### 4.1. Real-time Sync
+Perubahan data langsung terpropagasi ke semua client dalam milidetik. Worker klik "Selesai"? Customer langsung lihat update. Nggak ada polling, nggak ada refresh. UI selalu fresh.
 
-### 4.2. Relayer & Gasless Transactions
-Masalah utama blockchain: **Siapa yang bayar biaya transaksi (Gas Fee)?**
-Kita pakai teknik **Relayer**. 
-1. Worker klik "Selesai".
-2. Aplikasi minta tanda tangan digital user (lewat biometrik/PIN).
-3. Server Rust kita nerima tanda tangan itu, nambahin biaya transaksi dari dompet "Kas Platform", lalu ngirim ke Solana.
-*   **Hasilnya:** User nggak butuh punya koin SOL. Transaksi tetap jalan, biaya kita talangi (cuma Rp2 - Rp5 per transaksi, sangat murah buat platform).
-
-### 4.3. Fiat-to-Stablecoin Bridge
-Kita nggak pakai koin yang harganya naik-turun kayak *roller coaster*. Kita pakai **Stablecoin IDR**.
-*   **Deposit:** Customer bayar Rp100.000 via GoPay/OVO/Virtual Account.
-*   **Minting:** Sistem otomatis "mencetak" 100.000 Token IDR di Solana dan masukin ke Escrow.
-*   **Withdraw:** Worker tarik saldo 100.000 Token IDR, sistem otomatis transfer Rupiah asli ke rekening mereka dan "membakar" tokennya. 100% akurat.
+### 4.2. Virtual Ledger System
+Kita nggak pakai koin yang harganya naik-turun.
+*   **Deposit:** Customer bayar Rp100.000 via GoPay/OVO/VA.
+*   **Ledger Update:** Sistem mencatat saldo di ledger internal.
+*   **Withdraw:** Worker tarik saldo, sistem transfer ke rekening mereka. 100% akurat.
 
 ---
 
@@ -160,21 +149,23 @@ Server Rust kita terhubung ke model AI (Llama-lite & YOLO) yang sudah dioptimasi
 Kalau ada masalah, kita nggak pake CS yang jawabannya "Mohon maaf atas ketidaknyamanannya". Kita pake hukum komunitas.
 
 ### 6.1. Alur Sengketa (Dispute Lifecycle)
-1. Customer klaim: "Kerjaan nggak beres!" -> Dana di Escrow Solana otomatis **BEKU**.
-2. Sistem mencari 7 Juri (User dengan Karma tinggi) secara acak.
+1. Customer klaim: "Kerjaan nggak beres!" -> Dana di Virtual Escrow otomatis **BEKU**.
+2. Sistem mencari 7 Juri dengan **expertise di bidang yang sama**.
 3. Worker & Customer upload bukti foto/video.
 4. Juri voting secara *anonymous*. 
 5. Pemenang voting dapet dananya, Juri dapet komisi kecil sebagai imbalan kejujuran.
 
-### 6.2. Algoritma Pemilihan Juri
-*   Juri dipilih yang **nggak saling kenal** dan **nggak satu radius** dengan pelaku sengketa.
+### 6.2. Algoritma Pemilihan Juri (Expertise-Based)
+*   Juri dipilih dari pool worker yang punya **track record di kategori job yang sama**.
+*   Contoh: Sengketa job "Tukang AC" → Juri adalah worker dengan rating tinggi di kategori "AC & Elektronik".
+*   Juri **nggak saling kenal** dan **nggak satu radius** dengan pelaku sengketa.
 *   Juri nggak bisa lihat hasil voting juri lain sebelum dia sendiri submit. Ini buat menghindari "Ikut-ikutan" (*Herd Mentality*).
 
 ---
 
 ## BAB 7: 🎖️ Sistem Karma & Tata Kelola (Governance)
 
-Di SiapAja.id, uang bukan alat ukur utama kesuksesan seorang pekerja, melainkan **KARMA**. Karma adalah aset reputasi yang direkam secara permanen (tapi anonim) di jaringan Solana.
+Di SiapAja.id, uang bukan alat ukur utama kesuksesan seorang pekerja, melainkan **KARMA**. Karma adalah aset reputasi yang direkam permanen (tapi anonim) di database.
 
 ### 7.1. Metrik Profesional vs Moral
 Banyak yang takut sistem Karma kita bakal kayak "Skor Kredit Sosial" ala negara otoriter yang menilai orang dari pendapat politiknya. **Sama sekali tidak.**
@@ -183,8 +174,8 @@ Banyak yang takut sistem Karma kita bakal kayak "Skor Kredit Sosial" ala negara 
 
 ### 7.2. Karma Decay (Penyusutan Otomatis)
 Kita percaya pada **Penebusan Dosa Digital**. Kalau worker pernah salah (Karma anjlok), mereka nggak dihukum seumur hidup.
-*   Setiap 30 hari, poin Karma negatif akan otomatis mengalami "Decay" (menyusut) sebesar 20% jika worker terus berkelakuan baik. 
-*   Sistem ini diatur oleh *CRON Job* di server Rust yang secara efisien mengkalkulasi jutaan data *ledger* Solana setiap akhir bulan.
+*   Setiap 30 hari, poin Karma negatif akan otomatis mengalami "Decay" (menyusut) sebesar 20% jika worker terus berkelakuan baik.
+*   Sistem ini diatur oleh *CRON Job* di server Rust yang secara efisien mengkalkulasi jutaan data setiap akhir bulan.
 
 ### 7.3. Hak Suara (Voting Power)
 Karma bukan cuma buat pamer. Semakin tinggi Karma, semakin besar **Hak Suara (Voting Power)** user dalam menentukan arah platform.
@@ -199,27 +190,30 @@ Karma bukan cuma buat pamer. Semakin tinggi Karma, semakin besar **Hak Suara (Vo
 *"Kalau komisi 0%, dari mana platform dan Founder dapet duit? Jangan-jangan cuma tipu-tipu bakar duit VC?"* 
 Ini adalah rahasia terbesar kita. Kita nggak memeras recehan dari keringat tukang angkut barang, kita mengambil keuntungan dari **Ekosistem dan Korporat**.
 
-### 8.1. Nol Rupiah dari Pekerja (Janji Suci)
-Worker terima upah 100% utuh. Titik. Tidak ada "Biaya Layanan Tersembunyi" saat mereka menarik dana ke bank.
+### 8.1. Tiered Protection (Janji Suci)
+Untuk pekerja kecil (transaksi di bawah Rp500rb), worker terima **100% utuh**. Titik. Tidak ada "Biaya Layanan Tersembunyi".
 
-### 8.2. Revenue Stream Platform (Sumber Cuan Utama)
-1.  **Posting Fee (Rp5.000):** Customer yang butuh jasa bayar biaya posting untuk memastikan *demand*-nya asli (Anti-PHP). Sebagian untuk biaya server Rust kita, sebagian masuk *Treasury Komunitas*.
-2.  **Premium Verification (KYC):** User yang mau akunnya bercentang biru (sebagai tanda *Super Trusted Worker/Customer*) bayar biaya verifikasi sekali seumur hidup.
-3.  **B2B API Integration:** Kalau ada Mall atau Apartemen besar yang mau pakai ribuan worker kita secara borongan via sistem mereka, mereka wajib langganan API berbayar (*Enterprise Tier*).
+Fee hanya dikenakan untuk transaksi kelas menengah ke atas, dan dibebankan secara **adil ke kedua belah pihak** (split 50:50 customer-worker), bukan cuma memeras worker.
+
+### 8.2. The Sustainable Revenue Triple-Engine
+1.  **Tiered Transaction Fee:** Dari proyek besar (renovasi, borongan kantor). Pekerja harian tetap bebas potongan.
+2.  **Premium Blue Check (Trust Signal):** User bisa beli verifikasi centang biru. **PENTING:** Ini murni *signal*, BUKAN garansi. Platform TIDAK bertanggung jawab atas kerugian finansial/fisik. Sengketa diselesaikan Juri Netizen.
+3.  **Hyper-Local Ads Marketplace:** Warung, laundry, toko bangunan di radius 2km bisa pasang iklan kontekstual di Feed. Iklan muncul pas user scroll nyari jasa relevan. Contoh: User cari "Tukang AC" → Sistem tampilin iklan "Toko Sparepart AC Terdekat".
+4.  **B2B API Integration:** Mall atau Apartemen yang mau pakai worker kita secara borongan wajib langganan API (*Enterprise Tier*).
 
 ### 8.3. Dana Solidaritas (1% Auto-Deduction)
 Setiap transaksi potong 1%, tapi **BUKAN UNTUK PLATFORM**. 
-Uang ini otomatis masuk ke *Smart Contract* **Asuransi Komunitas (Solidarity Pool)**.
+Uang ini otomatis masuk ke **Asuransi Komunitas (Solidarity Pool)** di Virtual Ledger.
 *   Kalau ada worker kecelakaan saat narik barang, klaim pengobatannya diambil dari *pool* ini lewat persetujuan (voting) pengurus Koperasi. 
 
 ### 8.4. Auto-Yield Treasury (Uang Mengembang)
 Dana *Treasury* (dari denda dan sisa *fee*) yang belum terpakai tidak akan dibiarkan nganggur. 
-*   Sistem otomatis memutar dana tersebut di instrumen Reksadana Pasar Uang atau *Yield Farming* Solana berisiko rendah. 
+*   Sistem otomatis memutar dana tersebut di instrumen Reksadana Pasar Uang berisiko rendah. 
 *   **Bunganya (Yield):** Dibagikan sebagai dividen bulanan kepada pemegang Karma tertinggi. Pekerja bukan cuma buruh, mereka adalah **Investor Ekosistem**.
 
 ### 8.5. Enterprise Licensing (SSPL - The Trillion Rupiah Path)
 Ini cara Founder dan *Core Contributor* menjadi *Crazy Rich* secara elegan.
-*   Teknologi SiapAja.id (Backend Rust + Solana) sangat canggih. Kalau ada BUMN, Perusahaan Tambang, atau Startup lain yang mau me-rakit ulang (*fork*) kode kita untuk bisnis **komersial/privat** mereka...
+*   Teknologi SiapAja.id (stack Rust modern) sangat canggih. Kalau ada BUMN, Perusahaan Tambang, atau Startup lain yang mau me-rakit ulang (*fork*) kode kita untuk bisnis **komersial/privat** mereka...
 *   Mereka diikat oleh Lisensi **SSPL (Server Side Public License)**. Artinya: Mereka wajib *open source*-kan seluruh bisnis mereka, **ATAU** membayar **Lisensi Komersial Triliunan Rupiah** ke perusahaan kita. 
 
 ---
@@ -238,79 +232,76 @@ Kami membongkar sekat antara Developer (di GitHub) dan User (di Aplikasi).
 Issue di GitHub diklasifikasikan dengan label:
 *   `[VOLUNTEER]`: Pekerjaan sukarela untuk belajar.
 *   `[URGENT]`: Prioritas tinggi.
-*   `[BOUNTY]`: Ada hadiah Rupiah/Stablecoin jika *Community Pool* sedang memiliki saldo.
+*   `[BOUNTY]`: Ada hadiah Rupiah jika *Community Pool* sedang memiliki saldo.
 
 ### 9.3. Sistem Tipping "Seikhlasnya"
 Kita jujur dari awal: **Saat ini modal kita Rp0**. 
 *   Kalau kamu (*Developer*) berkontribusi (*Pull Request* di-merge), jangan harap langsung cair Rp10 juta.
-*   Namun, jika *Community Pool* (dari donasi/revenue platform) ada isinya, Founder atau Komunitas bisa mengklik tombol **"Appreciate"** pada kontributor tertentu. Token Solana akan otomatis mendarat di dompetmu sebagai bentuk terima kasih "seikhlasnya". Tanpa paksaan, tanpa eksploitasi.
+*   Namun, jika *Community Pool* (dari donasi/revenue platform) ada isinya, Founder atau Komunitas bisa mengklik tombol **"Appreciate"** pada kontributor tertentu. Bonus Rupiah akan otomatis masuk ke saldo akunmu sebagai bentuk terima kasih "seikhlasnya". Tanpa paksaan, tanpa eksploitasi.
 
 ---
 
-## BAB 10: 🤝 Panduan Kontribusi (For Rustaceans & Flutter Devs)
+## BAB 10: 🤝 Panduan Kontribusi (For Rustaceans & React Devs)
 
 Kita nggak lagi bangun *to-do list app* buat tugas kuliah. Kita bangun **Infrastruktur Finansial Alternatif**. Kalau kamu alergi baca dokumentasi, nggak peduli sama *memory safety*, atau cuma nyari gaji instan dari *startup* bakar duit—repo ini bukan buat kamu.
 
 ### 10.1. Syarat Mutlak Kontributor
 *   **Rust (Backend):** Wajib paham *Ownership/Borrowing*, Axum routing, dan SQLx. Kalau kode kamu kena *panic!* di *runtime* padahal bisa di-*handle* pakai `Result`, PR kamu otomatis kita *reject*.
-*   **Flutter (Frontend):** Paham *State Management* (Riverpod/Bloc) dan cara jembatanin FFI (*flutter_rust_bridge*) tanpa bikin UI *freeze*.
-*   **Solana (Smart Contract):** Paham Anchor Framework dan PDAs (*Program Derived Addresses*). Jangan sampai ada celah buat *Drainer* nyuri dana Escrow kita.
+*   **React/Frontend:** Paham React 18+ (Hooks, Context), TypeScript, Vite, dan cara pakai generated code dari OpenAPI. Tailwind CSS untuk styling.
+*   **Real-time Layer:** Paham cara kerja WebSocket subscriptions dan state sync. Jangan sampai ada race condition di matching engine kita.
 
-### 10.2. Sistem "Karma Dev" & Token $SIAP (Ekuitas Keringat)
+### 10.2. Sistem "Karma Dev" & Karma Equity Points (Ekuitas Keringat)
 Karena kita mulai dari **Nol Rupiah**, kita bayar keringat kalian dengan **Ekuitas Masa Depan**.
-*   Setiap kali Pull Request (PR) kamu di-*merge* ke cabang `main`, sistem CI/CD GitHub Actions kita akan memanggil *Smart Contract* Solana.
-*   Dompet kamu otomatis dikirimi **Token $SIAP**.
-*   **Apa itu Token $SIAP?** Saat ini harganya Rp0. Tapi, token ini merepresentasikan **Porsi Kepemilikan (Shares)** dari platform. Kalau besok SiapAja.id jualan Lisensi SSPL senilai Rp10 Miliar ke BUMN, keuntungan itu akan di-*airdrop* (dibagi dividen) secara otomatis ke dompet Solana para pemegang Token $SIAP, sepadan dengan jumlah *commit* kode mereka.
+*   Setiap kali Pull Request (PR) kamu di-*merge* ke cabang `main`, sistem CI/CD GitHub Actions kita akan mencatat kontribusi kamu.
+*   Akun kamu otomatis dikirimi **Karma Equity Points**.
+*   **Apa itu Karma Equity Points?** Saat ini harganya Rp0. Tapi, poin ini merepresentasikan **Porsi Kepemilikan (Shares)** dari platform. Kalau besok SiapAja.id jualan Lisensi SSPL senilai Rp10 Miliar ke BUMN, keuntungan itu akan dibagi dividen secara otomatis ke para pemegang Karma Equity Points, sepadan dengan jumlah *commit* kode mereka.
 *   Ini bukan eksploitasi kerja gratis. Ini adalah **Fair Equity Distribution**. Kalian adalah *Co-Founders* telat.
 
 ### 10.3. Git Workflow & PR Template
 1.  **Cari Issue:** Buka tab `Issues`, filter label `good first issue` atau `[BOUNTY]`.
 2.  **Branching:** Jangan pernah push langsung ke `main`. Buat branch baru: `git checkout -b feature/nama-fitur-keren`.
-3.  **Code & Test:** Tulis kode. Wajib sertakan *Unit Test*. Jalankan `cargo test` (untuk Rust) atau `flutter test`. Kalau *coverage* turun di bawah 85%, GitHub Actions akan nolak PR kamu secara kasar.
+3.  **Code & Test:** Tulis kode. Wajib sertakan *Unit Test*. Jalankan `cargo test` (untuk Rust) atau `pnpm test` (untuk React). Kalau *coverage* turun di bawah 85%, GitHub Actions akan nolak PR kamu secara kasar.
 4.  **Pull Request (PR):** Gunakan template PR yang sudah disediakan. Jelaskan *kenapa* kode ini ditulis, bukan cuma *apa* yang ditulis.
 
 ---
 
 ## BAB 11: ⚙️ Local Development Setup (Instalasi)
 
-Mau nyoba jalanin "The God Mode Engine" di laptop kamu? Ikuti langkah ini. 
-*(Peringatan: Pastikan Docker, Rust toolchain 1.75+, Flutter SDK 3.19+, dan Solana CLI sudah terinstall).*
+Mau nyoba jalanin "The God Mode Engine" di laptop kamu? Ikuti langkah ini.
+*(Prasyarat: Docker, Rust 1.75+, Node.js 20+, pnpm/yarn/npm)*
 
-### 11.1. Menyiapkan Infrastruktur Dasar (Docker)
-Kita butuh PostgreSQL untuk data persisten dan Redis untuk *real-time matching*.
+### 11.1. Menyiapkan Infrastruktur
+Kita butuh PostgreSQL untuk data persisten dan SpacetimeDB untuk real-time.
 ```bash
 git clone https://github.com/siapaja/siapaja-core.git
 cd siapaja-core
-# Spin up Postgres & Redis
-docker-compose -f docker/docker-compose.yml up -d
+docker-compose up -d
 ```
 
-### 11.2. Menjalankan Blockchain Lokal (Solana Testnet)
-Kita nggak pakai *Mainnet* buat *development* biar nggak ngabisin duit.
-```bash
-# Jalankan Local Validator Solana
-solana-test-validator
-# Deploy Smart Contract (Anchor) ke localnet
-cd backend/contracts
-anchor build && anchor deploy
-```
-
-### 11.3. Menjalankan Axum Backend (Rust)
-Set environment variables di `.env` (copy dari `.env.example`).
+### 11.2. Menjalankan Backend
 ```bash
 cd backend/api
-# Compile dan jalankan server (Otomatis migrasi database)
+cp .env.example .env
 cargo run --release
 # Server menyala di http://localhost:8080 ⚡
 ```
 
-### 11.4. Menjalankan Mobile App (Flutter)
+### 11.3. Menjalankan Web PWA (React + Vite)
 ```bash
-cd frontend/mobile
-# Generate FFI bridge (jika ada perubahan kode Rust client)
-flutter_rust_bridge_codegen
-# Jalankan aplikasi (Gunakan emulator Android/iOS)
-flutter run
+cd frontend/web
+pnpm install
+pnpm dev
+# Dev server menyala di http://localhost:5173 ⚡
+# PWA bisa di-install dari browser
+```
+
+### 11.4. Generate API Client dari OpenAPI
+Backend auto-generate dokumentasi OpenAPI.
+```bash
+# Download spec
+curl http://localhost:8080/api/docs/openapi.json -o openapi.json
+# Generate TypeScript client (pakai openapi-typescript-codegen)
+pnpm run generate:api
 ```
 
 ---
@@ -321,7 +312,7 @@ Semua endpoint dilindungi oleh JWT dan terenkripsi. Berikut adalah *sneak peek* 
 
 ### 12.1. Demand Creation API (Pay-to-Post)
 `POST /api/v1/jobs/create`
-*Endpoint ini dipanggil saat Customer menekan tombol "Posting Butuh Bantuan". Server Axum akan secara *invisible* menghubungi Solana untuk mengunci dana.*
+*Endpoint ini dipanggil saat Customer menekan tombol "Posting Butuh Bantuan". Server Axum akan mengunci dana di Virtual Escrow.*
 
 **Payload (JSON):**
 ```json
@@ -340,36 +331,36 @@ Semua endpoint dilindungi oleh JWT dan terenkripsi. Berikut adalah *sneak peek* 
 {
   "status": "locked_and_live",
   "job_id": "JOB-998-XTZ",
-  "escrow_tx_signature": "5Xz...solana_hash...9qT",
+  "escrow_id": "ESC-12345-ABC",
   "ai_analysis": {
     "risk_level": "medium",
     "workers_required": 1,
     "price_floor_ok": true
   },
-  "message": "Rp150.000 sukses ditarik ke Escrow Solana. Menyiarkan ke worker radius 2KM..."
+  "message": "Rp150.000 sukses ditarik ke Virtual Escrow. Menyiarkan ke worker radius 2KM..."
 }
 ```
 
 ### 12.2. GitHub Webhook Receiver
 `POST /api/v1/webhooks/github`
-*Ini adalah mesin "Build in Public" kita. GitHub memanggil endpoint ini saat ada PR baru atau Issue baru, lalu Axum akan me-masukkannya ke timeline Flutter lewat WebSocket.*
+*Ini adalah mesin "Build in Public" kita. GitHub memanggil endpoint ini saat ada PR baru atau Issue baru, lalu Axum akan me-masukkannya ke timeline React PWA lewat WebSocket.*
 
 ---
 
-## BAB 13: 📜 Smart Contract Reference (Solana Anchor Specs)
+## BAB 13: 📜 Virtual Ledger Reference (Escrow System)
 
-Smart contract kita (ditulis dalam Rust) hanya melakukan 3 hal, tapi melakukannya dengan sempurna tanpa celah keamanan.
+Virtual Ledger kita (ditulis dalam Rust) hanya melakukan 3 hal, tapi melakukannya dengan sempurna tanpa celah keamanan.
 
 ### 13.1. Escrow Initialization (InitJob)
-*   **Fungsi:** Membuat *Program Derived Address* (PDA) khusus untuk satu pekerjaan.
-*   **Keamanan:** Uang (Stablecoin IDR) dipindahkan dari dompet Customer ke PDA ini. Hanya instruksi `ReleaseFund` atau `Refund` dari platform (sebagai *Oracle*) yang bisa mengeluarkan uang ini.
+*   **Fungsi:** Membuat *Escrow Account* khusus untuk satu pekerjaan.
+*   **Keamanan:** Uang (IDR) dipindahkan dari saldo Customer ke Escrow ini. Hanya instruksi `ReleaseFund` atau `Refund` dari platform yang bisa mengeluarkan uang ini.
 
 ### 13.2. Fund Release (CompleteJob)
-*   **Fungsi:** Menyerahkan 100% uang ke Worker setelah Customer klik "Selesai", minus 1% (otomatis dipotong ke PDA *Solidarity Pool* untuk asuransi).
-*   **Speed:** Transaksi selesai dan masuk ke saldo Worker dalam 400 milidetik.
+*   **Fungsi:** Menyerahkan 100% uang ke Worker setelah Customer klik "Selesai", minus 1% (otomatis dipotong ke *Solidarity Pool* untuk asuransi).
+*   **Speed:** Transaksi selesai dan masuk ke saldo Worker dalam milidetik.
 
 ### 13.3. Dispute Freeze (LockJob)
-*   **Fungsi:** Kalau ada sengketa, status PDA diubah menjadi `FROZEN`. Uang tidak bisa ditarik oleh siapapun sampai 7 Juri Komunitas memberikan *voting* final ke server Rust kita.
+*   **Fungsi:** Kalau ada sengketa, status Escrow diubah menjadi `FROZEN`. Uang tidak bisa ditarik oleh siapapun sampai 7 Juri Komunitas memberikan *voting* final ke server Rust kita.
 
 ---
 
@@ -385,9 +376,9 @@ Kalau ada orderan renovasi senilai Rp5 Juta, pasti ada *developer* nakal yang bi
 Di era di mana data adalah emas hitam, kita nggak akan jual data KTP atau histori penghasilan worker ke perusahaan Pinjol (meskipun godaannya miliaran).
 *   **Enkripsi Zero-Knowledge:** Data penghasilan dan alamat tersimpan dalam bentuk *hash* di database Postgres. Pihak ketiga nggak bisa nge-*scraping* data profil worker untuk dijadiin target iklan kredit motor atau pinjaman *payday*.
 
-### 14.3. Enkripsi Wallet HSM (Hardware Security Module)
-Karena kita pakai "Invisible Solana" (user nggak pegang *Private Key*), server kitalah yang memegang kunci miliaran Rupiah di Escrow.
-*   **Benteng Terakhir:** *Private Key* platform tidak pernah menyentuh memori RAM dalam bentuk *plaintext*. Semua penandatanganan transaksi (signing) dilakukan di dalam HSM atau layanan KMS (Key Management Service) yang terisolasi. Kalaupun server VPS kita di-hack, *hacker* nggak bisa mencuri uang di Escrow.
+### 14.3. Enkripsi Database & Security
+Karena kita pakai Virtual Ledger (user nggak pegang *Private Key*), server kitalah yang mengelola miliaran Rupiah di Escrow.
+*   **Benteng Terakhir:** Data sensitif tidak pernah menyentuh memori RAM dalam bentuk *plaintext*. Semua operasi kriptografi dilakukan di dalam HSM atau layanan KMS (Key Management Service) yang terisolasi. Kalaupun server VPS kita di-hack, *hacker* nggak bisa mencuri uang di Escrow.
 
 ### 14.4. Rate Limiting di Axum (Anti-DDoS)
 Axum dilengkapi dengan *middleware* `tower::limit` yang sangat agresif. Kalau kompetitor nyoba nge-DDoS endpoint `/api/v1/jobs/create` kita, Rust akan memblokir IP mereka di level *layer 4* (TCP) sebelum request itu sempat menyentuh logika aplikasi. *CPU kita bahkan nggak akan kerasa.*
@@ -398,34 +389,46 @@ Axum dilengkapi dengan *middleware* `tower::limit` yang sangat agresif. Kalau ko
 
 Kita nggak halu pengen ngalahin Gojek besok pagi. Ini adalah maraton yang terukur.
 
-### 15.1. Phase 1: Bootstrapping & Rust Core (Bulan 1-3) - *KITA DI SINI*
-*   [x] Desain Arsitektur Axum + Solana.
-*   [x] Basic UI/UX PWA Flutter (Demand Feed).
-*   [ ] Integrasi *Invisible Wallet* (Web3Auth/Privy).
-*   [ ] Rilis MVP di GitHub untuk *Community Testing*.
+### 15.1. Phase 1: Bootstrapping (Bulan 1-3) - *Kita Di Sini*
+*   [x] Desain arsitektur.
+*   [x] Basic UI/UX PWA React.
+*   [ ] Integrasi Virtual Ledger.
+*   [ ] Rilis MVP.
 
-### 15.2. Phase 2: Beta "Micro-Economy" (Bulan 4-6)
-*   [ ] Uji coba *real-money* di 1 Kecamatan padat penduduk (Misal: Pamulang atau Depok).
-*   [ ] Peluncuran fitur "Pengadilan Netizen" (Jury Duty).
-*   [ ] Integrasi Payment Gateway (Xendit/Midtrans) untuk Fiat-to-Stablecoin.
+### 15.2. Phase 2: Beta Lokal (Bulan 4-6)
+*   [ ] Uji coba *real-money* di 1 Kecamatan.
+*   [ ] Fitur "Pengadilan Netizen".
+*   [ ] Integrasi Payment Gateway.
 
-### 15.3. Phase 3: Skalabilitas & Solana Mainnet (Bulan 7-9)
-*   [ ] Pemindahan Smart Contract dari *Devnet* ke *Solana Mainnet-Beta*.
-*   [ ] Rilis fitur "Time-Banking" (Tukar jasa tanpa Rupiah).
-*   [ ] Pembukaan lisensi B2B API untuk korporasi.
+### 15.3. Phase 3: Skalabilitas (Bulan 7-9)
+*   [ ] Optimasi performa.
+*   [ ] B2B API untuk korporasi.
 
-### 15.4. Phase 4: Koperasi Digital & Multi-City (Tahun ke-2)
-*   [ ] Integrasi langsung ke BI-FAST (Meninggalkan ketergantungan pada E-Wallet swasta).
-*   [ ] Ekspansi *Hyper-local* ke kota-kota lapis kedua di Indonesia.
-*   [ ] Pembagian Dividen Perdana dari *Yield Treasury* ke pemegang Karma tertinggi.
+### 15.4. Phase 4: Ekspansi (Tahun ke-2)
+*   [ ] Integrasi BI-FAST.
+*   [ ] Ekspansi ke kota-kota lapis kedua.
+*   [ ] Dividen perdana untuk pemegang Karma.
 
 ---
 
-## BAB 16: 🏛️ Struktur Legal & Koperasi
+## BAB 16: 🏛️ Struktur Legal, Koperasi & Non-Liability
 
+### 16.1. Platform Cooperative Model
 Kita nggak akan mendaftar sebagai PT (Perseroan Terbatas) konvensional yang tunduk pada *Venture Capital*. 
-*   **Platform Cooperative Model:** SiapAja.id akan berbadan hukum **Koperasi Multi-Pihak**. 
-*   Pekerja (Worker) bukan sekadar "Mitra", mereka adalah **Anggota Koperasi** yang sah di mata hukum Indonesia. Mereka berhak atas Sisa Hasil Usaha (SHU) tahunan yang didapat dari *Treasury* dan biaya API B2B.
+*   SiapAja.id akan berbadan hukum **Koperasi Multi-Pihak**. 
+*   Pekerja (Worker) bukan sekadar "Mitra", mereka adalah **Anggota Koperasi** yang sah di mata hukum Indonesia. Mereka berhak atas Sisa Hasil Usaha (SHU) tahunan.
+
+### 16.2. ⚠️ Non-Liability Disclaimer (FFFI Principle)
+SiapAja.id bertindak **MURNI sebagai penyedia infrastruktur kode** (Software-as-a-Service).
+
+*   **Zero Responsibility:** Platform TIDAK bertanggung jawab atas:
+    - Kualitas hasil kerja
+    - Penipuan antar user
+    - Kecelakaan kerja
+    - Kerugian finansial/fisik apapun
+*   **Jury-Led Resolution:** Semua sengketa diselesaikan secara *peer-to-peer* melalui sistem Juri Netizen. Keputusan juri adalah **FINAL** dan mengikat secara algoritma (auto-execute di Virtual Ledger).
+*   **User Autonomy:** Dengan menggunakan aplikasi ini, user setuju bahwa penggunaan adalah **atas resiko sendiri** (*Use at your own risk*).
+*   **Blue Check ≠ Guarantee:** Verifikasi centang biru hanyalah *trust signal* bahwa identitas sudah diverifikasi, BUKAN jaminan kualitas atau karakter user.
 
 ---
 
@@ -435,7 +438,7 @@ Kita nggak akan mendaftar sebagai PT (Perseroan Terbatas) konvensional yang tund
 1.  **Backend & Core (AGPL v3):** Bebas di-*fork*, dimodifikasi, dan dipakai oleh BEM Kampus, Karang Taruna, atau komunitas RT/RW secara **GRATIS**. Syaratnya: kalian harus *open source*-kan juga perubahannya.
 2.  **Commercial/Enterprise (SSPL):** Kalau ada BUMN, korporat raksasa, atau perusahaan asing yang mau mengambil infrastruktur SiapAja.id ini untuk dijalankan secara tertutup (*Closed-source SaaS*) demi meraup triliunan... **Mereka wajib membeli lisensi komersial dari kami.** 
 
-*(Disclaimer: Kontributor GitHub yang dibayar dengan Token $SIAP akan mendapatkan porsi bagi hasil dari setiap penjualan lisensi SSPL ini).*
+*(Disclaimer: Kontributor GitHub yang dibayar dengan Karma Equity Points akan mendapatkan porsi bagi hasil dari setiap penjualan lisensi SSPL ini).*
 
 ---
 
@@ -447,17 +450,20 @@ Kita nggak akan mendaftar sebagai PT (Perseroan Terbatas) konvensional yang tund
 **Q: Ini kan butuh modal gede buat promosi (bakar uang)?**
 > A: Kita pakai strategi *Word-of-Mouth* hiper-lokal. Ketika seorang Ketua RT di satu komplek mewajibkan warganya pakai aplikasi ini untuk cari tukang atau satpam panggilan, aplikasi ini akan viral dengan sendirinya tanpa perlu baliho di jalan protokol.
 
-**Q: Kenapa nggak pakai database MySQL biasa aja sih? Kenapa harus Solana?**
-> A: Karena kita mau menghilangkan "Admin Nakal". Dengan Smart Contract Solana, bahkan *Founder* SiapAja.id sekalipun **tidak bisa** mencuri uang yang sedang terkunci di Escrow. Keadilan harus dijamin oleh kriptografi, bukan oleh janji manis perusahaan.
+**Q: Kenapa pakai React PWA, bukan Flutter?**
+> A: SpacetimeDB client tidak mendukung Dart. Dengan React PWA, kita bisa langsung pakai WebSocket subscriptions dan real-time sync secara native. Plus, PWA bisa di-install di Android/iOS tanpa perlu approval Play Store/App Store.
+
+**Q: Kenapa nggak pakai database biasa aja?**
+> A: Karena kita butuh kecepatan real-time. Data sinkron instan tanpa polling. Matching engine bisa proses jutaan lokasi GPS per detik. Performa adalah prioritas utama.
 
 ---
 
 ## BAB 19: 🧪 Testing & CI/CD (Biar Nggak Malu-Maluin)
 
 Kita benci kode yang asal jalan.
-*   **Rust (Backend):** Target *Test Coverage* minimal 85%. Jalankan `cargo clippy -- -D warnings` sebelum PR. Kalau ada *warning*, PR ditolak.
-*   **Flutter (Frontend):** *Widget Testing* wajib ada untuk *flow* utama (Bidding & Payment).
-*   **Solana (Anchor):** Gunakan `solana-bankrun` untuk mensimulasikan kegagalan Smart Contract secara instan tanpa perlu nunggu *localnet* sinkron.
+*   **Rust:** Coverage minimal 85%. `cargo clippy -- -D warnings` sebelum PR.
+*   **React/Vitest:** Component testing wajib untuk flow utama. `pnpm test` sebelum PR.
+*   **Real-time:** Module testing untuk state transitions.
 
 ---
 
@@ -465,7 +471,7 @@ Kita benci kode yang asal jalan.
 
 Punya ide sinting? Nemu *bug* di sistem AI kita? Atau BUMN yang mau beli lisensi SSPL kita seharga Rp100 Miliar? Hubungi kami:
 
-*   **Discord Developer (Rust/Solana/Flutter):** [Join the Backroom](#)
+*   **Discord Developer:** [Join the Backroom](#)
 *   **Channel Telegram (Komunitas Worker/User):** [Warga SiapAja](#)
 *   **Email Business & Licensing:** `core@siapaja.id`
 
