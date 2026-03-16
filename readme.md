@@ -5,9 +5,9 @@
 
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](#)
 [![Rust Version](https://img.shields.io/badge/Rust-1.75%2B-orange.svg)](#)
-[![React](https://img.shields.io/badge/React-18%2B-61DAFB.svg)](#)
+[![Flutter](https://img.shields.io/badge/Flutter-3%2B-02569B.svg)](#)
+[![Dart](https://img.shields.io/badge/Dart-3%2B-0175C2.svg)](#)
 [![Vite](https://img.shields.io/badge/Vite-5%2B-646CFF.svg)](#)
-[![Tailwind](https://img.shields.io/badge/Tailwind-3%2B-06B6D4.svg)](#)
 [![Real-time](https://img.shields.io/badge/Engine-SpacetimeDB-red.svg)](#)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Corporate: SSPL](https://img.shields.io/badge/Corporate_License-SSPL-red.svg)](#)
@@ -18,7 +18,7 @@
 
 ---
 
-Selamat datang di *Ground Zero* pemberontakan gig economy. Repository ini bukan sekadar *source code* aplikasi ojol atau marketplace jasa biasa. Ini adalah **senjata digital** yang dibangun menggunakan performa brutal dari **Rust**, kecepatan antarmuka **React PWA**, dan real-time sync super cepat dari **SpacetimeDB**. 
+Selamat datang di *Ground Zero* pemberontakan gig economy. Repository ini bukan sekadar *source code* aplikasi ojol atau marketplace jasa biasa. Ini adalah **senjata digital** yang dibangun menggunakan performa brutal dari **Rust**, dan antarmuka mobile modern dari **Flutter**, serta real-time sync super cepat dari **SpacetimeDB**. 
 
 Kita membangun platform di mana **komisi 0% untuk rakyat kecil, tiered fee untuk proyek besar**, harga dilindungi oleh AI dari perang tarif, transaksi aman pakai *Virtual Ledger Escrow* (tapi user tetap melihatnya sebagai Rupiah), dan setiap baris kode yang kalian sumbangkan akan diubah menjadi kepemilikan saham (*Equity*) masa depan.
 
@@ -90,23 +90,24 @@ API Gateway dan *Matching Engine* kita ditulis 100% menggunakan **Rust** dengan 
 *   **Kenapa Rust?** *Memory-safe*, nggak ada *Garbage Collector* yang bikin server *freeze* tiba-tiba, dan sanggup memproses ratusan ribu *concurrent requests* secara asinkron.
 *   **Efisiensi Gila:** Backend kita bisa di-*deploy* di VPS seharga $5 (Rp75.000) per bulan dengan RAM cuma 1GB, tapi sanggup melayani puluhan ribu user aktif sekaligus. Bandingkan dengan platform sebelah yang butuh cluster server raksasa cuma buat nampung chat customer.
 
-### 3.3. Frontend (React PWA + Vite + SWC + Tailwind)
-UI kita pakai **React 18+** dengan **Vite** (build tool super cepat), **SWC** (compiler Rust-based), dan **Tailwind CSS** untuk styling.
-*   **Non-Blocking PWA:** Aplikasi berjalan sebagai Progressive Web App yang bisa di-install di HP Android/iOS tanpa perlu Play Store/App Store.
-*   **OpenAPI Generated Client:** Backend Rust auto-generate dokumentasi API. Client TypeScript di-generate otomatis dari spec OpenAPI.
-*   **Type-Safe:** Full TypeScript dengan type-safe API calls, nggak ada manual JSON mapping.
-*   **Catatan:** SpacetimeDB client tidak mendukung Dart, sehingga Flutter tidak digunakan. Web PWA adalah pilihan yang lebih native untuk real-time sync.
+### 3.3. Frontend (Flutter + Riverpod + Dart)
+UI kita pakai **Flutter 3+** dengan **Riverpod** untuk state management dan **Dart** sebagai bahasa pemrograman.
+*   **Native Mobile:** Aplikasi berjalan sebagai native app di Android/iOS dengan performa tinggi.
+*   **OpenAPI Generated Client:** Backend Rust auto-generate dokumentasi API. Client Dart di-generate otomatis dari spec OpenAPI.
+*   **Type-Safe:** Full Dart dengan type-safe API calls, nggak ada manual JSON mapping.
+*   **Native Features:** Akses penuh ke fitur native device seperti GPS, camera, dan push notifications.
 
 ### 3.4. Data Layer (PostgreSQL + SpacetimeDB)
-*   **PostgreSQL:** Data permanen (profil, transaksi, saldo akhir). Pakai SQLx biar query dicek saat compile - kalau ada typo, kode nggak akan jadi.
-*   **SpacetimeDB:** Data real-time (GPS, status order, matching). In-memory dengan persistence, jadi kencang tapi tetap aman.
+*   **PostgreSQL:** Data permanen (profil, transaksi, saldo akhir). diakses via REST API dengan OpenAPI auto-generation.
+*   **SpacetimeDB:** Data real-time (GPS, status order, matching). In-memory dengan persistence, diakses via binary protocol dengan community Dart SDK untuk Flutter.
 
 ### 3.5. System Architecture Diagram
 ```mermaid
 graph TD
-    User[React PWA] -- Auto-gen API --> Axum[Backend Rust Axum]
+    User[Flutter App] -- OpenAPI (REST) --> Axum[Backend Rust Axum]
+    User -- Binary Protocol --> STDB[SpacetimeDB]
     Axum -- Persistence --> Postgres[PostgreSQL Finansial/User]
-    Axum -- Real-time Logic --> STDB[SpacetimeDB Matching Engine]
+    Axum -- Real-time Logic --> STDB
     STDB -- Live State Sync --> User
     Postgres -- Backup/Restore --> STDB
 ```
@@ -247,7 +248,7 @@ Kita nggak lagi bangun *to-do list app* buat tugas kuliah. Kita bangun **Infrast
 
 ### 10.1. Syarat Mutlak Kontributor
 *   **Rust (Backend):** Wajib paham *Ownership/Borrowing*, Axum routing, dan SQLx. Kalau kode kamu kena *panic!* di *runtime* padahal bisa di-*handle* pakai `Result`, PR kamu otomatis kita *reject*.
-*   **React/Frontend:** Paham React 18+ (Hooks, Context), TypeScript, Vite, dan cara pakai generated code dari OpenAPI. Tailwind CSS untuk styling.
+*   **Flutter/Frontend:** Paham Flutter 3+ (Widgets, Riverpod), Dart, dan cara pakai generated code dari OpenAPI.
 *   **Real-time Layer:** Paham cara kerja WebSocket subscriptions dan state sync. Jangan sampai ada race condition di matching engine kita.
 
 ### 10.2. Sistem "Karma Dev" & Karma Equity Points (Ekuitas Keringat)
@@ -286,13 +287,12 @@ cargo run --release
 # Server menyala di http://localhost:8080 ⚡
 ```
 
-### 11.3. Menjalankan Web PWA (React + Vite)
+### 11.3. Menjalankan Mobile App (Flutter)
 ```bash
-cd frontend/web
-pnpm install
-pnpm dev
-# Dev server menyala di http://localhost:5173 ⚡
-# PWA bisa di-install dari browser
+cd frontend/mobile
+flutter pub get
+flutter run
+# Dev server menyala di emulator/device ⚡
 ```
 
 ### 11.4. Generate API Client dari OpenAPI
@@ -300,8 +300,8 @@ Backend auto-generate dokumentasi OpenAPI.
 ```bash
 # Download spec
 curl http://localhost:8080/api/docs/openapi.json -o openapi.json
-# Generate TypeScript client (pakai openapi-typescript-codegen)
-pnpm run generate:api
+# Generate Dart client (pakai openapi_generator)
+flutter pub run build_runner build
 ```
 
 ---
@@ -391,7 +391,7 @@ Kita nggak halu pengen ngalahin Gojek besok pagi. Ini adalah maraton yang teruku
 
 ### 15.1. Phase 1: Bootstrapping (Bulan 1-3) - *Kita Di Sini*
 *   [x] Desain arsitektur.
-*   [x] Basic UI/UX PWA React.
+*   [x] Basic UI/UX Flutter.
 *   [ ] Integrasi Virtual Ledger.
 *   [ ] Rilis MVP.
 
@@ -450,9 +450,6 @@ SiapAja.id bertindak **MURNI sebagai penyedia infrastruktur kode** (Software-as-
 **Q: Ini kan butuh modal gede buat promosi (bakar uang)?**
 > A: Kita pakai strategi *Word-of-Mouth* hiper-lokal. Ketika seorang Ketua RT di satu komplek mewajibkan warganya pakai aplikasi ini untuk cari tukang atau satpam panggilan, aplikasi ini akan viral dengan sendirinya tanpa perlu baliho di jalan protokol.
 
-**Q: Kenapa pakai React PWA, bukan Flutter?**
-> A: SpacetimeDB client tidak mendukung Dart. Dengan React PWA, kita bisa langsung pakai WebSocket subscriptions dan real-time sync secara native. Plus, PWA bisa di-install di Android/iOS tanpa perlu approval Play Store/App Store.
-
 **Q: Kenapa nggak pakai database biasa aja?**
 > A: Karena kita butuh kecepatan real-time. Data sinkron instan tanpa polling. Matching engine bisa proses jutaan lokasi GPS per detik. Performa adalah prioritas utama.
 
@@ -462,7 +459,7 @@ SiapAja.id bertindak **MURNI sebagai penyedia infrastruktur kode** (Software-as-
 
 Kita benci kode yang asal jalan.
 *   **Rust:** Coverage minimal 85%. `cargo clippy -- -D warnings` sebelum PR.
-*   **React/Vitest:** Component testing wajib untuk flow utama. `pnpm test` sebelum PR.
+*   **Flutter/Dart:** Widget testing wajib untuk flow utama. `flutter test` sebelum PR.
 *   **Real-time:** Module testing untuk state transitions.
 
 ---

@@ -3,15 +3,17 @@ Berikut **SCREEN-LIST.md Final Version** yang mengintegrasikan semua diskusi seb
 ```markdown
 # SCREEN-LIST.md
 ## SiapAja.id Platform Architecture
-### Version: 3.0 FINAL
-### Date: 2026-03-15
-### Philosophy: Universal Actions + Fair Fast-Bid + Transparent Karma
+### Version: 3.1
+### Date: 2026-03-16
+### Philosophy: Markdown-First + AI Extraction + Universal Actions
 
 ---
 
 # 0. PRINCIPLES & CONSTRAINTS
 
 ## 0.1 Core UX Philosophy
+- **Markdown-First**: Everything is a Post, and a Post is just Markdown
+- **AI Extraction**: Llama/Rust engine auto-extracts budget, location, category from text
 - **No Mode Switching**: Every user can perform any action anytime (Reddit-style)
 - **Pay-to-Post**: Job visible only after escrow funded (anti-spam)
 - **Fast-Bid Matching**: 15-minute enrollment window, customer selects or auto-match
@@ -167,24 +169,16 @@ Berikut **SCREEN-LIST.md Final Version** yang mengintegrasikan semua diskusi seb
 
 ## 3.2 Card Components
 
-### 3.2.1 Job Post Card ("Butuh Bantuan")
-- **3.2.1.1** Header: Poster avatar + name + verification badge + time + distance
-- **3.2.1.2** Title (bold, max 2 lines)
-- **3.2.1.3** Description (3 lines, expandable)
-- **3.2.1.4** Photo thumbnail (if exists, max 3 preview)
-- **3.2.1.5** AI Analysis Banner
-  - Price floor indicator ("Harga wajar: Rp150.000")
-  - Manpower warning ("Butuh 2 orang" if applicable)
-  - Risk level badge (Rendah/Sedang/Tinggi)
-- **3.2.1.6** Budget display (large, prominent)
-- **3.2.1.7** Location preview (mini map)
-- **3.2.1.8** Enrollment timer ("5 menit lagi" if active)
-- **3.2.1.9** Action bar:
-  - "Saya Bisa" (primary, if verified)
-  - "Verifikasi untuk Melamar" (if unverified)
-  - "Tanya Dulu" (chat button)
-  - "Simpan" (bookmark)
-  - "Bagikan" (share)
+### 3.2.1 Universal Post Card (Threads-style)
+- **3.2.1.1** Header: Author avatar + handle + verification badge + time
+- **3.2.1.2** Content Body: Full Markdown rendering (H1-H3, lists, bold, links)
+- **3.2.1.3** Media Stack: Inline image/video carousel (max 10)
+- **3.2.1.4** AI Smart-Metadata Chips (Auto-extracted from text):
+  - Budget: "💰 Rp150k" (Extracted)
+  - Skill: "🛠️ Reparasi Genteng" (Extracted)
+  - Location: "📍 2.5km - Depok" (Extracted)
+- **3.2.1.5** Description: Brief auto-summary for collapsed view
+- **3.2.1.6** Interaction Thread: Replies count + Upvotes + Karma Share link
 
 ### 3.2.2 Service Offer Card ("Bisa Bantu")
 - **3.2.2.1** Header: Worker avatar + verification + karma badge + online status
@@ -228,100 +222,18 @@ Berikut **SCREEN-LIST.md Final Version** yang mengintegrasikan semua diskusi seb
 
 # 4. CREATE FLOWS (Universal - Anyone Can Create Anything)
 
-## 4.1 Create Menu (Bottom Sheet)
+## 4.1 Unified Content Input (ChatGPT Style)
 
-### 4.1.1 "Butuh Bantuan" (Job Post)
-
-#### Step 1: Category & Title
-- **4.1.1.1** Visual category grid (8 categories with icons)
-- **4.1.1.2** Recent/suggested categories
-- **4.1.1.3** Search category
-- **4.1.1.4** Title input with AI suggestion helper
-- **4.1.1.5** Template selector (common job types)
-
-#### Step 2: Details & Photos
-- **4.1.2.1** Description textarea
-  - Voice-to-text button
-  - Template insert
-  - Character count
-- **4.1.2.2** Photo upload (max 5)
-  - Camera capture (with guides)
-  - Gallery multi-select
-  - Reorder drag-drop
-  - Delete with confirm
-- **4.1.2.3** AI Image Analysis loading state
-  - Object detection progress
-  - Manpower estimation result
-  - Risk assessment result
-
-#### Step 3: Location
-- **4.1.3.1** Map picker (current location default)
-  - Pin drag to adjust
-  - Address auto-complete
-- **4.1.3.2** Address details (floor, unit, landmark)
-- **4.1.3.3** Access instructions (gate code, parking, etc.)
-
-#### Step 4: Budget & Timing
-- **4.1.4.1** Budget input
-  - AI Price Floor warning (if below)
-  - Market rate comparison chart
-  - "Nego" toggle (allow bidding)
-- **4.1.4.2** Urgency selection
-  - "Sekarang" (Now - 30 min)
-  - "Hari Ini" (Today - 8 hours)
-  - "Fleksibel" (Flexible - schedule)
-- **4.1.4.3** Preferred time slot (if flexible)
-
-#### Step 5: Review & Fund
-- **4.1.5.1** Job summary preview
-- **4.1.5.2** AI final check (green/yellow/red)
-- **4.1.5.3** Terms agreement (checkbox)
-- **4.1.5.4** Escrow funding
-  - Balance check
-  - Payment method selection (if insufficient)
-  - Top-up flow (VA, E-wallet, QRIS)
-- **4.1.5.5** "Posting & Bayar" button
-  - Loading state (payment processing)
-  - Success animation
-  - Job live confirmation
-
-### 4.1.2 "Bisa Bantu" (Service Offer)
-
-#### Step 1: Service Definition
-- **4.1.6.1** Category of service (same as job categories)
-- **4.1.6.2** Title ("Saya bisa...")
-- **4.1.6.3** Detailed description of capabilities
-- **4.1.6.4** Tools/equipment owned (checklist)
-
-#### Step 2: Portfolio
-- **4.1.7.1** Past work photos (max 10)
-- **4.1.7.2** Photo captions
-- **4.1.7.3** Before/after pairs (optional)
-
-#### Step 3: Availability & Pricing
-- **4.1.8.1** Rate/range (optional, can be "Nego")
-  - Per hour / Per job / Custom
-- **4.1.8.2** Availability schedule
-  - Regular hours (mon-sun)
-  - Exception dates (off days)
-  - "On Call" toggle (available anytime)
-
-#### Step 4: Service Area
-- **4.1.9.1** Base location
-- **4.1.9.2** Service radius
-- **4.1.9.3** Transportation mode (walk/motor/car)
-
-#### Step 5: Publish
-- **4.1.10.1** Preview
-- **4.1.10.2** "Pasang Penawaran" button
-- **4.1.10.3** Success + "Lihat di Profil"
-
-### 4.1.3 "Diskusi" (Community Post)
-- **4.1.11.1** Title input
-- **4.1.11.2** Body text (rich editor)
-- **4.1.11.3** Flair selection (Help/Tips/Story/Question)
-- **4.1.11.4** Attachments (optional)
-- **4.1.11.5** "Posting" button
+### 4.1.1 Universal Post Composer
+- **4.1.1.1** Markdown Workspace: Single large-text area for everything (The "Prompt")
+- **4.1.1.2** Description: Floating helper for Markdown shortcuts (Table, List, Code)
+- **4.1.1.3** Real-time AI Interpreter Sidebar:
+  - Extracted Budget tracker (updates as you type "bayar 100rb")
+  - Extracted Location tagger (updates as you type "di ruko depan ITC")
+  - Extracted Category suggestor
+- **4.1.1.4** Media Attachment Bar: Simple paperclip icon for images/docs
+- **4.1.1.5** Escrow Preview Overlay: Shows locked amount once AI detects budget in text
+- **4.1.1.6** "Publish via Escrow" Button: Trigger payment & post in one tap
 
 ---
 
@@ -342,16 +254,11 @@ Berikut **SCREEN-LIST.md Final Version** yang mengintegrasikan semua diskusi seb
 - **5.1.2.4** "Lihat Profil" button
 - **5.1.2.5** Chat button (pre-apply inquiry)
 
-### 5.1.3 Job Information
-- **5.1.3.1** Title (full, expanded)
-- **5.1.3.2** Description (full text)
-- **5.1.3.3** Photo gallery (fullscreen capable, pinch zoom, swipe)
-- **5.1.3.4** AI Analysis Section (expandable)
-  - Price floor explanation
-  - Manpower recommendation with reasoning
-  - Estimated duration
-  - Required tools/materials list
-  - Risk assessment details
+### 5.1.3 Main Thread Content
+- **5.1.3.1** Content Body: Pure Markdown view with full syntax support
+- **5.1.3.2** Description: Meta-data summary card (Budget, Urgency, Status)
+- **5.1.3.3** Media Canvas: Full-bleed gallery view for attached evidence
+- **5.1.3.4** AI Insights Toggle: Detailed breakdown of how AI extracted the job params
 
 ### 5.1.4 Location Section
 - **5.1.4.1** Full address (if shared)
@@ -450,20 +357,21 @@ Berikut **SCREEN-LIST.md Final Version** yang mengintegrasikan semua diskusi seb
 
 # 6. MATCHING & APPLICATION SCREENS
 
-## 6.1 Application Flow (Worker Perspective)
+## 6.1 Instant Match Discovery (Worker Grind Mode)
 
-### 6.1.1 Apply Confirmation
-- **6.1.1.1** Job summary
-- **6.1.1.2** "Anda akan melamar untuk job ini"
-- **6.1.1.3** Optional message input ("Bisa datang dalam 30 menit...")
-- **6.1.1.4** Estimated completion time
-- **6.1.1.5** "Konfirmasi Lamar" button
+### 6.1.1 Fast-Match Card Stack (Tinder-style)
+- **6.1.1.1** Card Deck: Full-screen gesture-based stack of nearby job posts
+- **6.1.1.2** Markdown Card View: The "Post" rendered as a clean, readable markdown sheet
+- **6.1.1.3** AI Chips Overlay: Floating badges for 💰 Budget, 📍 Distance, and 🕒 Urgency (auto-extracted)
+- **6.1.1.4** Swipe Right Action: Instant "Saya Bisa" (Claim/Enroll) with haptic feedback
+- **6.1.1.5** Swipe Left Action: "Skip" and hide this post from the current session stack
+- **6.1.1.6** Description: High-velocity UI designed for workers to clear all local demand in seconds without leaving the screen
 
-### 6.1.2 Application Success
-- **6.1.2.1** Success animation
-- **6.1.2.2** "Tunggu customer pilih" explanation
-- **6.1.2.3** Time remaining indicator
-- **6.1.2.4** "Lihat Job Lain" button
+### 6.1.2 Post-Swipe Feedback & Queue Status
+- **6.1.2.1** Match Splash: "Sikat!" full-screen animation if auto-matched instantly
+- **6.1.2.2** Enrollment Queue: Real-time progress bar of the 15-minute selection window
+- **6.1.2.3** Next Card Trigger: Auto-sliding the next demand card into view after a swipe
+- **6.1.2.4** Description: Seamless transition that keeps the worker in the "flow state" of finding work
 
 ## 6.2 Applicant Management (Poster Perspective)
 
@@ -493,12 +401,11 @@ Berikut **SCREEN-LIST.md Final Version** yang mengintegrasikan semua diskusi seb
 
 ## 6.3 Match Confirmation
 
-### 6.3.1 For Worker (Winner)
-- **6.3.1.1** "Anda Dipilih!" celebration
-- **6.3.1.2** Job details recap
-- **6.3.1.3** Customer contact info
-- **6.3.1.4** "Chat Customer" button
-- **6.3.1.5** "Navigasi ke Lokasi" button
+### 6.3.1 Match Confirmation (The "Winner" State)
+- **6.3.1.1** Match Celebration: High-energy visual for "Job is Yours!"
+- **6.3.1.2** Thread Unlock: Customer's markdown post now shows full address & private notes
+- **6.3.1.3** Direct Action Bar: Instant "Gas ke Lokasi" (Maps) + Chat bubble
+- **6.3.1.4** Description: Transition from browsing mode to execution mode with all private data decrypted
 
 ### 6.3.2 For Poster (After Selection)
 - **6.3.2.1** "Worker Dipilih" confirmation
@@ -1122,10 +1029,12 @@ Jury Review → Voting → Result → Fund Release
 | 1.0 | 2026-03-01 | Initial draft with mode switching |
 | 2.0 | 2026-03-10 | Reddit-style universal actions |
 | 3.0 | 2026-03-15 | Final: Fast-bid matching, anti-senior bias, transparency features |
+| 3.1 | 2026-03-16 | Markdown-first paradigm: AI extraction, Universal Post Card, ChatGPT-style composer |
+| 3.2 | 2026-03-16 | Swipe-engine matching: Tinder-style card stack for worker discovery |
 
 ---
 
-**Document Status**: FINAL  
-**Next Review**: Post-MVP Launch  
+**Document Status**: 3.1 - Markdown-First Paradigm
+**Next Review**: Pre-MVP Launch  
 **Owner**: Product & Design Team
 ```

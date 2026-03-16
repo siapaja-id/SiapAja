@@ -56,11 +56,13 @@ Kami menolak penggunaan bahasa pemrograman *garbage-collected* yang rakus memori
 *   **Efisiensi VPS:** Sebuah server *virtual* seharga Rp100.000/bulan dengan RAM 1GB mampu menangani +50.000 koneksi bersamaan berkat asinkronisasi Tokio/Axum.
 *   **Crash-Proof:** Jaminan *Memory Safety* Rust memastikan server tidak akan mengalami *Null Pointer Exception* di tengah malam.
 
-### 3.2. Frontend Modern (React PWA + Vite + SWC + Tailwind)
-Kami menggunakan **React 18+** dengan **Vite** (build tool super cepat), **SWC** (compiler Rust-based), dan **Tailwind CSS** untuk styling.
-*   **Non-Blocking PWA:** Aplikasi berjalan sebagai Progressive Web App yang bisa di-install di HP Android/iOS tanpa perlu Play Store/App Store.
-*   **Type-Safe API:** Client TypeScript di-generate otomatis dari OpenAPI spec backend Rust.
-*   **Catatan Penting:** SpacetimeDB client tidak mendukung Dart, sehingga Flutter tidak digunakan. Web PWA lebih native untuk real-time sync.
+### 3.2. Frontend Modern (Flutter + Riverpod + Dart)
+Kami menggunakan **Flutter 3+** dengan **Riverpod** untuk state management dan **Dart** sebagai bahasa pemrograman.
+*   **Native Mobile:** Aplikasi berjalan sebagai native app di Android/iOS dengan performa tinggi.
+*   **Dual Database Architecture:**
+  - **REST API (OpenAPI):** Untuk data persisten (PostgreSQL) - user profiles, transactions
+  - **SpacetimeDB Binary Protocol:** Untuk data real-time - job feed, GPS tracking, live notifications. Menggunakan community Dart SDK yang production-ready.
+*   **Type-Safe API:** Client Dart di-generate otomatis dari OpenAPI spec backend Rust.
 
 ### 3.3. State-Sync Engine (Self-hosted SpacetimeDB)
 Kami menggunakan SpacetimeDB untuk menghapus latency antara worker dan customer.
@@ -152,7 +154,7 @@ Kode sumber kami adalah senjata komersial yang dilindungi secara hukum:
 
 ## BAB 9: Peta Jalan (Roadmap)
 
-*   **Fase 1: Asimilasi Kode (Q1 - Q2):** Penyelesaian inti Rust Axum, PWA React, dan SpacetimeDB module. Uji coba integrasi Virtual Ledger.
+*   **Fase 1: Asimilasi Kode (Q1 - Q2):** Penyelesaian inti Rust Axum, Flutter App, dan SpacetimeDB module. Uji coba integrasi Virtual Ledger.
 *   **Fase 2: Hyper-Local Beta (Q3):** Peluncuran *real-money* secara eksklusif di 1 Kecamatan di Jabodetabek. Menguji keandalan *Price Floor AI* dan stabilitas *Virtual Escrow*.
 *   **Fase 3: Kedaulatan Fiat & Ekspansi (Q4):** Integrasi BI-FAST untuk *bypass* biaya *Payment Gateway*. Ekspansi ke kota-kota lapis kedua.
 *   **Fase 4: Era Enterprise (Tahun ke-2):** Pembukaan API komersial untuk korporasi, pendirian Koperasi resmi berskala nasional, dan pembagian dividen *Treasury* pertama.
@@ -163,7 +165,7 @@ Kode sumber kami adalah senjata komersial yang dilindungi secara hukum:
 
 Monopoli *gig economy* saat ini bukan didasarkan pada teknologi yang mustahil dikalahkan, melainkan pada keengganan kita untuk bersatu membangun infrastruktur tandingan. 
 
-**SiapAja.id** mengundang para *Rustaceans*, *React Devs*, penggiat hukum, aktivis pekerja, dan siapa saja yang muak melihat tetangga mereka kelelahan di jalan raya hanya demi potongan 30% yang masuk ke gedung kaca di SCBD.
+**SiapAja.id** mengundang para *Rustaceans*, *Flutter Devs*, penggiat hukum, aktivis pekerja, dan siapa saja yang muak melihat tetangga mereka kelelahan di jalan raya hanya demi potongan 30% yang masuk ke gedung kaca di SCBD.
 
 Kita tidak butuh miliaran Dolar dari investor asing untuk membuat sistem ini berjalan. Kita hanya butuh kompilasi kode yang bersih, konsensus algoritma yang adil, dan semangat gotong royong digital yang nyata.
 

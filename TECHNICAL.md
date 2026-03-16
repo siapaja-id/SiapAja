@@ -4,12 +4,12 @@
 
 ## 1. Executive Summary
 
-SiapAja.id adalah platform gig economy real-time yang dibangun dengan arsitektur modern berbasis Rust workspace monorepo, React PWA, dan SpacetimeDB. Dokumen ini menjelaskan secara komprehensif arsitektur sistem, komponen teknis, alur data, dan spesifikasi implementasi tanpa menyertakan kode sumber.
+SiapAja.id adalah platform gig economy real-time yang dibangun dengan arsitektur modern berbasis Rust workspace monorepo, Flutter Mobile App, dan SpacetimeDB. Dokumen ini menjelaskan secara komprehensif arsitektur sistem, komponen teknis, alur data, dan spesifikasi implementasi tanpa menyertakan kode sumber.
 
 **Target Pembaca:**
 - Software Architects evaluating the platform
 - Backend Engineers (Rust)
-- Frontend Engineers (React/TypeScript)
+- Frontend Engineers (Flutter/Dart)
 - DevOps/Infrastructure Engineers
 - Technical Product Managers
 
@@ -27,9 +27,11 @@ Platform gig economy konvensional memiliki masalah fundamental:
 ### 2.2 Solution Approach
 SiapAja.id menyelesaikan ini melalui:
 1. **Third-party Escrow Integration** - Xendit/Flip/ Midtrans Escrow API menampung dana, bukan SiapAja
-2. **Real-time state synchronization** menggunakan SpacetimeDB (in-memory dengan persistence)
+2. **Dual Database Architecture:**
+   - **PostgreSQL:** REST API (Axum) dengan OpenAPI auto-generation untuk persistent data (user profiles, transactions, financial records)
+   - **SpacetimeDB:** Binary protocol dengan community Dart SDK untuk real-time state (job feed, GPS tracking, live notifications)
 3. **Ultra-efficient backend** dalam Rust workspace dengan clean architecture
-4. **Progressive Web App** dengan personalized feed recommendation
+4. **Native Mobile App** dengan personalized feed recommendation
 5. **Dual-role architecture** - satu user bisa switch antara customer dan worker
 
 ### 2.3 Core Value Proposition
@@ -72,12 +74,13 @@ SiapAja.id menyelesaikan ini melalui:
 | Backend Runtime | Rust + Tokio | Zero-cost async, memory safety, no GC pauses |
 | Web Framework | Axum | Built by Tokio team, Tower ecosystem, type-safe routing |
 | Database (Persistent) | PostgreSQL | ACID compliance untuk financial records, SQLx untuk compile-time checked queries |
-| Database (Real-time) | SpacetimeDB | In-memory speed dengan persistence, native WebSocket subscriptions, menggantikan Redis |
-| AI Integration | OpenRouter API | Access 200+ LLM models (Claude, GPT, Llama) dengan single API key, text-only calls |
-| API Documentation | Utoipa | Compile-time OpenAPI generation, Swagger UI integration dengan Axum |
-| Frontend Framework | React 18+ | Concurrent features, Suspense untuk async state |
-| Build Tool | Vite + SWC | Rust-based compiler, instant HMR |
-| Styling | Tailwind CSS | Utility-first, minimal CSS bundle size |
+| Database (Real-time) | SpacetimeDB | In-memory speed dengan persistence, native WebSocket subscriptions, community Dart SDK (production ready), replaced Redis |
+| AI Integration | OpenRouter API | Access 200+ LLM models (Claude, GPT, Llama) with single API key, text-only calls |
+| API Documentation | Utoipa | Compile-time OpenAPI generation for REST API (Axum → Flutter) |
+| Frontend Framework | Flutter 3+ | Native mobile app dengan performant rendering, Riverpod untuk state management |
+| Build Tool | Flutter CLI + FVM | Flutter version management, fast compilation |
+| State Management | Riverpod | Compile-time safe, testable, scalable state management |
+| Styling | Flutter Widgets | Material Design 3, customizable theming |
 
 ### 3.3 Clean Architecture Layers (Onion Architecture)
 
@@ -420,79 +423,115 @@ crates/sa-cli/
     └── config.rs                   # CLI configuration
 ```
 
-### 4.3 Frontend Structure (React PWA)
+### 4.3 Frontend Structure (Flutter Mobile App)
 
 ```
 frontend/
-├── package.json
-├── vite.config.ts
-├── tsconfig.json
-├── tailwind.config.js
-├── index.html
-├── public/
-│   ├── manifest.json             # PWA manifest
-│   ├── sw.js                     # Service worker
-│   └── icons/
-└── src/
-    ├── main.tsx                  # Entry point
-    ├── App.tsx                   # Root component
-    ├── routes.tsx                # React Router config
-    ├── components/
-    │   ├── common/               # Reusable UI components
-    │   │   ├── Button.tsx
-    │   │   ├── Input.tsx
-    │   │   └── Card.tsx
-    │   ├── feed/                 # Feed-specific components
-    │   │   ├── FeedCard.tsx
-    │   │   ├── FeedList.tsx
-    │   │   └── FeedFilter.tsx
-    │   ├── job/                  # Job components
-    │   │   ├── JobCard.tsx
-    │   │   ├── JobDetail.tsx
-    │   │   └── JobForm.tsx
-    │   ├── map/                  # Map components
-    │   │   ├── MapView.tsx
-    │   │   └── WorkerMarker.tsx
-    │   └── layout/
-    │       ├── Header.tsx
-    │       ├── BottomNav.tsx
-    │       └── Sidebar.tsx
-    ├── pages/
-    │   ├── Home.tsx              # Personalized feed page
-    │   ├── JobDetail.tsx
-    │   ├── CreateJob.tsx
-    │   ├── Profile.tsx
-    │   ├── Wallet.tsx
-    │   ├── Disputes.tsx
-    │   └── Settings.tsx
-    ├── hooks/
-    │   ├── useAuth.ts            # Authentication hook
-    │   ├── useFeed.ts            # Personalized feed hook
-    │   ├── useJobs.ts            # Job management hook
-    │   ├── useLocation.ts        # GPS tracking hook
-    │   ├── useSpacetimeDB.ts     # Real-time subscription hook
-    │   └── usePayments.ts        # Payment operations hook
-    ├── services/
-    │   ├── api.ts                # Generated API client (OpenAPI)
-    │   ├── auth.ts
-    │   ├── jobs.ts
-    │   ├── feed.ts               # Feed personalization API
-    │   ├── payments.ts
-    │   └── spacetimedb.ts        # SpacetimeDB SDK wrapper
-    ├── stores/
-    │   ├── authStore.ts          # Zustand auth state
-    │   ├── feedStore.ts          # Feed personalization state
-    │   ├── jobStore.ts           # Active jobs cache
-    │   └── userStore.ts          # User profile state
-    ├── types/
-    │   └── generated/            # Auto-generated dari OpenAPI
-    │       └── api.ts
-    ├── utils/
-    │   ├── formatters.ts         # Currency, date formatting
-    │   ├── validators.ts         # Input validation
-    │   └── geo.ts                # Geolocation helpers
-    └── styles/
-        └── globals.css
+├── pubspec.yaml
+├── analysis_options.yaml
+├── lib/
+│   ├── main.dart                    # Entry point
+│   ├── app.dart                     # Root widget with MaterialApp
+│   ├── core/
+│   │   ├── config/
+│   │   │   ├── app_config.dart      # Environment configuration
+│   │   │   └── api_config.dart      # API endpoints
+│   │   ├── theme/
+│   │   │   ├── app_theme.dart       # Material 3 theme
+│   │   │   └── colors.dart          # Color palette
+│   │   ├── constants/
+│   │   │   └── app_constants.dart   # App-wide constants
+│   │   └── utils/
+│   │       ├── formatters.dart      # Currency, date formatting
+│   │       ├── validators.dart      # Input validation
+│   │       └── geo.dart             # Geolocation helpers
+│   ├── data/
+│   │   ├── models/                  # Data models
+│   │   │   ├── user_model.dart
+│   │   │   ├── job_model.dart
+│   │   │   ├── escrow_model.dart
+│   │   │   └── location_model.dart
+│   │   ├── repositories/             # Data repositories
+│   │   │   ├── auth_repository.dart
+│   │   │   ├── job_repository.dart
+│   │   │   └── payment_repository.dart
+│   │   └── services/
+│   │       ├── api_service.dart     # HTTP client
+│   │       ├── auth_service.dart
+│   │       ├── job_service.dart
+│   │       ├── feed_service.dart
+│   │       ├── payments_service.dart
+│   │       └── spacetimedb_service.dart
+│   ├── domain/
+│   │   ├── entities/                # Domain entities
+│   │   │   ├── user.dart
+│   │   │   ├── job.dart
+│   │   │   └── escrow.dart
+│   │   └── repositories/            # Repository interfaces
+│   │       ├── user_repository.dart
+│   │       └── job_repository.dart
+│   ├── presentation/
+│   │   ├── providers/               # Riverpod providers
+│   │   │   ├── auth_provider.dart
+│   │   │   ├── feed_provider.dart
+│   │   │   ├── job_provider.dart
+│   │   │   ├── location_provider.dart
+│   │   │   └── payments_provider.dart
+│   │   ├── screens/
+│   │   │   ├── splash/
+│   │   │   │   └── splash_screen.dart
+│   │   │   ├── auth/
+│   │   │   │   ├── login_screen.dart
+│   │   │   │   └── otp_screen.dart
+│   │   │   ├── home/
+│   │   │   │   └── home_screen.dart
+│   │   │   ├── feed/
+│   │   │   │   ├── feed_screen.dart
+│   │   │   │   └── feed_card.dart
+│   │   │   ├── job/
+│   │   │   │   ├── job_detail_screen.dart
+│   │   │   │   ├── create_job_screen.dart
+│   │   │   │   └── job_form.dart
+│   │   │   ├── profile/
+│   │   │   │   ├── profile_screen.dart
+│   │   │   │   └── edit_profile_screen.dart
+│   │   │   ├── wallet/
+│   │   │   │   └── wallet_screen.dart
+│   │   │   ├── disputes/
+│   │   │   │   └── disputes_screen.dart
+│   │   │   └── settings/
+│   │   │       └── settings_screen.dart
+│   │   └── widgets/
+│   │       ├── common/              # Reusable widgets
+│   │       │   ├── app_button.dart
+│   │       │   ├── app_text_field.dart
+│   │       │   ├── app_card.dart
+│   │       │   └── loading_indicator.dart
+│   │       ├── feed/                # Feed widgets
+│   │       │   ├── feed_card.dart
+│   │       │   ├── feed_list.dart
+│   │       │   └── feed_filter.dart
+│   │       ├── job/                 # Job widgets
+│   │       │   ├── job_card.dart
+│   │       │   ├── job_detail.dart
+│   │       │   └── job_form.dart
+│   │       └── map/                 # Map widgets
+│   │           ├── map_view.dart
+│   │           └── worker_marker.dart
+│   └── generated/                   # OpenAPI generated code
+│       └── api/
+│           ├── api_client.dart
+│           └── api_models.dart
+├── test/
+│   ├── unit/                        # Unit tests
+│   ├── widget/                      # Widget tests
+│   └── integration/                 # Integration tests
+├── assets/
+│   ├── images/
+│   ├── icons/
+│   └── fonts/
+└── android/                         # Android native config
+ios/                                # iOS native config
 ```
 
 ---
@@ -542,7 +581,7 @@ frontend/
 **SpacetimeDB Container:**
 - Real-time state: active jobs, worker locations, user sessions
 - In-memory dengan persistence
-- WebSocket subscriptions untuk live updates
+- Binary protocol (bukan REST/OpenAPI) dengan community Dart SDK untuk Flutter
 
 **Background Worker Container:**
 - Cron jobs: karma decay, escrow cleanup, treasury yield
@@ -989,12 +1028,15 @@ pub struct FeedPersonalization {
 
 ## 9. Real-Time System (SpacetimeDB)
 
-### 9.1 WebSocket Architecture
+### 9.1 SpacetimeDB Protocol Architecture
+
+**Note Penting:** SpacetimeDB menggunakan binary protocol sendiri (bukan REST/OpenAPI). Flutter frontend terhubung ke SpacetimeDB menggunakan community SpacetimeDB Dart SDK yang production-ready.
 
 **Connection Model:**
-- Persistent WebSocket per user session
+- Persistent WebSocket per user session menggunakan SpacetimeDB protocol
 - Auto-reconnect dengan exponential backoff (max 30s)
 - Heartbeat 30 detik
+- Binary serialization untuk efisiensi bandwidth
 
 **Subscriptions:**
 - `jobs:nearby:{lat}:{lng}:{radius}` - Job feed personalized
@@ -1021,7 +1063,7 @@ pub struct FeedPersonalization {
 
 **Layer 1: Network**
 - TLS 1.3 mandatory
-- Certificate pinning di PWA
+- Certificate pinning di Flutter App
 
 **Layer 2: Application**
 - Input validation: strict JSON schema
@@ -1098,7 +1140,8 @@ pub struct FeedPersonalization {
 |------|------------|
 | **Xendit Escrow** | Third-party escrow service yang menampung dana. SiapAja tidak perlu izin OJK. |
 | **OpenRouter** | Unified API untuk 200+ LLM models. |
-| **SpacetimeDB** | In-memory database dengan persistence dan real-time subscriptions. |
+| **SpacetimeDB** | In-memory database dengan persistence, real-time subscriptions, dan binary protocol. Flutter client menggunakan community Dart SDK. |
+| **OpenAPI/Swagger** | API specification untuk REST endpoints (Axum → Flutter). Bukan untuk SpacetimeDB. |
 | **Dual-Role** | User bisa switch antara customer dan worker dalam satu akun. |
 | **Personalized Feed** | Feed job yang berbeda untuk setiap user berdasarkan preferensi. |
 | **Karma** | Reputation score user. |
@@ -1117,6 +1160,9 @@ pub struct FeedPersonalization {
 - Utoipa: 4.2+
 - PostgreSQL: 15+
 - SpacetimeDB: 1.0+
+- Flutter: 3.0+
+- Dart: 3.0+
+- Riverpod: 2.0+
 
 ### Appendix B: External APIs
 - Xendit: Escrow API v2
