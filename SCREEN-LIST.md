@@ -1,6 +1,3 @@
-Berikut **SCREEN-LIST.md Final Version** yang mengintegrasikan semua diskusi sebelumnya: filosofi Reddit-style universal actions, Fast-Bid matching dengan anti-senior bias, dan arsitektur yang sudah didefinisikan.
-
-```markdown
 # SCREEN-LIST.md
 ## SiapAja.id Platform Architecture
 ### Version: 3.1
