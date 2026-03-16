@@ -70,20 +70,21 @@ Kami menggunakan SpacetimeDB untuk menghapus latency antara worker dan customer.
 *   **ACID Persistence:** Meskipun kencang, data tetap aman tersimpan di disk.
 *   **Real-time Sync:** Perubahan data langsung terpropagasi ke semua client dalam milidetik tanpa polling.
 
-### 3.4. Jembatan Fiat (Integrated Virtual Account)
+### 3.4. Jembatan Fiat (Xendit Escrow Integration)
 *   **In-App Display:** User hanya melihat saldo dalam bentuk Rupiah (IDR).
-*   **Virtual Ledger Reality:** Di belakang layar, *Payment Gateway* (seperti QRIS/BI-FAST) mencatat saldo di Virtual Ledger internal kami. Saat penarikan (*withdraw*), proses langsung dieksekusi dalam hitungan detik.
+*   **Escrow Reality:** Di belakang layar, **Xendit Escrow API** (berizin OJK sebagai payment gateway) menampung dana sementara. Saat penarikan (*withdraw*), proses langsung dieksekusi dalam hitungan detik.
+*   **Keuntungan:** SiapAja tidak perlu izin OJK karena dana tidak pernah menyentuh rekening perusahaan - Xendit sebagai第三方 escrow provider.
 
 ---
 
 ## BAB 4: Kecerdasan Buatan sebagai Pelindung Keselamatan (K3)
 
-Kami menolak keras sistem lelang buta yang membuat pekerja saling banting harga hingga upah tidak manusiawi. Di sinilah **AI Man-Power Estimator** bekerja di sisi *Edge/Server*.
+Kami menolak keras sistem lelang buta yang membuat pekerja saling banting harga hingga upah tidak manusiawi. Di sinilah **AI Man-Power Estimator** bekerja melalui **OpenRouter API** (Claude 3 Haiku, GPT-3.5) - text-only LLM untuk ekstraksi data terstruktur dari teks tidak terstruktur.
 
-1.  **Analisis NLP & Computer Vision:** Saat *customer* memposting "Bantu angkut lemari 3 pintu ke lantai 4", AI akan memproses teks dan foto ruangan.
-2.  **Risk & Effort Calculation:** AI menghitung estimasi kalori, risiko cedera, dan harga pasar di wilayah tersebut.
+1.  **Text-to-Structured Extraction:** Saat *customer* memposting "Bantu angkut lemari 3 pintu ke lantai 4", LLM mengekstrak: budget, lokasi, estimasi difficulty.
+2.  **Risk & Effort Calculation:** AI menghitung estimasi kalori, risiko cedera, dan harga pasar di wilayah tersebut berdasarkan teks saja.
 3.  **Price Floor Enforcement:** AI akan mengunci **Harga Bawah**. *Customer* tidak bisa memposting tawaran di bawah harga minimum yang layak.
-4.  **Squad Formation:** Jika beban melampaui kapasitas 1 manusia (>50kg), AI secara otomatis memecah loker menjadi *Multi-Worker Job* (misal: butuh 3 orang). Virtual Ledger otomatis membagi 3 uang pembayaran secara rata di akhir tugas.
+4.  **Squad Formation:** Jika beban melampaui kapasitas 1 manusia (>50kg) berdasarkan teks deskripsi, AI secara otomatis memecah job menjadi *Multi-Worker Job* (misal: butuh 3 orang).
 
 ---
 

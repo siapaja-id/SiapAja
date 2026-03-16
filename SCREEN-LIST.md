@@ -10,7 +10,7 @@
 
 ## 0.1 Core UX Philosophy
 - **Markdown-First**: Everything is a Post, and a Post is just Markdown
-- **AI Extraction**: Llama/Rust engine auto-extracts budget, location, category from text
+- **AI Extraction**: OpenRouter API (Claude 3 Haiku, GPT-3.5) auto-extracts budget, location, category from text
 - **No Mode Switching**: Every user can perform any action anytime (Reddit-style)
 - **Pay-to-Post**: Job visible only after escrow funded (anti-spam)
 - **Fast-Bid Matching**: 15-minute enrollment window, customer selects or auto-match

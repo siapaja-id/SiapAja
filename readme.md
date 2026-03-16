@@ -4,10 +4,9 @@
 **"Scroll medsos dapet duit. Posting butuh bantuan langsung ada yang nyamber. 0% Komisi. 100% Keadilan."**
 
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](#)
-[![Rust Version](https://img.shields.io/badge/Rust-1.75%2B-orange.svg)](#)
+[![Rust](https://img.shields.io/badge/Rust-1.75%2B-orange.svg)](#)
 [![Flutter](https://img.shields.io/badge/Flutter-3%2B-02569B.svg)](#)
 [![Dart](https://img.shields.io/badge/Dart-3%2B-0175C2.svg)](#)
-[![Vite](https://img.shields.io/badge/Vite-5%2B-646CFF.svg)](#)
 [![Real-time](https://img.shields.io/badge/Engine-SpacetimeDB-red.svg)](#)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Corporate: SSPL](https://img.shields.io/badge/Corporate_License-SSPL-red.svg)](#)
@@ -70,7 +69,7 @@ Data sinkron instan, tanpa loading, secepat aplikasi chat. User cuma lihat saldo
 
 ### 2.3. AI Man-Power Estimator (Perlindungan K3)
 Sering terjadi: Customer pelit minta pindahan kosan 3 lantai, barangnya ada kulkas 2 pintu, tapi bayarnya cuma buat 1 orang.
-Di SiapAja.id, AI berbasis NLP dan *Image Recognition* kita bakal baca postingan dan foto yang di-upload customer. 
+Di SiapAja.id, **text-only LLM** (via OpenRouter API) membaca postingan untuk ekstraksi terstruktur.
 *   **Output AI:** *"Deteksi beban >70kg + Tangga. Risiko cedera tinggi. Pekerjaan ini wajib dikerjakan minimal 3 Worker. Harga dasar dikunci di Rp350.000."*
 *   Sistem menolak postingan jika customer memaksa menawar di bawah *Price Floor* (Harga Bawah) yang sudah dihitung AI. Kita jaga tulang punggung pekerja!
 
@@ -82,7 +81,7 @@ Kalau AI mendeteksi butuh 3 orang untuk angkat lemari raksasa, sistem nggak akan
 ## BAB 3: 🏗️ Arsitektur "God Mode" (The Tech Stack)
 
 ### 3.1. Filosofi Pemilihan Stack
-Kita punya satu prinsip: **"Performance of C++, Safety of Rust, Speed of SpacetimeDB, Modern PWA with React."**
+Kita punya satu prinsip: **"Performance of C++, Safety of Rust, Speed of SpacetimeDB, Modern Mobile with Flutter."**
 Kita nggak mau bakar duit puluhan juta tiap bulan cuma buat bayar server AWS kayak *startup* sebelah. Dengan tumpukan teknologi ini, kita bisa menampung transaksi satu negara hanya dengan biaya server setara harga kopi *specialty* sebulan.
 
 ### 3.2. Backend (Rust + Axum)
@@ -121,11 +120,11 @@ User login pakai No HP (OTP) atau Google Login. Di belakang layar, sistem langsu
 ### 4.1. Real-time Sync
 Perubahan data langsung terpropagasi ke semua client dalam milidetik. Worker klik "Selesai"? Customer langsung lihat update. Nggak ada polling, nggak ada refresh. UI selalu fresh.
 
-### 4.2. Virtual Ledger System
-Kita nggak pakai koin yang harganya naik-turun.
-*   **Deposit:** Customer bayar Rp100.000 via GoPay/OVO/VA.
-*   **Ledger Update:** Sistem mencatat saldo di ledger internal.
-*   **Withdraw:** Worker tarik saldo, sistem transfer ke rekening mereka. 100% akurat.
+### 4.2. Xendit Escrow System
+Kita nggak pakai koin yang harganya naik-turun. Dana ditampung oleh **Xendit Escrow** (berizin OJK).
+*   **Deposit:** Customer bayar Rp100.000 via GoPay/OVO/VA/QRIS ke Xendit.
+*   **Escrow Lock:** Dana dikunci di escrow, tidak bisa diambil sampai pekerjaan selesai.
+*   **Release:** Worker terima uang (dikurangi 1% solidarity pool) langsung ke rekening bank/e-wallet.
 
 ---
 
@@ -138,10 +137,10 @@ Kita benci kalau sesama worker saling banting harga cuma buat dapet kerjaan.
 *   **The Logic:** AI akan menghitung biaya hidup per wilayah, tingkat kesulitan kerja, dan jarak tempuh. 
 *   Kalau AI bilang harga wajar benerin pompa air adalah Rp150.000, maka tombol "Bidding" di bawah angka itu akan **dimatikan**. Kita memastikan kompetisi terjadi di *kualitas*, bukan di *kemiskinan*.
 
-### 5.2. NLP & Image Recognition Pipeline
-Server Rust kita terhubung ke model AI (Llama-lite & YOLO) yang sudah dioptimasi.
+### 5.2. Text-to-Structured LLM Pipeline
+Server Rust kita terhubung ke **OpenRouter API** (Claude 3 Haiku, GPT-3.5) - text-only extraction.
 *   **Scanning Deskripsi:** Kalau customer nulis "butuh orang buat nagih utang sambil bawa sajam", AI bakal otomatis nge-blok postingan itu karena melanggar hukum.
-*   **Scanning Foto:** Kalau customer upload foto lemari yang gedenya nggak masuk akal buat diangkut satu orang, AI akan otomatis mengubah status kerjaan jadi "Multi-Worker Required".
+*   **Ekstraksi Data:** Dari teks tidak terstruktur ("bantu pindahan 3 lantai, kulkas 2 pintu") LLM mengekstrak budget, kategori, dan estimasi worker needed.
 
 ---
 
@@ -175,7 +174,7 @@ Banyak yang takut sistem Karma kita bakal kayak "Skor Kredit Sosial" ala negara 
 
 ### 7.2. Karma Decay (Penyusutan Otomatis)
 Kita percaya pada **Penebusan Dosa Digital**. Kalau worker pernah salah (Karma anjlok), mereka nggak dihukum seumur hidup.
-*   Setiap 30 hari, poin Karma negatif akan otomatis mengalami "Decay" (menyusut) sebesar 20% jika worker terus berkelakuan baik.
+*   Setiap 30 hari, poin Karma negatif akan otomatis mengalami "Decay" (menyusut) sebesar 15% jika worker terus berkelakuan baik.
 *   Sistem ini diatur oleh *CRON Job* di server Rust yang secara efisien mengkalkulasi jutaan data setiap akhir bulan.
 
 ### 7.3. Hak Suara (Voting Power)
@@ -269,7 +268,7 @@ Karena kita mulai dari **Nol Rupiah**, kita bayar keringat kalian dengan **Ekuit
 ## BAB 11: ⚙️ Local Development Setup (Instalasi)
 
 Mau nyoba jalanin "The God Mode Engine" di laptop kamu? Ikuti langkah ini.
-*(Prasyarat: Docker, Rust 1.75+, Node.js 20+, pnpm/yarn/npm)*
+*(Prasyarat: Docker, Rust 1.75+, Flutter SDK 3+)*
 
 ### 11.1. Menyiapkan Infrastruktur
 Kita butuh PostgreSQL untuk data persisten dan SpacetimeDB untuk real-time.
@@ -279,11 +278,17 @@ cd siapaja-core
 docker-compose up -d
 ```
 
-### 11.2. Menjalankan Backend
+### 11.2. Menjalankan Backend (Rust Workspace)
 ```bash
-cd backend/api
-cp .env.example .env
-cargo run --release
+# Clone dan setup
+git clone https://github.com/siapaja/siapaja-core.git
+cd siapaja-core
+
+# Build workspace
+cargo build --release
+
+# Jalankan API server (sa-api crate)
+cargo run -p sa-api
 # Server menyala di http://localhost:8080 ⚡
 ```
 
