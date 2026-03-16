@@ -42,12 +42,18 @@ SiapAja.id membalik logika itu. Kita pakai sistem **Demand-Only Feed** yang bent
 ### 1.3. Zero-Commission & Tiered Scalability
 Platform tetap gratis buat rakyat kecil. Tapi untuk menjaga keberlanjutan infrastruktur, kita menerapkan **Tiered Fee** hanya untuk transaksi kelas menengah ke atas:
 
-| Budget Pekerjaan | Fee Platform | Potongan
-|------------------|--------------|----------
-| Dibawah Rp500.000 | **0%** | Gratis total
-| Rp500rb - Rp2jt | 2.5% | Split 50:50 (customer + worker)
-| Rp2jt - Rp10jt | 5% | Split 50:50
-| Diatas Rp10jt | 10% | Split 50:50
+| Budget Pekerjaan | Fee Platform | Beban Biaya (Customer : Worker)
+|------------------|--------------|--------------------------------
+| Dibawah Rp500.000 | **3%** | 100% Customer (Worker 0% Fee)
+| Rp500rb - Rp2jt | **5%** | 50% Customer : 50% Worker
+| Rp2jt - Rp10jt | **7.5%** | 50% Customer : 50% Worker
+| Diatas Rp10jt | **10%** | 50% Customer : 50% Worker
+
+**Alokasi Fee Platform (The Distribution):**
+* **40% Operational & Server:** Biaya infrastruktur Rust & SpacetimeDB.
+* **30% Founder & Core Devs:** Jatah "Kaya Raya" buat para perancang sistem (Operational Carry).
+* **20% Community Treasury:** Kas Koperasi untuk SHU & Dividen.
+* **10% Solidarity Pool:** Asuransi kecelakaan/kesehatan anggota.
 
 **Untuk transaksi di bawah Rp500.000, worker tetap terima 100% UTUH.**
 Fee untuk transaksi besar dibebankan secara *adil* ke kedua belah pihak (split fee), bukan cuma memeras worker.

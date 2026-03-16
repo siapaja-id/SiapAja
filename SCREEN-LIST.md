@@ -69,8 +69,11 @@
 - **1.3.1.4** Location permission (GPS auto or manual Kecamatan)
 - **1.3.1.5** Service radius preference (2km/5km/10km/20km)
 
-### 1.3.2 Optional Verification (Unlocks Features)
-- **1.3.2.1** KTP Verification
+### 1.3.2 Verifikasi & Komitmen Konstitusi (Membership Gate)
+- **1.3.2.1** Persetujuan AD/ART Digital
+  - **1.3.2.1.1** Viewer Konstitusi: Reader AD/ART (termasuk klausul Token $SIAP & Distribusi Fee).
+  - **1.3.2.1.2** Digital Signature: Checkbox tunduk pada aturan koperasi.
+- **1.3.2.2** KTP Verification (Kyc)
   - Front photo capture with auto-crop
   - Back photo capture
   - Selfie with KTP (liveness detection)
@@ -473,6 +476,13 @@
 ### 8.1.3 Recent Transactions (3 latest)
 - **8.1.3.1** Transaction card (icon + desc + amount + status)
 
+## 8.1 WALLET (Unified Fiat & Digital Assets)
+### 8.1.1 Asset Display
+- **8.1.1.1** Saldo Rupiah: Dana operasional harian.
+- **8.1.1.2** Sertifikat Modal Digital (SMD): Jumlah unit penyertaan modal (Phase 1).
+- **8.1.1.3** $SIAP Token: (Status: Roadmap - "Ready for Global Swap after Phase 4").
+- **8.1.1.4** Transaction Immutability: Tombol cek hash transaksi untuk memastikan data sudah masuk *batch on-chain*.
+
 ## 8.2 Top Up Flow
 
 ### 8.2.1 Amount Selection
@@ -829,6 +839,11 @@
 
 # 14. SPECIAL SCREENS
 
+## 14.0 MANAGEMENT & FOUNDER HUB (The Sultan View)
+### 14.0.1 Global Revenue Stream
+- **14.0.1.1** Real-time Fee Tracker: Pantau jatah 3% dari transaksi harian.
+- **14.0.1.2** Founder Wallet: Tombol withdraw untuk jatah pengurus.
+
 ## 14.1 Contributor Zone (Developer)
 
 ### 14.1.1 Build in Public
@@ -843,13 +858,28 @@
 - **14.1.2.3** Vesting schedule
 - **14.1.2.4** Dividend history
 
-## 14.2 Cooperative Member (Future)
+## 14.2 KOPERASI HUB (The Ownership Experience)
+### 14.2.1 Dashboard Anggota
+- **14.2.1.1** Status Anggota & Porsi Karma Shares.
+- **14.2.1.2** Open Ledger: Transparansi kas kopi (Yield & Fee).
+- **14.2.1.3** Governance: Voting amandemen AD/ART.
 
-### 14.2.1 Koperasi Dashboard
-- **14.2.1.1** Membership status
-- **14.2.1.2** SHU info
-- **14.2.1.3** Voting proposals
-- **14.2.1.4** Annual reports
+### 14.2.2 Open Ledger (Transparansi Radikal)
+- **14.2.2.1** Real-time Treasury Clock: Counter duit yang masuk ke kas koperasi per detik
+- **14.2.2.2** Allocation Chart: Visualisasi kemana duit fee & yield pergi (Ops vs SHU vs Solidarity)
+- **14.2.2.3** Public Log: Daftar transaksi treasury (anonymized) yang bisa di-scroll siapa aja
+- **14.2.2.4** Solidarity Pool Balance: Total dana asuransi yang siap pake
+
+### 14.2.3 Governance & Voting (Satu Orang Satu Suara)
+- **14.2.3.1** Proposal Policy: List usulan perubahan sistem (misal: "Naikin tarif min di Depok")
+- **14.2.3.2** Voting Room: Interface buat submit suara (pake Karma-weighted voting)
+- **14.2.3.3** Forum Diskusi Kebijakan: Chat thread khusus per-proposal
+- **14.2.3.4** Election Center: Pemilihan pengurus wilayah secara periodik
+
+### 14.2.4 Solidarity & Social (Bela Beli Teman)
+- **14.2.4.1** List Klaim Bantuan: Daftar anggota yang butuh dana bantuan (sakit/kecelakaan)
+- **14.2.4.2** Verifikasi Komunitas: Tombol bagi anggota terdekat buat verifikasi kondisi teman
+- **14.2.4.3** "Beli Jasa Teman": Filter khusus buat prioritasin panggil worker yang lagi butuh bantuan dana
 
 ## 14.3 Verification Gates (Soft Prompts)
 

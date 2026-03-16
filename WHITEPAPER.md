@@ -92,11 +92,21 @@ Kami menolak keras sistem lelang buta yang membuat pekerja saling banting harga 
 
 Bagaimana *Founder*, Komunitas, dan Platform meraup keuntungan finansial jika komisi operasional adalah 0%? Ini adalah desain makroekonomi kita.
 
-### 5.1. Dual-Asset System
-1.  **IDR Balance (Utility):** Digunakan murni untuk bayaran jasa. Dipatok 1:1 dengan Rupiah. Bebas fluktuasi.
-2.  **Karma Shares (Non-Crypto Equity):** Poin internal yang merepresentasikan hak kepemilikan platform. Tidak dijual di ICO, melainkan "ditambang" melalui kontribusi nyata (menulis kode di GitHub, menjadi pengurus wilayah, dll).
+### 5.1. Evolusi Permodalan: Dari SMD ke $SIAP Token
+SiapAja.id menggunakan strategi *Hybrid Entity* untuk menjembatani regulasi domestik dan likuiditas global.
+*   **Phase 1: Sertifikat Modal Digital (SMD)**
+    - Status hukum: Bukti penyertaan modal anggota Koperasi Multi-Pihak yang sah secara digital.
+    - Fokus: Kepatuhan regulasi Indonesia (Kemenkop & OJK).
+*   **Phase 4: Global Tokenization ($SIAP)**
+    - Status hukum: Token tata kelola yang dirilis melalui *Offshore Foundation* untuk menarik modal global.
+    - Mekanisme: Pemegang SMD memiliki hak prioritas untuk konversi (swap) menjadi $SIAP Token saat infrastruktur *Dual-Entity* diaktifkan.
 
-### 5.2. Multi-Channel Revenue & Hyper-Local Ads
+### 5.2. Revenue Streams (The Management Carry)
+Platform bukan hanya infrastruktur, tapi mesin ekonomi bagi para *Founder* dan Anggota.
+*   **Customer-Side Admin Fee (3%):** Untuk transaksi <Rp500.000, biaya dibebankan 100% ke Customer. Worker menerima 100% utuh (Zero Commission Branding).
+*   **The Founder's Carry (30%):** Dari total *Fee Platform* yang terkumpul, 30% dialokasikan langsung sebagai royalti IP dan biaya manajemen bagi tim *Founder* (Pengurus Inti).
+
+### 5.3. Multi-Channel Revenue & Hyper-Local Ads
 Platform membiayai dirinya sendiri tanpa memeras pekerja harian melalui:
 
 1.  **Tiered Transaction Fee:** Transaksi di atas Rp500.000 dikenakan fee progresif (2.5% - 10%). Fee dibebankan secara adil (split 50:50) ke kedua belah pihak. Pekerja harian (mikro) tetap bebas potongan.
@@ -105,10 +115,11 @@ Platform membiayai dirinya sendiri tanpa memeras pekerja harian melalui:
 
 3.  **Identity-as-a-Service:** Biaya verifikasi Centang Biru sebagai filter trust. **PENTING:** Ini adalah *trust signal*, BUKAN garansi. Platform tidak bertanggung jawab atas kerugian finansial atau fisik.
 
-### 5.3. Manajemen Likuiditas (Auto-Yield)
-Dana IDR yang tersimpan di *Escrow* (menunggu pekerjaan selesai) menghasilkan *Float* (dana mengendap) dalam jumlah masif. 
-*   Melalui integrasi dengan *Decentralized Finance* (DeFi) atau SBN (Surat Berharga Negara), *Treasury* akan memutar dana menganggur ini di instrumen berisiko sangat rendah.
-*   Bunga (Yield) dari putaran uang ini dibagikan secara berkala sebagai **Dividen** kepada pekerja yang memiliki skor *Karma* tertinggi dan kepada *Developer* pemegang Karma Shares.
+### 5.4. Manajemen Likuiditas & Open Ledger (Transparansi Radikal)
+Dana IDR yang tersimpan di *Escrow* menghasilkan *Float* (dana mengendap) yang dikelola secara kolektif.
+*   **Auto-Yield Logic:** Dana diputar di instrumen berisiko rendah (SBN/Reksadana Pasar Uang). Hasilnya (Yield) 100% masuk ke kas Koperasi.
+*   **Open Ledger Policy:** Setiap Rupiah yang masuk ke kas (dari yield, fee makro, atau ads) bisa di-audit secara real-time oleh semua anggota via aplikasi. Tidak ada "biaya siluman".
+*   **Mekanisme SHU:** Sisa Hasil Usaha dibagikan secara otomatis via Virtual Ledger setiap akhir periode kepada anggota aktif (berdasarkan proporsi Karma dan partisipasi), bukan cuma buat pemilik modal.
 
 ---
 

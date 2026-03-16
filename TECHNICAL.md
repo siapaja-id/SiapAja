@@ -35,7 +35,7 @@ SiapAja.id menyelesaikan ini melalui:
 5. **Dual-role architecture** - satu user bisa switch antara customer dan worker
 
 ### 2.3 Core Value Proposition
-- **0% komisi** untuk transaksi di bawah Rp500.000
+- **3% fee** untuk transaksi di bawah Rp500.000 (100% dari customer, worker 0%)
 - **Tanpa izin OJK** - tidak menampung dana user
 - **Sub-millisecond latency** untuk state updates
 - **VPS $5/bulan** bisa handle 50.000+ concurrent users
@@ -800,10 +800,49 @@ CREATE TABLE jury_votes (
 CREATE TABLE karma_history (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id),
-    delta INTEGER NOT NULL, -- positive atau negative
+    delta INTEGER NOT NULL,
     reason karma_reason NOT NULL,
-    reference_type VARCHAR(50), -- 'job', 'dispute', 'jury'
+    reference_type VARCHAR(50),
     reference_id UUID,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Koperasi Open Ledger (Transparency Table)
+CREATE TABLE community_treasury_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    entry_type VARCHAR(50) NOT NULL, 
+    amount_idr BIGINT NOT NULL,
+    founder_cut_idr BIGINT NOT NULL, -- Jatah lu & tim inti
+    community_cut_idr BIGINT NOT NULL, -- Jatah kas koperasi
+    description TEXT,
+    balance_snapshot BIGINT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Founder/Management Wallet (Private Tracking)
+CREATE TABLE management_wallets (
+    user_id UUID PRIMARY KEY REFERENCES users(id),
+    total_earned_idr BIGINT DEFAULT 0,
+    withdrawable_balance_idr BIGINT DEFAULT 0,
+    tier_level VARCHAR(20) DEFAULT 'CORE_FOUNDER'
+);
+
+-- Future Web3 Settlement Table
+CREATE TABLE blockchain_settlement_batches (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    batch_merkle_root VARCHAR(64) NOT NULL,
+    solana_tx_id VARCHAR(128), -- Nullable sampai roadmap aktif
+    status VARCHAR(20) DEFAULT 'OFF_CHAIN_ONLY',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Solidarity Pool (Asuransi Komunitas)
+CREATE TABLE solidarity_claims (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id),
+    amount_requested INTEGER NOT NULL,
+    status VARCHAR(20) DEFAULT 'VOTING_PENDING', -- Juri vote buat acc bantuan
+    evidence_url TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ```
