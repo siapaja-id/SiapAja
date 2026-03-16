@@ -1,6 +1,6 @@
 # SCREEN-LIST.md
 ## SiapAja.id Platform Architecture
-### Version: 3.1
+### Version: 3.5
 ### Date: 2026-03-16
 ### Philosophy: Markdown-First + AI Extraction + Universal Actions
 
@@ -23,7 +23,7 @@
 | Unverified | Phone only, no KTP | Browse, Chat, Post Job (with limits) |
 | Verified | KTP + Bank verified | Claim Jobs, Withdraw, Jury Duty |
 | Active | Completed 1+ job | Full platform access |
-| Boosted | First 10 jobs | Karma display boost, "New Worker" badge |
+| Boosted | First 10 jobs | Pamor display boost, "New Jagoan" badge |
 
 ---
 
@@ -126,6 +126,7 @@
   - "Butuh Bantuan" (Post Job)
   - "Bisa Bantu" (Post Service Offer)
   - "Diskusi" (Community Post)
+  - "Pasang Iklan" (Iklan Warga - for local business)
 
 ### 2.1.4 Aktivitas (Activity)
 - **2.1.4.1** Notification inbox (all types)
@@ -141,7 +142,7 @@
 ### 2.2.1 Home Header
 - **2.2.1.1** Location pill (tap to change)
 - **2.2.1.2** Wallet quick-balance (tap for details)
-- **2.2.1.3** Karma score (tap for dashboard)
+- **2.2.1.3** Pamor score (tap for dashboard)
 
 ### 2.2.2 Universal Search Header
 - **2.2.2.1** Back button
@@ -154,12 +155,11 @@
 
 ## 3.1 Feed Architecture
 
-### 3.1.1 Feed Tabs
-- **3.1.1.1** Untukmu (For You - algorithmic mix)
-- **3.1.1.2** Butuh Bantuan (Jobs only - help wanted)
-- **3.1.1.3** Bisa Bantu (Services only - help offered)
-- **3.1.1.4** Dekat (Nearby - geo-sorted)
-- **3.1.1.5** Terbaru (Chronological)
+### 3.1.1 Feed Tabs (The Social-Utility Mix)
+- **3.1.1.1** Untukmu (Algorithmic: 60% Demand, 20% Flex/Portfolio, 20% Community Discussion)
+- **3.1.1.2** Cari Cuan (Jobs only - help wanted with active escrow)
+- **3.1.1.3** Pamer Skill (Flex/Showcase: Workers posting their completed work results)
+- **3.1.1.4** Info Warga (Hyper-local social: Discussion, news, and community warnings)
 
 ### 3.1.2 Feed Filters (Sticky Header)
 - **3.1.2.1** Category chips (multi-select)
@@ -178,10 +178,10 @@
   - Skill: "🛠️ Reparasi Genteng" (Extracted)
   - Location: "📍 2.5km - Depok" (Extracted)
 - **3.2.1.5** Description: Brief auto-summary for collapsed view
-- **3.2.1.6** Interaction Thread: Replies count + Upvotes + Karma Share link
+- **3.2.1.6** Interaction Thread: Replies count + Upvotes + Pamor Share link
 
 ### 3.2.2 Service Offer Card ("Bisa Bantu")
-- **3.2.2.1** Header: Worker avatar + verification + karma badge + online status
+- **3.2.2.1** Header: Jagoan avatar + verification + pamor badge + online status
 - **3.2.2.2** Title: "[Nama] bisa [Skill]"
 - **3.2.2.3** Skills tags (horizontal scroll)
 - **3.2.2.4** Portfolio thumbnail (3 photos)
@@ -197,8 +197,12 @@
 - **3.2.3.1** Author info
 - **3.2.3.2** Title + preview text
 - **3.2.3.3** Flair/Tag
-- **3.2.3.4** Vote count + comment count
-- **3.2.3.5** Actions: Upvote, Downvote, Comment, Share
+- **3.2.3.4** Vote count (Net Score) + comment count
+- **3.2.3.5** Actions: 
+    - Upvote (Haptic feedback)
+    - Downvote (Trigger "Reason Picker" modal: Spam/Scam/Etika/Lainnya)
+    - Comment
+    - Share
 
 ## 3.3 Feed States
 
@@ -218,6 +222,21 @@
 - **3.3.3.2** GPS weak (manual location fallback)
 - **3.3.3.3** Server error (status page link)
 
+## 3.4 Card Component: Iklan Lokal (Contextual Ad Card)
+
+### 3.4.1 Ad Card Structure
+- **3.4.1.1** Brand Header: Foto profil toko + Nama Usaha + Label "Promosi" (hijau tipis)
+- **3.4.1.2** Creative Canvas: Foto produk/jasa (1:1 atau 4:5 ratio)
+- **3.4.1.3** Headline: Judul singkat (misal: "Sedia Pasir Putih & Semen Gresik")
+- **3.4.1.4** Distance Tag: Otomatis muncul "📍 800m dari lo"
+- **3.4.1.5** CTA Button: Tombol "Chat via SiapAja" atau "Gasin ke Lokasi" (Google Maps)
+
+### 3.4.2 Contextual Targeting Logic
+- **3.4.2.1** Job-Based Targeting: Kalau Jagoan lagi liat job "Benerin Atap", iklan yang muncul adalah "Toko Genteng Terdekat"
+- **3.4.2.2** Service-Based Targeting: Kalau Tasker lagi cari "Cleaning Service", iklan yang muncul adalah "Layanan Laundry Sat-Set"
+- **3.4.2.3** Location-Based: Prioritas radius 1km > 2km > 5km
+- **3.4.2.4** Category Match: Ads diselaraskan dengan kategori skill/service yang lagi aktif di feed
+
 ---
 
 # 4. CREATE FLOWS (Universal - Anyone Can Create Anything)
@@ -234,6 +253,30 @@
 - **4.1.1.4** Media Attachment Bar: Simple paperclip icon for images/docs
 - **4.1.1.5** Escrow Preview Overlay: Shows locked amount once AI detects budget in text
 - **4.1.1.6** "Publish via Escrow" Button: Trigger payment & post in one tap
+
+## 4.2 Iklan Warga Creation Flow (Simple & Fast)
+
+### 4.2.1 Drafting Markdown
+- **4.2.1.1** Text input: Sama kayak post job, cukup tulis: *"Toko Berkah sedia kopi & gorengan buat Jagoan yang lagi nunggu job. Depan Alfamart Margonda."*
+- **4.2.1.2** Photo upload: Satu foto produk/jasa (1:1 atau 4:5 ratio)
+- **4.2.1.3** Business info: Nama usaha otomatis dari profil
+
+### 4.2.2 Radius Setting
+- **4.2.2.1** Radius selector: 1km, 2km, 5km
+- **4.2.2.2** Preview map: Visualisasi jangkauan iklan
+
+### 4.2.3 Budgeting
+- **4.2.3.1** Budget input: Masukin budget (misal: Rp10.000 buat 500 tayangan)
+- **4.2.3.2** CPM preview: Estimasi jumlah tayangan berdasarkan budget
+- **4.2.3.3** Duration indicator: Estimasi lama iklan aktif
+
+### 4.2.4 Payment
+- **4.2.4.1** Saldo Rupiah: Bayar pake Saldo Rupiah (Xendit)
+- **4.2.4.2** Escrow-like model: Budget dikunci dan diambil per tayangan
+
+### 4.2.5 Success Page
+- **4.2.5.1** "Mengudara" animation: Iklan langsung "mengudara" di feed warga sekitar
+- **4.2.5.2** Quick link ke Ads Manager
 
 ---
 
@@ -299,7 +342,7 @@
 - "Edit" (if no applicants yet)
 - "Batalkan Job" (with refund confirmation)
 
-**For Assigned Worker:**
+**For Assigned Jagoan:**
 - "Menuju Lokasi" (navigation)
 - "Update Progress" (photo + status)
 - "Selesai" (mark complete)
@@ -311,11 +354,11 @@
 
 ## 5.2 Service Detail Screen ("Bisa Bantu")
 
-### 5.2.1 Worker Profile Header
+### 5.2.1 Jagoan Profile Header
 - **5.2.1.1** Avatar + cover photo
 - **5.2.1.2** Name + verification + karma percentile ("Top 15%")
 - **5.2.1.3** Online status + last active
-- **5.2.1.4** "New Worker" badge (if <10 jobs)
+- **5.2.1.4** "New Jagoan" badge (if <10 jobs)
 
 ### 5.2.2 Service Details
 - **5.2.2.1** Skills list with experience level
@@ -357,7 +400,7 @@
 
 # 6. MATCHING & APPLICATION SCREENS
 
-## 6.1 Instant Match Discovery (Worker Grind Mode)
+## 6.1 Instant Match Discovery (Jagoan Grind Mode)
 
 ### 6.1.1 Fast-Match Card Stack (Tinder-style)
 - **6.1.1.1** Card Deck: Full-screen gesture-based stack of nearby job posts
@@ -376,22 +419,22 @@
 ## 6.2 Applicant Management (Poster Perspective)
 
 ### 6.2.1 Applicants List
-- **6.2.1.1** Header: "X Worker Melamar" + time remaining
-- **6.2.1.2** Sort options (Recommended/Jarak/Karma/Terbaru)
+- **6.2.1.1** Header: "X Jagoan Melamar" + time remaining
+- **6.2.1.2** Sort options (Recommended/Jarak/Pamor/Terbaru)
 - **6.2.1.3** Applicant cards:
   - Avatar + name + karma percentile
   - Distance + estimated arrival
   - Message preview
-  - "New Worker" badge (if applicable)
+  - "New Jagoan" badge (if applicable)
   - Win probability score (transparent algorithm)
   - "Pilih" button
 
 ### 6.2.2 Applicant Detail
 - **6.2.2.1** Full profile view
 - **6.2.2.2** Past work history
-- **6.2.2.3** Reviews as worker
+- **6.2.2.3** Reviews as Jagoan
 - **6.2.2.4** Chat history (if any)
-- **6.2.2.5** "Pilih Worker Ini" (primary)
+- **6.2.2.5** "Pilih Jagoan Ini" (primary)
 - **6.2.2.6** "Tolak" (secondary)
 
 ### 6.2.3 Auto-Match Info
@@ -403,29 +446,25 @@
 
 ### 6.3.1 Match Confirmation (The "Winner" State)
 - **6.3.1.1** Match Celebration: High-energy visual for "Job is Yours!"
-- **6.3.1.2** Thread Unlock: Customer's markdown post now shows full address & private notes
-- **6.3.1.3** Direct Action Bar: Instant "Gas ke Lokasi" (Maps) + Chat bubble
-- **6.3.1.4** Description: Transition from browsing mode to execution mode with all private data decrypted
-
-### 6.3.2 For Poster (After Selection)
-- **6.3.2.1** "Worker Dipilih" confirmation
-- **6.3.2.2** Worker profile card
-- **6.3.2.3** "Chat Worker" button
+- **6.3.1.2** Thread Unlock: Pembuat Job's markdown post now shows full address & private notes
+- **6.3.2.1** "Jagoan Dipilih" confirmation
+- **6.3.2.2** Jagoan profile card
+- **6.3.2.3** "Chat Jagoan" button
 - **6.3.2.4** Cancel window info ("Bisa cancel dalam 5 menit")
 
 ---
 
 # 7. JOB EXECUTION SCREENS
 
-## 7.1 Active Job Screen (Worker)
+## 7.1 Active Job Screen (Jagoan)
 
 ### 7.1.1 Job Progress Header
 - **7.1.1.1** Job status (Dalam Perjalanan/Sedang Dikerjakan)
-- **7.1.1.2** Customer info
+- **7.1.1.2** Pembuat Job info
 - **7.1.1.3** Chat button
 
 ### 7.1.2 Location Tracking
-- **7.1.2.1** Map with customer location
+- **7.1.2.1** Map with Pembuat Job location
 - **7.1.2.2** "Sampai" button (mark arrival)
 - **7.1.2.3** Navigation integration (Google Maps/Waze)
 
@@ -438,12 +477,12 @@
 - **7.1.4.1** "Selesai" button
 - **7.1.4.2** Final photo upload (before/after)
 - **7.1.4.3** Completion notes
-- **7.1.4.4** "Tunggu Konfirmasi Customer"
+- **7.1.4.4** "Tunggu Konfirmasi Pembuat Job"
 
-## 7.2 Active Job Screen (Customer)
+## 7.2 Active Job Screen (Pembuat Job)
 
-### 7.2.1 Worker Tracking
-- **7.2.1.1** Map with worker location (if en route)
+### 7.2.1 Jagoan Tracking
+- **7.2.1.1** Map with Jagoan location (if en route)
 - **7.2.1.2** ETA estimate
 - **7.2.1.3** Chat button
 
@@ -460,6 +499,8 @@
 ---
 
 # 8. WALLET & PAYMENT SCREENS
+
+> **📋 Source of Truth:** Untuk detail lengkap escrow integration, fee structure, dan payment flow, lihat [ECONOMICS.md](./docs/ECONOMICS.md)
 
 ## 8.1 Wallet Home
 
@@ -531,18 +572,37 @@
   - Status (success/pending/failed)
   - Timestamp
 
-### 8.4.2 Transaction Detail
+### 8.4.2 Transaction Detail (Audit Mode)
 - **8.4.2.1** Full details
 - **8.4.2.2** Reference numbers
 - **8.4.2.3** Related job link (if applicable)
 - **8.4.2.4** Download receipt
 - **8.4.2.5** Report issue
+- **8.4.2.6** **Immutable Receipt**: Menampilkan Hash SHA-256 transaksi (contoh: `0x7f83b1657ff1fc53b92dc18148a1d65dfa1350f`).
+- **8.4.2.7** **Verify Link**: Tombol buat verifikasi data ke Public Ledger Browser (transparansi radikal) - buka modal yang nampilin payload JSON + hash chain.
+
+### 8.4.3 Ledger Browser (Public Audit View)
+- **8.4.3.1** Search by hash: Input field buat cari transaksi berdasarkan hash.
+- **8.4.3.2** Filter by type: Toggle antara 'financial' dan 'pamor'.
+- **8.4.3.3** Chain visualization: Timeline entry dengan indikator hash validity (centang hijau kalau chain intact).
+- **8.4.3.4** Export data: Download JSON + Merkle proof untuk audit eksternal.
+
+---
+
+### 9.2.3 Pamor Audit Trail
+- **9.2.3.1** List kronologis mutasi Pamor (contoh: "+10 dari Job #123", "-5 dari downvote").
+- **9.2.3.2** Tiap baris punya indikator "Verified by Ledger" (Centang hijau kecil).
+- **9.2.3.3** Hash preview: Klik buat liat full hash entry di modal.
+- **9.2.3.4** Filter by source: Job completion, downvote, jury duty, decay.
+- **9.2.3.5** Export Pamor Ledger: Tombol download entire Pamor history sebagai JSON + hash chain (buat portabilitas reputasi).
 
 ---
 
 # 9. KARMA & REPUTATION SCREENS
 
-## 9.1 Karma Dashboard
+> **📋 Source of Truth:** Untuk detail lengkap sistem Pamor, voting power, decay rate, dan tier system, lihat [GOVERNANCE.md](./docs/GOVERNANCE.md)
+
+## 9.1 Pamor Dashboard
 
 ### 9.1.1 Score Display
 - **9.1.1.1** Current karma (large number)
@@ -555,23 +615,14 @@
 - **9.1.2.2** Tier benefits list
 - **9.1.2.3** Next tier requirements
 
-### 9.1.3 Karma Breakdown
+### 9.1.3 Pamor Breakdown
 - **9.1.3.1** Category scores (per skill)
-- **9.1.3.2** As customer score
-- **9.1.3.3** As worker score
-- **9.1.3.4** Community contribution score
+- **9.1.3.2** As Pembuat Job score
+- **9.1.3.3** As Jagoan score
 
-## 9.2 Karma History
+## 9.2 Pamor History
 
-### 9.2.1 Timeline
-- **9.2.1.1** Chronological list
-- **9.2.1.2** Positive events (green +)
-- **9.2.1.3** Negative events (red -)
-- **9.2.1.4** Decay events (grey, fading negative)
-
-### 9.2.2 Event Detail
-- **9.2.2.1** What happened
-- **9.2.2.2** Karma change
+- **9.2.2.2** Pamor change
 - **9.2.2.3** Related job/user (if applicable)
 - **9.2.2.4** Appeal option (if disputed)
 
@@ -581,21 +632,23 @@
 - **9.3.1.1** List of applied jobs
 - **9.3.1.2** Win/loss status
 - **9.3.1.3** Reason for loss (transparent)
-  - "Karma 15% lebih rendah dari pemenang"
+  - "Pamor 15% lebih rendah dari pemenang"
   - "Jarak 2km lebih jauh"
   - "Pesan kurang detail"
-  - "Customer memilih manual"
+  - "Pembuat Job memilih manual"
 - **9.3.1.4** Tips for improvement
 
 ---
 
 # 10. DISPUTE & JUSTICE SCREENS
 
+> **📋 Source of Truth:** Untuk detail lengkap dispute resolution, jury selection, dan voting mechanism, lihat [GOVERNANCE.md](./docs/GOVERNANCE.md)
+
 ## 10.1 Dispute Initiation
 
 ### 10.1.1 Dispute Form
 - **10.1.1.1** Job reference (auto-filled)
-- **10.1.1.2** Your role (Poster/Worker - auto)
+- **10.1.1.2** Your role (Poster/Jagoan - auto)
 - **10.1.1.3** Reason selection:
   - Pekerjaan tidak selesai
   - Kualitas tidak sesuai
@@ -623,7 +676,7 @@
 ### 10.2.2 Evidence Review
 - **10.2.2.1** Case summary
 - **10.2.2.2** Poster evidence
-- **10.2.2.3** Worker evidence
+- **10.2.2.3** Jagoan evidence
 - **10.2.2.4** Job details (anonymized location)
 - **10.2.2.5** Chat history (filtered)
 
@@ -666,13 +719,13 @@
 - **11.1.1.1** Semua (All)
 - **11.1.1.2** Pekerjaan (Job-related)
 - **11.1.1.3** Keuangan (Payment)
-- **11.1.1.4** Komunitas (Jury, Karma, Reviews)
+- **11.1.1.4** Komunitas (Jury, Pamor, Reviews)
 - **11.1.1.5** Sistem (Updates, Maintenance)
 
 ### 11.1.2 Notification Types
 - **11.1.2.1** Job alerts (new job in radius, applied, selected, completed)
 - **11.1.2.2** Payment alerts (received, withdrawal, escrow released)
-- **11.1.2.3** Karma alerts (gained, decay, tier up)
+- **11.1.2.3** Pamor alerts (gained, decay, tier up)
 - **11.1.2.4** Jury summons
 - **11.1.2.5** Review received
 - **11.1.2.6** Chat messages
@@ -725,13 +778,13 @@
 - **12.1.1.1** Cover photo
 - **12.1.1.2** Avatar (large)
 - **12.1.1.3** Name + verification badge
-- **12.1.1.4** Karma tier badge
-- **12.1.1.5** "New Worker" badge (if <10 jobs)
+- **12.1.1.4** Pamor tier badge
+- **12.1.1.5** "New Jagoan" badge (if <10 jobs)
 
 ### 12.1.2 Stats Row
 - **12.1.2.1** Jobs posted (as customer)
 - **12.1.2.2** Jobs completed (as worker)
-- **12.1.2.3** Karma score
+- **12.1.2.3** Pamor score
 - **12.1.2.4** Member since
 
 ### 12.1.3 Content Tabs (Reddit-style)
@@ -852,7 +905,7 @@
 - **14.1.1.3** Contributor leaderboard
 - **14.1.1.4** Bounty board
 
-### 14.1.2 Karma Equity
+### 14.1.2 Pamor Equity
 - **14.1.2.1** Contribution stats (commits, PRs, issues)
 - **14.1.2.2** Equity points balance
 - **14.1.2.3** Vesting schedule
@@ -860,7 +913,7 @@
 
 ## 14.2 KOPERASI HUB (The Ownership Experience)
 ### 14.2.1 Dashboard Anggota
-- **14.2.1.1** Status Anggota & Porsi Karma Shares.
+- **14.2.1.1** Status Anggota & Porsi Pamor Shares.
 - **14.2.1.2** Open Ledger: Transparansi kas kopi (Yield & Fee).
 - **14.2.1.3** Governance: Voting amandemen AD/ART.
 
@@ -872,7 +925,7 @@
 
 ### 14.2.3 Governance & Voting (Satu Orang Satu Suara)
 - **14.2.3.1** Proposal Policy: List usulan perubahan sistem (misal: "Naikin tarif min di Depok")
-- **14.2.3.2** Voting Room: Interface buat submit suara (pake Karma-weighted voting)
+- **14.2.3.2** Voting Room: Interface buat submit suara (pake Pamor-weighted voting)
 - **14.2.3.3** Forum Diskusi Kebijakan: Chat thread khusus per-proposal
 - **14.2.3.4** Election Center: Pemilihan pengurus wilayah secara periodik
 
@@ -888,6 +941,24 @@
 - **14.3.1.2** Benefits list with icons
 - **14.3.1.3** Quick actions (Upload KTP, Add Bank)
 - **14.3.1.4** "Nanti" (dismissible)
+
+## 14.5 Ads Manager (Dashboard Toko)
+
+### 14.5.1 Active Ads
+- **14.5.1.1** Daftar iklan yang lagi jalan
+- **14.5.1.2** Status (Aktif/Expired/Paused)
+- **14.5.1.3** Quick actions (Pause/Edit/Delete)
+
+### 14.5.2 Real-time Stats
+- **14.5.2.1** Pamor Reach: Berapa banyak warga yang liat
+- **14.5.2.2** Engagement: Berapa banyak yang klik atau nanya via chat
+- **14.5.2.3** Cost per engagement: Efisiensi biaya iklan
+- **14.5.2.4** Time remaining: Sisa waktu iklan aktif
+
+### 14.5.3 Top-up Budget
+- **14.5.3.1** Tambah saldo buat perpanjang durasi iklan
+- **14.5.3.2** Quick amounts (50k/100k/200k)
+- **14.5.3.3** Payment method selection
 
 ---
 
@@ -995,7 +1066,7 @@ Category → Details → Photos → Location → Budget →
 Review → Fund Escrow → Success → Job Live
 ```
 
-## 17.2 Critical Path: First Job Claim (New Worker)
+## 17.2 Critical Path: First Job Claim (New Jagoan)
 ```
 Splash → Onboarding → Home → Feed → Job Card → 
 "Saya Bisa" → Verification Prompt → Upload KTP → 
@@ -1058,10 +1129,13 @@ Jury Review → Voting → Result → Fund Release
 | 3.0 | 2026-03-15 | Final: Fast-bid matching, anti-senior bias, transparency features |
 | 3.1 | 2026-03-16 | Markdown-first paradigm: AI extraction, Universal Post Card, ChatGPT-style composer |
 | 3.2 | 2026-03-16 | Swipe-engine matching: Tinder-style card stack for worker discovery |
+| 3.3 | 2026-03-16 | Downvote accountability: Reason Picker modal, Net Score display |
+| 3.4 | 2026-03-16 | Immutable Ledger UI: Transaction hash display, Ledger Browser, Pamor Audit Trail with verification |
+| 3.5 | 2026-03-16 | Hyper-Local Ads: Iklan Warga (Contextual Ad Card, Creation Flow, Ads Manager Dashboard) |
 
 ---
 
-**Document Status**: 3.1 - Markdown-First Paradigm
-**Next Review**: Pre-MVP Launch  
+**Document Status**: 3.5 - Hyper-Local Ads Integration
+**Next Review**: Pre-MVP Launch
 **Owner**: Product & Design Team
 ```

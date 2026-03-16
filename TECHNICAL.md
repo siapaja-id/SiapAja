@@ -541,7 +541,7 @@ ios/                                # iOS native config
 ### 5.1 C4 Model: Context Diagram
 
 **External Actors:**
-- **Customer/Worker:** User yang bisa switch role (dual-role)
+- **Pembuat Job/Jagoan:** User yang bisa switch role (dual-role)
 - **Xendit:** Payment gateway + Escrow provider (menampung dana)
 - **OpenRouter:** AI/LLM API provider untuk price estimation
 - **GitHub:** Webhook provider untuk Build in Public
@@ -594,29 +594,29 @@ ios/                                # iOS native config
 **Solution v2.0:** Xendit Escrow API menampung dana.
 
 **Flow Create Job:**
-1. Customer create job dengan budget Rp150.000
+1. Pembuat Job create job dengan budget Rp150.000
 2. Backend call Xendit Escrow API: `create_escrow(amount: 150000, customer_id, job_id)`
 3. Xendit return escrow_id dan payment link/virtual account
-4. Customer bayar ke Xendit (VA/e-wallet/QRIS)
+4. Pembuat Job bayar ke Xendit (VA/e-wallet/QRIS)
 5. Xendit webhook ke backend: payment received, escrow locked
 6. Backend update job status: "ESCROW_LOCKED" dan broadcast ke feed
 
 **Flow Complete Job:**
-1. Worker tap "Selesai"
-2. Customer tap "Konfirmasi"
-3. Backend call Xendit: `release_escrow(escrow_id, worker_id, amount: 148500)`
-4. Xendit transfer ke rekening worker (minus 1% solidarity pool ke rekening koperasi)
+1. Jagoan tap "Selesai"
+2. Pembuat Job tap "Konfirmasi"
+3. Backend call Xendit: `release_escrow(escrow_id, taskee_id, amount: 148500)`
+4. Xendit transfer ke rekening Jagoan (minus 1% solidarity pool ke rekening koperasi)
 5. Xendit webhook: release completed
 6. Backend update job: "COMPLETED"
 
 **Flow Dispute:**
-1. Customer tap "Dispute" dalam 24 jam
+1. Pembuat Job tap "Dispute" dalam 24 jam
 2. Backend call Xendit: `freeze_escrow(escrow_id)`
 3. Xendit hold dana (tidak bisa di-release)
 4. Jury voting (7 jurors)
 5. Setelah voting selesai:
-   - Jika customer menang: Xendit `refund_escrow(ke customer)`
-   - Jika worker menang: Xendit `release_escrow(ke worker)`
+   - Jika Pembuat Job menang: Xendit `refund_escrow(ke Pembuat Job)`
+   - Jika Jagoan menang: Xendit `release_escrow(ke Jagoan)`
 
 **Keuntungan:**
 - SiapAja tidak pernah menampung dana user
@@ -629,7 +629,7 @@ ios/                                # iOS native config
 **Problem:** Tiap user harus lihat feed yang berbeda berdasarkan:
 - Lokasi GPS (radius 5km default)
 - Preferensi kategori (history job yang pernah di-claim)
-- Karma score (job premium untuk karma tinggi)
+- Pamor score (job premium untuk pamor tinggi)
 - Availability (worker hanya lihat job saat online dan available)
 
 **Solution:**
@@ -643,7 +643,7 @@ ios/                                # iOS native config
 3. **Personalization Layer:** Application service tambah ranking berdasarkan:
    - Category match dengan history user
    - Price preference (user suka job berapa harga)
-   - Karma compatibility (job premium untuk karma tinggi)
+   - Pamor compatibility (job premium untuk pamor tinggi)
 4. **Client-side Cache:** React cache dengan React Query/SWR
 
 **Feed Algorithm (simplified):**
@@ -661,7 +661,7 @@ Sort by score descending, limit 50
 - Push notification untuk high-match jobs (Firebase Cloud Messaging)
 - Background refresh setiap 30 detik
 
-### 5.5 Dual-Role Support (Customer = Worker)
+### 5.5 Dual-Role Support (Pembuat Job = Jagoan)
 
 **Database Schema:**
 - Table `users` tidak punya role fixed
@@ -676,10 +676,9 @@ Sort by score descending, limit 50
   - `claim_job`: cek `can_work_as_worker` dan `karma >= threshold`
 
 **UI Pattern:**
-- Toggle switch di header: "Mode Customer" / "Mode Worker"
-- Feed berubah berdasarkan mode:
-  - Customer mode: lihat "My Posted Jobs" + "Nearby Workers"
-  - Worker mode: lihat "Available Jobs" + "My Active Jobs"
+- Toggle switch di header: "Mode Pembuat Job" / "Mode Jagoan"
+  - Pembuat Job mode: lihat "My Posted Jobs" + "Nearby Jagoans"
+  - Jagoan mode: lihat "Available Jobs" + "My Active Jobs"
 
 ---
 
@@ -747,7 +746,27 @@ CREATE TABLE escrow_refs (
     xendit_payload JSONB -- raw response dari Xendit untuk audit
 );
 
--- Transactions (financial records, immutable)
+-- Immutable Ledger (Merkle-Chained)
+CREATE TABLE ledger_entries (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    previous_hash VARCHAR(64), -- Link ke entry sebelumnya (NULL untuk genesis)
+    entry_hash VARCHAR(64) NOT NULL, -- SHA-256(data + previous_hash)
+    payload JSONB NOT NULL, -- Detail mutasi (uang atau pamor)
+    entry_type VARCHAR(32) NOT NULL, -- 'financial' | 'pamor'
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    created_by UUID, -- User yang trigger event (nullable untuk system events)
+    CONSTRAINT valid_hash_chain CHECK (
+        (previous_hash IS NULL) OR 
+        (previous_hash ~ '^[a-f0-9]{64}$')
+    )
+);
+
+-- Index untuk audit trail queries
+CREATE INDEX idx_ledger_entries_type ON ledger_entries(entry_type);
+CREATE INDEX idx_ledger_entries_created_at ON ledger_entries(created_at DESC);
+CREATE INDEX idx_ledger_entries_created_by ON ledger_entries(created_by);
+
+-- Transactions (financial records, deprecated - use ledger_entries instead)
 CREATE TABLE transactions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id),
@@ -796,7 +815,7 @@ CREATE TABLE jury_votes (
     UNIQUE(dispute_id, juror_id)
 );
 
--- Karma History
+-- Pamor History
 CREATE TABLE karma_history (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id),
@@ -847,7 +866,311 @@ CREATE TABLE solidarity_claims (
 );
 ```
 
-### 6.2 SpacetimeDB Schema (Real-time State)
+### 6.10 Immutable Ledger Implementation
+
+### 6.10.1 Hash Chain Architecture
+
+Ledger entries menggunakan **Merkle Log** technique (mirip Git atau Certificate Transparency) untuk memastikan integritas data tanpa perlu full blockchain yang lambat.
+
+**Prinsip Dasar:**
+```
+Entry 0 (Genesis): hash₀ = SHA-256(payload₀)
+Entry 1: hash₁ = SHA-256(payload₁ + hash₀)
+Entry 2: hash₂ = SHA-256(payload₂ + hash₁)
+...
+Entry N: hashₙ = SHA-256(payloadₙ + hashₙ₋₁)
+```
+
+**Properties:**
+- **Append-Only**: Tidak ada UPDATE atau DELETE. Semua mutasi adalah INSERT baru.
+- **Cryptographic Link**: Setiap entry terikat dengan entry sebelumnya melalui hash.
+- **Tamper-Evident**: Mengubah 1 entry akan memutus rantai hash semua entry setelahnya.
+- **Efficient Audit**: Verifikasi integritas cukup O(log n) dengan Merkle proof.
+
+### 6.10.2 Rust Implementation (sa-infrastructure)
+
+**Module:** `crates/sa-infrastructure/src/persistence/postgres/ledger_repository.rs`
+
+**Struktur Data:**
+```rust
+pub struct LedgerEntry {
+    pub id: Uuid,
+    pub previous_hash: Option<String>, // None untuk genesis
+    pub entry_hash: String, // SHA-256 hex
+    pub payload: LedgerPayload,
+    pub entry_type: LedgerEntryType,
+    pub created_at: chrono::DateTime<Utc>,
+    pub created_by: Option<Uuid>,
+}
+
+pub enum LedgerEntryType {
+    Financial, // Mutasi Rupiah
+    Pamor,     // Mutasi reputasi
+}
+
+pub struct LedgerPayload {
+    // Untuk financial
+    pub amount_idr: i64,
+    pub balance_before: i64,
+    pub balance_after: i64,
+    pub reference_id: Uuid, // job_id, escrow_id, dll
+    pub description: String,
+    
+    // Untuk pamor
+    pub pamor_delta: i32,
+    pub pamor_before: i32,
+    pub pamor_after: i32,
+    pub reason: String,
+}
+```
+
+**Repository Interface:**
+```rust
+pub trait LedgerRepository: Send + Sync {
+    /// Append entry ke ledger dengan hash chain validation
+    async fn append(&self, payload: LedgerPayload, entry_type: LedgerEntryType, created_by: Option<Uuid>) -> Result<LedgerEntry, LedgerError>;
+    
+    /// Verifikasi integritas chain dari entry tertentu ke belakang
+    async fn verify_chain_from(&self, entry_id: Uuid) -> Result<bool, LedgerError>;
+    
+    /// Ambil entry berdasarkan hash (untuk audit publik)
+    async fn find_by_hash(&self, hash: &str) -> Result<Option<LedgerEntry>, LedgerError>;
+    
+    /// Export ledger entries dengan Merkle proof (untuk eksternal audit)
+    async fn export_with_proof(&self, from: chrono::DateTime<Utc>, to: chrono::DateTime<Utc>) -> Result<LedgerExport, LedgerError>;
+}
+```
+
+**Hash Calculation Logic:**
+```rust
+impl LedgerRepository {
+    fn calculate_entry_hash(previous_hash: Option<&str>, payload: &LedgerPayload) -> String {
+        let mut hasher = Sha256::new();
+        
+        // Hash previous entry (jika ada)
+        if let Some(prev) = previous_hash {
+            hasher.update(prev.as_bytes());
+        }
+        
+        // Hash payload dengan canonical JSON serialization
+        let payload_json = serde_json::to_string(payload)
+            .expect("Payload must be serializable");
+        hasher.update(payload_json.as_bytes());
+        
+        let result = hasher.finalize();
+        hex::encode(result) // Return 64-char hex string
+    }
+    
+    async fn get_latest_hash(&self) -> Result<Option<String>, LedgerError> {
+        // Query: SELECT entry_hash FROM ledger_entries ORDER BY created_at DESC LIMIT 1
+        // Return hash dari entry terakhir untuk jadi previous_hash entry baru
+    }
+}
+```
+
+**Transaction Integration (Saga Pattern):**
+```rust
+// Di sa-application/src/services/payment_service.rs
+pub async fn release_escrow_payment(
+    &self,
+    escrow_id: Uuid,
+    taskee_id: Uuid,
+    amount: i64,
+) -> Result<(), PaymentError> {
+    // 1. Call Xendit API untuk release escrow
+    let xendit_result = self.xendit_client.release_escrow(escrow_id).await?;
+    
+    // 2. Mulai database transaction (SQLx)
+    let mut tx = self.db.begin().await?;
+    
+    // 3. Get latest hash dari ledger
+    let latest_hash = self.ledger_repo.get_latest_hash().await?;
+    
+    // 4. Append financial entry ke ledger
+    let payload = LedgerPayload {
+        amount_idr: amount,
+        balance_before: current_balance,
+        balance_after: current_balance + amount,
+        reference_id: escrow_id,
+        description: format!("Escrow release for job {}", escrow_id),
+        pamor_delta: 0,
+        pamor_before: 0,
+        pamor_after: 0,
+        reason: String::new(),
+    };
+    
+    let entry = self.ledger_repo.append_with_tx(&mut tx, payload, LedgerEntryType::Financial, Some(taskee_id)).await?;
+    
+    // 5. Update user balance (harus konsisten dengan ledger)
+    self.user_repo.update_balance_with_tx(&mut tx, taskee_id, amount).await?;
+    
+    // 6. Commit transaction
+    tx.commit().await?;
+    
+    // 7. Return hash untuk UI display
+    Ok(entry.entry_hash)
+}
+```
+
+### 6.10.3 Pamor Ledger Integration
+
+**Module:** `crates/sa-application/src/services/karma_engine.rs`
+
+```rust
+pub async fn award_pamor(
+    &self,
+    user_id: Uuid,
+    delta: i32,
+    reason: PamorReason,
+    reference_id: Uuid,
+) -> Result<(), KarmaError> {
+    // 1. Get current pamor score
+    let current_pamor = self.user_repo.get_pamor(user_id).await?;
+    let new_pamor = current_pamor.saturating_add(delta);
+    
+    // 2. Append to immutable ledger
+    let payload = LedgerPayload {
+        amount_idr: 0,
+        balance_before: 0,
+        balance_after: 0,
+        reference_id,
+        description: format!("Pamor {} from {}", delta, reason),
+        pamor_delta: delta,
+        pamor_before: current_pamor,
+        pamor_after: new_pamor,
+        reason: reason.to_string(),
+    };
+    
+    let entry = self.ledger_repo.append(payload, LedgerEntryType::Pamor, Some(user_id)).await?;
+    
+    // 3. Update user pamor (read-only di repo, update via reducer)
+    self.user_repo.update_pamor(user_id, new_pamor).await?;
+    
+    // 4. Log hash untuk audit trail
+    tracing::info!(
+        user_id = %user_id,
+        pamor_delta = delta,
+        entry_hash = %entry.entry_hash,
+        "Pamor updated with immutable ledger entry"
+    );
+    
+    Ok(())
+}
+```
+
+### 6.10.4 Audit & Verification API
+
+**Endpoint:** `GET /api/v1/ledger/verify/{hash}`
+
+```rust
+// Di crates/sa-api/src/routes/ledger.rs
+pub async fn verify_entry(
+    Path(hash): Path<String>,
+    State(state): State<AppState>,
+) -> Result<Json<LedgerVerificationResponse>, ApiError> {
+    // 1. Find entry by hash
+    let entry = state.ledger_repo.find_by_hash(&hash).await?
+        .ok_or(ApiError::NotFound)?;
+    
+    // 2. Verify chain integrity dari entry ini ke genesis
+    let is_valid = state.ledger_repo.verify_chain_from(entry.id).await?;
+    
+    // 3. Build response dengan Merkle proof
+    let proof = state.ledger_repo.build_merkle_proof(entry.id).await?;
+    
+    Ok(Json(LedgerVerificationResponse {
+        entry,
+        chain_valid: is_valid,
+        merkle_proof: proof,
+        verified_at: Utc::now(),
+    }))
+}
+```
+
+**Response Example:**
+```json
+{
+  "entry": {
+    "id": "uuid",
+    "previous_hash": "0xabc...",
+    "entry_hash": "0x7f83b1657ff1fc53b92dc18148a1d65dfa1350f...",
+    "payload": {
+      "amount_idr": 148500,
+      "balance_before": 0,
+      "balance_after": 148500,
+      "reference_id": "job-uuid",
+      "description": "Escrow release for job #123"
+    },
+    "entry_type": "financial",
+    "created_at": "2026-03-16T10:30:00Z"
+  },
+  "chain_valid": true,
+  "merkle_proof": {
+    "leaf_hash": "0x7f83...",
+    "root_hash": "0xabc...",
+    "proof_path": ["0x123...", "0x456..."]
+  },
+  "verified_at": "2026-03-16T12:00:00Z"
+}
+```
+
+### 6.10.5 Performance Optimization
+
+**Problem:** Hash chain calculation bisa jadi bottleneck kalau setiap insert harus query entry terakhir.
+
+**Solution:**
+1. **In-Memory Latest Hash Cache**: Simpan latest hash di SpacetimeDB singleton state.
+2. **Batch Inserts**: Untuk operasi bulk (misal: monthly karma decay), gunakan batch insert dengan pre-calculated hashes.
+3. **Snapshot Checkpoints**: Setiap 10,000 entries, buat snapshot dengan Merkle root untuk faster verification.
+
+**SpacetimeDB Integration:**
+```rust
+// Di crates/sa-spacetimedb/src/tables/ledger_state.rs
+#[table]
+pub struct LedgerState {
+    #[primarykey]
+    pub id: u64, // Always 1 (singleton)
+    pub latest_hash: String,
+    pub latest_entry_id: Uuid,
+    pub entry_count: u64,
+    pub last_checkpoint_merkle_root: Option<String>,
+    pub last_checkpoint_at: Timestamp,
+}
+
+#[reducer]
+pub fn update_latest_hash(ctx: &ReducerContext, new_hash: String, entry_id: Uuid) {
+    // Update singleton state
+    let mut state = ctx.db.singleton_ledger_state();
+    state.latest_hash = new_hash;
+    state.latest_entry_id = entry_id;
+    state.entry_count += 1;
+}
+```
+
+### 6.10.6 Migration Strategy
+
+**Phase 1 (Current):** Hash chain di PostgreSQL (`ledger_entries` table)
+- Cepat, efficient, cukup untuk audit internal
+- Hash calculation di Rust backend
+
+**Phase 4 (Roadmap):** Blockchain Settlement
+- Periodic batch export ke Solana (setiap 24 jam atau setiap 1000 entries)
+- Merkle root di-commit ke Solana transaction
+- Jagoan bisa verify data mereka on-chain
+
+**Future-Proof Design:**
+```rust
+// Table sudah siap untuk blockchain integration
+CREATE TABLE blockchain_settlement_batches (
+    id UUID PRIMARY KEY,
+    batch_merkle_root VARCHAR(64) NOT NULL,
+    solana_tx_id VARCHAR(128), -- Nullable sampai Phase 4
+    status VARCHAR(20) DEFAULT 'OFF_CHAIN_ONLY',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+### 6.11 SpacetimeDB Schema (Real-time State)
 
 ```rust
 // Active Jobs (real-time feed)
@@ -1007,7 +1330,7 @@ pub struct FeedPersonalization {
 **Limits:**
 - Anonymous: 10 req/minute
 - Authenticated: 60 req/minute
-- High Karma: 300 req/minute
+- High Pamor: 300 req/minute
 - Blue Check: 600 req/minute
 
 **Specific Endpoints:**
@@ -1018,6 +1341,8 @@ pub struct FeedPersonalization {
 ---
 
 ## 8. AI Integration (OpenRouter)
+
+> **📋 Source of Truth:** Untuk detail lengkap AI pipeline, LLM models, prompt templates, dan JSON schemas, lihat [AI-SPECS.md](./docs/AI-SPECS.md)
 
 ### 8.1 OpenRouter Architecture
 
@@ -1183,7 +1508,7 @@ pub struct FeedPersonalization {
 | **OpenAPI/Swagger** | API specification untuk REST endpoints (Axum → Flutter). Bukan untuk SpacetimeDB. |
 | **Dual-Role** | User bisa switch antara customer dan worker dalam satu akun. |
 | **Personalized Feed** | Feed job yang berbeda untuk setiap user berdasarkan preferensi. |
-| **Karma** | Reputation score user. |
+| **Pamor** | Reputation score user. |
 | **Price Floor** | Harga minimum yang ditentukan AI. |
 | **Squad Formation** | Job yang butuh multiple workers. |
 | **Clean Architecture** | Onion/Hexagonal architecture dengan domain di center. |
@@ -1218,13 +1543,14 @@ pub struct FeedPersonalization {
 
 **Document Control:**
 - **Author:** Core Technical Team
-- **Version:** 2.0
-- **Date:** 2026-03-15
-- **Next Review:** 2026-06-15
+- **Version:** 2.1
+- **Date:** 2026-03-16
+- **Next Review:** 2026-06-16
 
 **Changelog:**
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.1 | 2026-03-16 | Added Immutable Ledger implementation with Merkle-chained hash chain, audit API, and SpacetimeDB integration |
 | 2.0 | 2026-03-15 | Third-party escrow, OpenRouter AI, personalized feed, dual-role, workspace structure |
 | 1.0 | 2026-03-01 | Initial specification |
 

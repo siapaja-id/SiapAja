@@ -40,8 +40,10 @@ Jika fungsi utama platform adalah memastikan keamanan uang, maka fungsi tersebut
 *   Tidak ada admin keuangan yang perlu menggaji dirinya sendiri dari proses persetujuan ini.
 
 ### 2.2. Pembalikan Model UX: "Demand-Driven Feed"
-SiapAja.id membuang konsep "Katalog Jasa" (di mana pekerja memajang profil dan menunggu dipanggil). Kami menggunakan model **Timeline Kebutuhan Real-time**.
-*   *Customer* yang butuh bantuan memposting masalahnya beserta harga bayaran.
+SiapAja.id membuang konsep "Katalog Jasa" (di mana pekerja memajang profil dan menunggu dipanggil). Kami menggunakan model **Hybrid Demand-Social Feed**.
+* **Core Transaction:** Postingan kebutuhan bantuan yang di-lock dengan escrow.
+* **Social Proof:** Mekanisme "Flex-to-Earn" di mana Jagoan memposting hasil kerja untuk menaikkan Pamor dan Trust.
+* **Community Intelligence:** Diskusi lokal non-finansial yang menjaga retensi user (DAU/MAU) tanpa harus membakar duit iklan.
 *   **Syarat:** Dana harus di-lock (Pay-to-Post) di awal. Feed terbebas dari *spam* dan order fiktif.
 *   Pekerja di radius terdekat tinggal melakukan *claim* (ambil job) secara *first-come-first-serve* atau *bidding* wajar.
 
@@ -79,16 +81,20 @@ Kami menggunakan SpacetimeDB untuk menghapus latency antara worker dan customer.
 
 ## BAB 4: Kecerdasan Buatan sebagai Pelindung Keselamatan (K3)
 
+> **📋 Source of Truth:** Untuk detail lengkap AI pipeline, LLM models, dan JSON schemas, lihat [AI-SPECS.md](./docs/AI-SPECS.md)
+
 Kami menolak keras sistem lelang buta yang membuat pekerja saling banting harga hingga upah tidak manusiawi. Di sinilah **AI Man-Power Estimator** bekerja melalui **OpenRouter API** (Claude 3 Haiku, GPT-3.5) - text-only LLM untuk ekstraksi data terstruktur dari teks tidak terstruktur.
 
 1.  **Text-to-Structured Extraction:** Saat *customer* memposting "Bantu angkut lemari 3 pintu ke lantai 4", LLM mengekstrak: budget, lokasi, estimasi difficulty.
 2.  **Risk & Effort Calculation:** AI menghitung estimasi kalori, risiko cedera, dan harga pasar di wilayah tersebut berdasarkan teks saja.
-3.  **Price Floor Enforcement:** AI akan mengunci **Harga Bawah**. *Customer* tidak bisa memposting tawaran di bawah harga minimum yang layak.
-4.  **Squad Formation:** Jika beban melampaui kapasitas 1 manusia (>50kg) berdasarkan teks deskripsi, AI secara otomatis memecah job menjadi *Multi-Worker Job* (misal: butuh 3 orang).
+3.  **Price Floor Enforcement:** AI akan mengunci **Harga Bawah**. *Pembuat Job* tidak bisa memposting tawaran di bawah harga minimum yang layak.
+4.  **Squad Formation:** Jika beban melampaui kapasitas 1 manusia (>50kg) berdasarkan teks deskripsi, AI secara otomatis memecah job menjadi *Multi-Jagoan Job* (misal: butuh 3 orang).
 
 ---
 
 ## BAB 5: Model Ekonomi & Ekosistem Finansial
+
+> **📋 Source of Truth:** Untuk detail lengkap fee structure, revenue streams, dan tokenomics, lihat [ECONOMICS.md](./docs/ECONOMICS.md)
 
 Bagaimana *Founder*, Komunitas, dan Platform meraup keuntungan finansial jika komisi operasional adalah 0%? Ini adalah desain makroekonomi kita.
 
@@ -103,7 +109,7 @@ SiapAja.id menggunakan strategi *Hybrid Entity* untuk menjembatani regulasi dome
 
 ### 5.2. Revenue Streams (The Management Carry)
 Platform bukan hanya infrastruktur, tapi mesin ekonomi bagi para *Founder* dan Anggota.
-*   **Customer-Side Admin Fee (3%):** Untuk transaksi <Rp500.000, biaya dibebankan 100% ke Customer. Worker menerima 100% utuh (Zero Commission Branding).
+*   **Pembuat Job-Side Admin Fee (3%):** Untuk transaksi <Rp500.000, biaya dibebankan 100% ke Pembuat Job. Jagoan menerima 100% utuh (Zero Commission Branding).
 *   **The Founder's Carry (30%):** Dari total *Fee Platform* yang terkumpul, 30% dialokasikan langsung sebagai royalti IP dan biaya manajemen bagi tim *Founder* (Pengurus Inti).
 
 ### 5.3. Multi-Channel Revenue & Hyper-Local Ads
@@ -119,29 +125,34 @@ Platform membiayai dirinya sendiri tanpa memeras pekerja harian melalui:
 Dana IDR yang tersimpan di *Escrow* menghasilkan *Float* (dana mengendap) yang dikelola secara kolektif.
 *   **Auto-Yield Logic:** Dana diputar di instrumen berisiko rendah (SBN/Reksadana Pasar Uang). Hasilnya (Yield) 100% masuk ke kas Koperasi.
 *   **Open Ledger Policy:** Setiap Rupiah yang masuk ke kas (dari yield, fee makro, atau ads) bisa di-audit secara real-time oleh semua anggota via aplikasi. Tidak ada "biaya siluman".
-*   **Mekanisme SHU:** Sisa Hasil Usaha dibagikan secara otomatis via Virtual Ledger setiap akhir periode kepada anggota aktif (berdasarkan proporsi Karma dan partisipasi), bukan cuma buat pemilik modal.
+*   **Mekanisme SHU:** Sisa Hasil Usaha dibagikan secara otomatis via Virtual Ledger setiap akhir periode kepada anggota aktif (berdasarkan proporsi Pamor dan partisipasi), bukan cuma buat pemilik modal.
 
 ---
 
 ## BAB 6: Desentralisasi Keadilan (Pengadilan Netizen)
 
+> **📋 Source of Truth:** Untuk detail lengkap dispute resolution dan jury selection, lihat [GOVERNANCE.md](./docs/GOVERNANCE.md)
+
 Pusat panggilan (Call Center) yang berisi CS robot adalah sumber frustrasi terbesar di era modern. SiapAja.id menggantinya dengan **Decentralized Justice Protocol**.
 
-1.  **Trigger Sengketa:** *Customer* merasa pekerjaan tidak sesuai, menekan tombol "Dispute". Dana otomatis terkunci (*Frozen*).
-2.  **Jury Selection (Expertise-Based):** Sistem memilih 7 juri dari pool worker yang punya **track record di kategori job yang sama**. Contoh: Sengketa "Tukang AC" → Juri adalah worker rating tinggi di kategori "AC & Elektronik".
+1.  **Trigger Sengketa:** *Pembuat Job* merasa pekerjaan tidak sesuai, menekan tombol "Dispute". Dana otomatis terkunci (*Frozen*).
+2.  **Jury Selection (Expertise-Based):** Sistem memilih 7 juri dari pool Jagoan yang punya **track record di kategori job yang sama**. Contoh: Sengketa "Tukang AC" → Juri adalah Jagoan rating tinggi di kategori "AC & Elektronik".
 3.  **Blind Voting:** Juri diberikan waktu 24 jam untuk meninjau bukti foto *Sebelum/Sesudah* tanpa mengetahui identitas pelapor. 
 4.  **Resolusi & Insentif:** Suara mayoritas (misal 4 vs 3) menjadi keputusan final yang dieksekusi oleh Virtual Ledger. Platform tidak intervensi. Keputusan juri adalah **FINAL**.
 
 ---
 
-## BAB 7: Sistem Karma (The Anti-Dystopian Social Credit)
+## BAB 7: Sistem Pamor (The Anti-Dystopian Social Credit)
 
-Reputasi di SiapAja.id tidak direpresentasikan oleh "Bintang 5" yang bisa dimanipulasi, melainkan oleh **KARMA Database Record**.
+> **📋 Source of Truth:** Untuk detail lengkap Pamor calculation, voting power, dan tier system, lihat [GOVERNANCE.md](./docs/GOVERNANCE.md)
 
-*   **Akuisisi:** Karma didapat dari penyelesaian tugas sukses, partisipasi juri, dan kontribusi kode (bagi *developer*).
-*   **Pengurangan:** Pembatalan mendadak, keterlambatan parah, atau membuang sampah sembarangan di lokasi *customer*.
-*   **Decay Mechanism (Pengampunan):** Karma buruk akan menyusut (hilang) dengan sendirinya sebesar 15% setiap bulan jika user kembali berkelakuan baik. Kami menghargai penebusan kesalahan, bukan menghukum seumur hidup.
-*   **Utilitas:** Karma tinggi memberikan prioritas tayangan di *Feed*, hak suara (*Voting Power*) untuk menentukan regulasi harga di wilayahnya, dan syarat mutlak pembagian dividen *Treasury*.
+Di SiapAja.id, kami memperkenalkan konsep **PAMOR** sebagai alternatif dari sistem Kredit Sosial yanghoror. Pamor bukan alat pengawasan negara, melainkan **sistem reputasi peer-to-peer** yang memberdayakan komunitas.
+
+### 7.1. Mekanisme Pamor
+*   **Akuisisi:** Pamor didapat dari penyelesaian tugas sukses, partisipasi juri, dan kontribusi kode (bagi *developer*).
+*   **Pengurangan:** Pembatalan mendadak, keterlambatan parah, atau membuang sampah sembarangan di lokasi *Pembuat Job*.
+*   **Decay Mechanism (Pengampunan):** Pamor buruk akan menyusut (hilang) dengan sendirinya sebesar 15% setiap bulan jika user kembali berkelakuan baik. Kami menghargai penebusan kesalahan, bukan menghukum seumur hidup.
+*   **Utilitas:** Pamor tinggi memberikan prioritas tayangan di *Feed*, hak suara (*Voting Power*) untuk menentukan regulasi harga di wilayahnya, dan syarat mutlak pembagian dividen *Treasury*.
 
 ---
 
@@ -160,7 +171,7 @@ SiapAja.id menolak bentuk Perseroan Terbatas (PT) yang murni kapitalis. Platform
 ### 8.3. Strategi Lisensi Ganda (AGPL + SSPL)
 Kode sumber kami adalah senjata komersial yang dilindungi secara hukum:
 1.  **Untuk Rakyat (GNU AGPL v3):** Siapa pun (Universitas, LSM, RT/RW) bebas *fork* kode ini dan menjalankannya secara mandiri (gratis), selama mereka juga mempublikasikan modifikasinya ke ranah *open source*.
-2.  **Untuk Korporasi Rakus (SSPL):** Jika sebuah BUMN, perusahaan raksasa multinasional, atau *startup unicorn* mencoba mengambil kode kami, mengganti logonya, dan menutup *source code*-nya untuk bisnis komersial pribadi... **Mereka secara hukum wajib membayar Lisensi Enterprise kepada pemegang Karma Shares dengan nilai kontrak yang kami tentukan.** Ini adalah jalan raya menuju valuasi triliunan tanpa harus menjual jiwa komunitas.
+2.  **Untuk Korporasi Rakus (SSPL):** Jika sebuah BUMN, perusahaan raksasa multinasional, atau *startup unicorn* mencoba mengambil kode kami, mengganti logonya, dan menutup *source code*-nya untuk bisnis komersial pribadi... **Mereka secara hukum wajib membayar Lisensi Enterprise kepada pemegang Pamor Shares dengan nilai kontrak yang kami tentukan.** Ini adalah jalan raya menuju valuasi triliunan tanpa harus menjual jiwa komunitas.
 
 ---
 

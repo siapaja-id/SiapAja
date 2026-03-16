@@ -37,17 +37,20 @@ Kalian sadar nggak kalau sistem ojol dan platform *freelance* hari ini sudah ber
 ### 1.2. The SiapAja Solution (Demand-Only Feed)
 Platform sebelah isinya katalog jasa. Tukang AC, *driver*, dan *cleaner* harus banting harga dan bayar iklan biar jasanya dilirik. 
 
-SiapAja.id membalik logika itu. Kita pakai sistem **Demand-Only Feed** yang bentuknya persis kayak timeline X/Threads. Isinya bukan orang pamer liburan, tapi kumpulan orang di radius 5km yang teriak: *"Genset mati nih, siapa bisa benerin sekarang? Budget Rp200.000!"* Worker tinggal *scroll*, nemu yang cocok, klik "Terima", dan langsung berangkat.
+SiapAja.id membalik logika itu. Kita pakai sistem **Demand-Only Feed** yang bentuknya persis kayak timeline X/Threads. Isinya bukan orang pamer liburan, tapi kumpulan orang di radius 5km yang teriak: *"Genset mati nih, siapa bisa benerin sekarang? Budget Rp200.000!"* Jagoan tinggal *scroll*, nemu yang cocok, klik "Terima", dan langsung berangkat.
 
 ### 1.3. Zero-Commission & Tiered Scalability
+
+> **📋 Source of Truth:** Untuk detail lengkap fee structure, distribution, dan escrow system, lihat [ECONOMICS.md](./docs/ECONOMICS.md)
+
 Platform tetap gratis buat rakyat kecil. Tapi untuk menjaga keberlanjutan infrastruktur, kita menerapkan **Tiered Fee** hanya untuk transaksi kelas menengah ke atas:
 
-| Budget Pekerjaan | Fee Platform | Beban Biaya (Customer : Worker)
+| Budget Pekerjaan | Fee Platform | Beban Biaya (Pembuat Job : Jagoan)
 |------------------|--------------|--------------------------------
-| Dibawah Rp500.000 | **3%** | 100% Customer (Worker 0% Fee)
-| Rp500rb - Rp2jt | **5%** | 50% Customer : 50% Worker
-| Rp2jt - Rp10jt | **7.5%** | 50% Customer : 50% Worker
-| Diatas Rp10jt | **10%** | 50% Customer : 50% Worker
+| Dibawah Rp500.000 | **3%** | 100% Pembuat Job (Jagoan 0% Fee)
+| Rp500rb - Rp2jt | **5%** | 50% Pembuat Job : 50% Jagoan
+| Rp2jt - Rp10jt | **7.5%** | 50% Pembuat Job : 50% Jagoan
+| Diatas Rp10jt | **10%** | 50% Pembuat Job : 50% Jagoan
 
 **Alokasi Fee Platform (The Distribution):**
 * **40% Operational & Server:** Biaya infrastruktur Rust & SpacetimeDB.
@@ -55,8 +58,8 @@ Platform tetap gratis buat rakyat kecil. Tapi untuk menjaga keberlanjutan infras
 * **20% Community Treasury:** Kas Koperasi untuk SHU & Dividen.
 * **10% Solidarity Pool:** Asuransi kecelakaan/kesehatan anggota.
 
-**Untuk transaksi di bawah Rp500.000, worker tetap terima 100% UTUH.**
-Fee untuk transaksi besar dibebankan secara *adil* ke kedua belah pihak (split fee), bukan cuma memeras worker.
+**Untuk transaksi di bawah Rp500.000, Jagoan tetap terima 100% UTUH.**
+Fee untuk transaksi besar dibebankan secara *adil* ke kedua belah pihak (split fee), bukan cuma memeras Jagoan.
 
 ### 1.4. Anti-Bakar Duit (Guerrilla Bootstrapping)
 Kita nggak punya VC (*Venture Capitalist*) yang ngasih triliunan buat bakar duit ngasih promo diskon. Dan kita emang nggak butuh.
@@ -67,20 +70,26 @@ Strategi kita adalah **Hyper-Local Density**. Kita nggak akan rilis se-Indonesia
 ## BAB 2: 🚀 Konsep Utama & Killer Features
 
 ### 2.1. Timeline "Pay-to-Post" (Anti-Spam Mutlak)
-Di sini, nggak ada cerita "Customer PHP" atau nanya-nanya doang trus ngilang. 
-Mau bikin postingan butuh bantuan? **Duitnya harus di-lock di depan.** Kalau budget kerjaannya Rp100.000, sistem akan narik saldo Rp100.000 itu detik itu juga dan dikunci di *Virtual Escrow*. Feed kita 100% berisi duit mateng. Begitu worker klik "Selesai", dana otomatis cair. 
+Di sini, nggak ada cerita "Pembuat Job PHP" atau nanya-nanya doang trus ngilang. 
+Mau bikin postingan butuh bantuan? **Duitnya harus di-lock di depan.** Kalau budget kerjaannya Rp100.000, sistem akan narik saldo Rp100.000 itu detik itu juga dan dikunci di *Virtual Escrow*. Feed kita 100% berisi duit mateng. Begitu Jagoan klik "Selesai", dana otomatis cair. 
 
 ### 2.2. Ultra-Fast State Sync
 Data sinkron instan, tanpa loading, secepat aplikasi chat. User cuma lihat saldo "Rupiah", tapi di belakang layar sistem mengelola Virtual Ledger dengan latensi milidetik. Semua perubahan langsung terpropagasi ke semua client tanpa polling. *Magic!*
 
 ### 2.3. AI Man-Power Estimator (Perlindungan K3)
-Sering terjadi: Customer pelit minta pindahan kosan 3 lantai, barangnya ada kulkas 2 pintu, tapi bayarnya cuma buat 1 orang.
+
+> **📋 Source of Truth:** Untuk detail lengkap AI pipeline, LLM models, dan JSON schemas, lihat [AI-SPECS.md](./docs/AI-SPECS.md)
+
+Sering terjadi: Pembuat Job pelit minta pindahan kosan 3 lantai, barangnya ada kulkas 2 pintu, tapi bayarnya cuma buat 1 orang.
 Di SiapAja.id, **text-only LLM** (via OpenRouter API) membaca postingan untuk ekstraksi terstruktur.
-*   **Output AI:** *"Deteksi beban >70kg + Tangga. Risiko cedera tinggi. Pekerjaan ini wajib dikerjakan minimal 3 Worker. Harga dasar dikunci di Rp350.000."*
-*   Sistem menolak postingan jika customer memaksa menawar di bawah *Price Floor* (Harga Bawah) yang sudah dihitung AI. Kita jaga tulang punggung pekerja!
+*   **Output AI:** *"Deteksi beban >70kg + Tangga. Risiko cedera tinggi. Pekerjaan ini wajib dikerjakan minimal 3 Jagoan. Harga dasar dikunci di Rp350.000."*
+*   Sistem menolak postingan jika Pembuat Job memaksa menawar di bawah *Price Floor* (Harga Bawah) yang sudah dihitung AI. Kita jaga tulang punggung Jagoan!
 
 ### 2.4. Pembentukan Tim Otomatis (Squad Formation)
-Kalau AI mendeteksi butuh 3 orang untuk angkat lemari raksasa, sistem nggak akan nge-lempar kerjaan ini ke 1 orang. Sistem otomatis bikin "Lobby" pencarian 3 worker terdekat. Begitu 3 orang kumpul, mereka jalan bareng. Setelah kerjaan selesai, Virtual Ledger otomatis memecah pembayaran ke 3 akun worker tersebut secara adil dalam waktu milidetik. Nggak ada lagi rebutan jatah di lapangan.
+
+> **📋 Source of Truth:** Untuk detail lengkap squad formation logic dan threshold, lihat [AI-SPECS.md](./docs/AI-SPECS.md)
+
+Kalau AI mendeteksi butuh 3 orang untuk angkat lemari raksasa, sistem nggak akan nge-lempar kerjaan ini ke 1 orang. Sistem otomatis bikin "Lobby" pencarian 3 Jagoan terdekat. Begitu 3 orang kumpul, mereka jalan bareng. Setelah kerjaan selesai, Virtual Ledger otomatis memecah pembayaran ke 3 akun Jagoan tersebut secara adil dalam waktu milidetik. Nggak ada lagi rebutan jatah di lapangan.
 
 ---
 
@@ -124,98 +133,99 @@ graph TD
 User login pakai No HP (OTP) atau Google Login. Di belakang layar, sistem langsung membuat session real-time.
 
 ### 4.1. Real-time Sync
-Perubahan data langsung terpropagasi ke semua client dalam milidetik. Worker klik "Selesai"? Customer langsung lihat update. Nggak ada polling, nggak ada refresh. UI selalu fresh.
+Perubahan data langsung terpropagasi ke semua client dalam milidetik. Jagoan klik "Selesai"? Pembuat Job langsung lihat update. Nggak ada polling, nggak ada refresh. UI selalu fresh.
 
 ### 4.2. Xendit Escrow System
 Kita nggak pakai koin yang harganya naik-turun. Dana ditampung oleh **Xendit Escrow** (berizin OJK).
-*   **Deposit:** Customer bayar Rp100.000 via GoPay/OVO/VA/QRIS ke Xendit.
+*   **Deposit:** Pembuat Job bayar Rp100.000 via GoPay/OVO/VA/QRIS ke Xendit.
 *   **Escrow Lock:** Dana dikunci di escrow, tidak bisa diambil sampai pekerjaan selesai.
-*   **Release:** Worker terima uang (dikurangi 1% solidarity pool) langsung ke rekening bank/e-wallet.
+*   **Release:** Jagoan terima uang (dikurangi 1% solidarity pool) langsung ke rekening bank/e-wallet.
 
 ---
 
 ## BAB 5: 🤖 Deep Dive: AI & Algoritma Perlindungan
 
+> **📋 Source of Truth:** Untuk detail lengkap AI pipeline, LLM models, dan JSON schemas, lihat [AI-SPECS.md](./docs/AI-SPECS.md)
+
 AI kita bukan cuma buat gaya-gayaan, tapi buat jadi "Bodyguard" pekerja.
 
 ### 5.1. Price Floor Mechanism (Anti-Perang Harga)
-Kita benci kalau sesama worker saling banting harga cuma buat dapet kerjaan. 
+Kita benci kalau sesama Jagoan saling banting harga cuma buat dapet kerjaan. 
 *   **The Logic:** AI akan menghitung biaya hidup per wilayah, tingkat kesulitan kerja, dan jarak tempuh. 
 *   Kalau AI bilang harga wajar benerin pompa air adalah Rp150.000, maka tombol "Bidding" di bawah angka itu akan **dimatikan**. Kita memastikan kompetisi terjadi di *kualitas*, bukan di *kemiskinan*.
 
 ### 5.2. Text-to-Structured LLM Pipeline
 Server Rust kita terhubung ke **OpenRouter API** (Claude 3 Haiku, GPT-3.5) - text-only extraction.
-*   **Scanning Deskripsi:** Kalau customer nulis "butuh orang buat nagih utang sambil bawa sajam", AI bakal otomatis nge-blok postingan itu karena melanggar hukum.
-*   **Ekstraksi Data:** Dari teks tidak terstruktur ("bantu pindahan 3 lantai, kulkas 2 pintu") LLM mengekstrak budget, kategori, dan estimasi worker needed.
+*   **Scanning Deskripsi:** Kalau Pembuat Job nulis "butuh orang buat nagih utang sambil bawa sajam", AI bakal otomatis nge-blok postingan itu karena melanggar hukum.
+*   **Ekstraksi Data:** Dari teks tidak terstruktur ("bantu pindahan 3 lantai, kulkas 2 pintu") LLM mengekstrak budget, kategori, dan estimasi Jagoan needed.
 
 ---
 
 ## BAB 6: ⚖️ Decentralized Justice (Pengadilan Netizen)
 
+> **📋 Source of Truth:** Untuk detail lengkap sistem keadilan, jury selection, dan dispute resolution, lihat [GOVERNANCE.md](./docs/GOVERNANCE.md)
+
 Kalau ada masalah, kita nggak pake CS yang jawabannya "Mohon maaf atas ketidaknyamanannya". Kita pake hukum komunitas.
 
 ### 6.1. Alur Sengketa (Dispute Lifecycle)
-1. Customer klaim: "Kerjaan nggak beres!" -> Dana di Virtual Escrow otomatis **BEKU**.
-2. Sistem mencari 7 Juri dengan **expertise di bidang yang sama**.
-3. Worker & Customer upload bukti foto/video.
+1. Pembuat Job klaim: "Kerjaan nggak beres!" -> Dana di Virtual Escrow otomatis **BEKU**.
+2. Juri Netizen voting (7 orang dipilih secara random dari pool Jagoan di kategori yang sama).
+3. Jagoan & Pembuat Job upload bukti foto/video.
 4. Juri voting secara *anonymous*. 
 5. Pemenang voting dapet dananya, Juri dapet komisi kecil sebagai imbalan kejujuran.
 
 ### 6.2. Algoritma Pemilihan Juri (Expertise-Based)
-*   Juri dipilih dari pool worker yang punya **track record di kategori job yang sama**.
-*   Contoh: Sengketa job "Tukang AC" → Juri adalah worker dengan rating tinggi di kategori "AC & Elektronik".
+*   Juri dipilih dari pool Jagoan yang punya **track record di kategori job yang sama**.
+*   Contoh: Sengketa job "Tukang AC" → Juri adalah Jagoan dengan rating tinggi di kategori "AC & Elektronik".
 *   Juri **nggak saling kenal** dan **nggak satu radius** dengan pelaku sengketa.
 *   Juri nggak bisa lihat hasil voting juri lain sebelum dia sendiri submit. Ini buat menghindari "Ikut-ikutan" (*Herd Mentality*).
 
 ---
 
-## BAB 7: 🎖️ Sistem Karma & Tata Kelola (Governance)
+## BAB 7: 🎖️ Sistem Pamor & Tata Kelola (Governance)
 
-Di SiapAja.id, uang bukan alat ukur utama kesuksesan seorang pekerja, melainkan **KARMA**. Karma adalah aset reputasi yang direkam permanen (tapi anonim) di database.
+> **📋 Source of Truth:** Untuk detail lengkap sistem Pamor, voting power, dan tier system, lihat [GOVERNANCE.md](./docs/GOVERNANCE.md)
+
+Di SiapAja.id, uang bukan alat ukur utama kesuksesan seorang pekerja, melainkan **PAMOR**. Pamor adalah aset reputasi yang direkam permanen (tapi anonim) di database.
 
 ### 7.1. Metrik Profesional vs Moral
-Banyak yang takut sistem Karma kita bakal kayak "Skor Kredit Sosial" ala negara otoriter yang menilai orang dari pendapat politiknya. **Sama sekali tidak.**
-*   **Karma Naik (+):** Tepat waktu sampai lokasi, rating bintang 5 dari *customer* (dinilai dari kualitas kerja), atau rajin jadi Juri sengketa yang adil.
-*   **Karma Turun (-):** Batalin orderan sepihak setelah setuju (Cancel), telat parah tanpa alasan, atau terbukti curang dalam sengketa.
+Banyak yang takut sistem Pamor kita bakal kayak "Skor Kredit Sosial" ala negara otoriter yang menilai orang dari pendapat politiknya. **Sama sekali tidak.**
+*   **Pamor Naik (+):** Tepat waktu sampai lokasi, rating bintang 5 dari *Pembuat Job* (dinilai dari kualitas kerja), atau rajin jadi Juri sengketa yang adil.
+*   **Pamor Turun (-):** Batalin orderan sepihak setelah setuju (Cancel), telat parah tanpa alasan, atau terbukti curang dalam sengketa.
 
-### 7.2. Karma Decay (Penyusutan Otomatis)
-Kita percaya pada **Penebusan Dosa Digital**. Kalau worker pernah salah (Karma anjlok), mereka nggak dihukum seumur hidup.
-*   Setiap 30 hari, poin Karma negatif akan otomatis mengalami "Decay" (menyusut) sebesar 15% jika worker terus berkelakuan baik.
+### 7.2. Pamor Decay (Penyusutan Otomatis)
+Kita percaya pada **Penebusan Dosa Digital**. Kalau Jagoan pernah salah (Pamor anjlok), mereka nggak dihukum seumur hidup.
+*   Setiap 30 hari, poin Pamor negatif akan otomatis mengalami "Decay" (menyusut) sebesar 15% jika Jagoan terus berkelakuan baik.
 *   Sistem ini diatur oleh *CRON Job* di server Rust yang secara efisien mengkalkulasi jutaan data setiap akhir bulan.
 
 ### 7.3. Hak Suara (Voting Power)
-Karma bukan cuma buat pamer. Semakin tinggi Karma, semakin besar **Hak Suara (Voting Power)** user dalam menentukan arah platform.
+Pamor bukan cuma buat pamer. Semakin tinggi Pamor, semakin besar **Hak Suara (Voting Power)** user dalam menentukan arah platform.
 *   Mau naikin *Price Floor* (Harga Bawah) di kota Jakarta? Voting!
 *   Mau uang denda di *Treasury* dipakai buat bagi-bagi sembako atau asuransi kecelakaan? Voting!
-*   100 Karma = 1 Suara. Maksimal 10 Suara per orang (supaya *Sultan Karma* tidak bisa memonopoli keputusan).
+*   100 Pamor = 1 Suara. Maksimal 10 Suara per orang (supaya *Sultan Pamor* tidak bisa memonopoli keputusan).
 
 ---
 
 ## BAB 8: 💸 Tokenomics & "The Founder's Secret" (Model Bisnis)
 
+> **📋 Source of Truth:** Untuk detail lengkap revenue streams, tokenomics roadmap, dan distribution, lihat [ECONOMICS.md](./docs/ECONOMICS.md)
+
 *"Kalau komisi 0%, dari mana platform dan Founder dapet duit? Jangan-jangan cuma tipu-tipu bakar duit VC?"* 
 Ini adalah rahasia terbesar kita. Kita nggak memeras recehan dari keringat tukang angkut barang, kita mengambil keuntungan dari **Ekosistem dan Korporat**.
 
 ### 8.1. Tiered Protection (Janji Suci)
-Untuk pekerja kecil (transaksi di bawah Rp500rb), worker terima **100% utuh**. Titik. Tidak ada "Biaya Layanan Tersembunyi".
+Untuk pekerja kecil (transaksi di bawah Rp500rb), Jagoan terima **100% utuh**. Titik. Tidak ada "Biaya Layanan Tersembunyi".
 
-Fee hanya dikenakan untuk transaksi kelas menengah ke atas, dan dibebankan secara **adil ke kedua belah pihak** (split 50:50 customer-worker), bukan cuma memeras worker.
+Fee hanya dikenakan untuk transaksi kelas menengah ke atas, dan dibebankan secara **adil ke kedua belah pihak** (split 50:50 Pembuat Job-Jagoan), bukan cuma memeras Jagoan.
 
 ### 8.2. The Sustainable Revenue Triple-Engine
 1.  **Tiered Transaction Fee:** Dari proyek besar (renovasi, borongan kantor). Pekerja harian tetap bebas potongan.
 2.  **Premium Blue Check (Trust Signal):** User bisa beli verifikasi centang biru. **PENTING:** Ini murni *signal*, BUKAN garansi. Platform TIDAK bertanggung jawab atas kerugian finansial/fisik. Sengketa diselesaikan Juri Netizen.
 3.  **Hyper-Local Ads Marketplace:** Warung, laundry, toko bangunan di radius 2km bisa pasang iklan kontekstual di Feed. Iklan muncul pas user scroll nyari jasa relevan. Contoh: User cari "Tukang AC" → Sistem tampilin iklan "Toko Sparepart AC Terdekat".
-4.  **B2B API Integration:** Mall atau Apartemen yang mau pakai worker kita secara borongan wajib langganan API (*Enterprise Tier*).
-
-### 8.3. Dana Solidaritas (1% Auto-Deduction)
-Setiap transaksi potong 1%, tapi **BUKAN UNTUK PLATFORM**. 
-Uang ini otomatis masuk ke **Asuransi Komunitas (Solidarity Pool)** di Virtual Ledger.
-*   Kalau ada worker kecelakaan saat narik barang, klaim pengobatannya diambil dari *pool* ini lewat persetujuan (voting) pengurus Koperasi. 
-
-### 8.4. Auto-Yield Treasury (Uang Mengembang)
-Dana *Treasury* (dari denda dan sisa *fee*) yang belum terpakai tidak akan dibiarkan nganggur. 
-*   Sistem otomatis memutar dana tersebut di instrumen Reksadana Pasar Uang berisiko rendah. 
-*   **Bunganya (Yield):** Dibagikan sebagai dividen bulanan kepada pemegang Karma tertinggi. Pekerja bukan cuma buruh, mereka adalah **Investor Ekosistem**.
+4.  **B2B API Integration:** Mall atau Apartemen yang mau pakai Jagoan kita secara borongan wajib langganan API (*Enterprise Tier*).
+*   **Solidarity Pool:** Setiap transaksi potong 1% otomatis buat asuransi.
+*   Kalau ada Jagoan kecelakaan saat narik barang, klaim pengobatannya diambil dari *pool* ini lewat persetujuan (voting) pengurus Koperasi. 
+*   **Bunganya (Yield):** Dibagikan sebagai dividen bulanan kepada pemegang Pamor tertinggi. Pekerja bukan cuma buruh, mereka adalah **Investor Ekosistem**.
 
 ### 8.5. Enterprise Licensing (SSPL - The Trillion Rupiah Path)
 Ini cara Founder dan *Core Contributor* menjadi *Crazy Rich* secara elegan.
@@ -256,11 +266,9 @@ Kita nggak lagi bangun *to-do list app* buat tugas kuliah. Kita bangun **Infrast
 *   **Flutter/Frontend:** Paham Flutter 3+ (Widgets, Riverpod), Dart, dan cara pakai generated code dari OpenAPI.
 *   **Real-time Layer:** Paham cara kerja WebSocket subscriptions dan state sync. Jangan sampai ada race condition di matching engine kita.
 
-### 10.2. Sistem "Karma Dev" & Karma Equity Points (Ekuitas Keringat)
-Karena kita mulai dari **Nol Rupiah**, kita bayar keringat kalian dengan **Ekuitas Masa Depan**.
-*   Setiap kali Pull Request (PR) kamu di-*merge* ke cabang `main`, sistem CI/CD GitHub Actions kita akan mencatat kontribusi kamu.
-*   Akun kamu otomatis dikirimi **Karma Equity Points**.
-*   **Apa itu Karma Equity Points?** Saat ini harganya Rp0. Tapi, poin ini merepresentasikan **Porsi Kepemilikan (Shares)** dari platform. Kalau besok SiapAja.id jualan Lisensi SSPL senilai Rp10 Miliar ke BUMN, keuntungan itu akan dibagi dividen secara otomatis ke para pemegang Karma Equity Points, sepadan dengan jumlah *commit* kode mereka.
+### 10.2. Sistem "Pamor Dev" & Pamor Equity Points (Ekuitas Keringat)
+*   Akun kamu otomatis dikirimi **Pamor Equity Points**.
+*   **Apa itu Pamor Equity Points?** Saat ini harganya Rp0. Tapi, poin ini merepresentasikan **Porsi Kepemilikan (Shares)** dari platform. Kalau besok SiapAja.id jualan Lisensi SSPL senilai Rp10 Miliar ke BUMN, keuntungan itu akan dibagi dividen secara otomatis ke para pemegang Pamor Equity Points, sepadan dengan jumlah *commit* kode mereka.
 *   Ini bukan eksploitasi kerja gratis. Ini adalah **Fair Equity Distribution**. Kalian adalah *Co-Founders* telat.
 
 ### 10.3. Git Workflow & PR Template
@@ -323,7 +331,7 @@ Semua endpoint dilindungi oleh JWT dan terenkripsi. Berikut adalah *sneak peek* 
 
 ### 12.1. Demand Creation API (Pay-to-Post)
 `POST /api/v1/jobs/create`
-*Endpoint ini dipanggil saat Customer menekan tombol "Posting Butuh Bantuan". Server Axum akan mengunci dana di Virtual Escrow.*
+*Endpoint ini dipanggil saat Pembuat Job menekan tombol "Posting Butuh Bantuan". Server Axum akan mengunci dana di Virtual Escrow.*
 
 **Payload (JSON):**
 ```json
@@ -348,7 +356,7 @@ Semua endpoint dilindungi oleh JWT dan terenkripsi. Berikut adalah *sneak peek* 
     "workers_required": 1,
     "price_floor_ok": true
   },
-  "message": "Rp150.000 sukses ditarik ke Virtual Escrow. Menyiarkan ke worker radius 2KM..."
+  "message": "Rp150.000 sukses ditarik ke Virtual Escrow. Menyiarkan ke Jagoan radius 2KM..."
 }
 ```
 
@@ -360,15 +368,15 @@ Semua endpoint dilindungi oleh JWT dan terenkripsi. Berikut adalah *sneak peek* 
 
 ## BAB 13: 📜 Virtual Ledger Reference (Escrow System)
 
+> **📋 Source of Truth:** Untuk detail lengkap escrow integration dan payment flow, lihat [ECONOMICS.md](./docs/ECONOMICS.md)
+
 Virtual Ledger kita (ditulis dalam Rust) hanya melakukan 3 hal, tapi melakukannya dengan sempurna tanpa celah keamanan.
 
 ### 13.1. Escrow Initialization (InitJob)
 *   **Fungsi:** Membuat *Escrow Account* khusus untuk satu pekerjaan.
-*   **Keamanan:** Uang (IDR) dipindahkan dari saldo Customer ke Escrow ini. Hanya instruksi `ReleaseFund` atau `Refund` dari platform yang bisa mengeluarkan uang ini.
-
-### 13.2. Fund Release (CompleteJob)
-*   **Fungsi:** Menyerahkan 100% uang ke Worker setelah Customer klik "Selesai", minus 1% (otomatis dipotong ke *Solidarity Pool* untuk asuransi).
-*   **Speed:** Transaksi selesai dan masuk ke saldo Worker dalam milidetik.
+*   **Keamanan:** Uang (IDR) dipindahkan dari saldo Pembuat Job ke Escrow ini. Hanya instruksi `ReleaseFund` atau `Refund` dari platform yang bisa mengeluarkan uang ini.
+*   **Fungsi:** Menyerahkan 100% uang ke Jagoan setelah Pembuat Job klik "Selesai", minus 1% (otomatis dipotong ke *Solidarity Pool* untuk asuransi).
+*   **Speed:** Transaksi selesai dan masuk ke saldo Jagoan dalam milidetik.
 
 ### 13.3. Dispute Freeze (LockJob)
 *   **Fungsi:** Kalau ada sengketa, status Escrow diubah menjadi `FROZEN`. Uang tidak bisa ditarik oleh siapapun sampai 7 Juri Komunitas memberikan *voting* final ke server Rust kita.
@@ -381,11 +389,9 @@ Dunia gig economy itu keras. Kalau platform ini besar, mafia pangkalan, korporat
 
 ### 14.1. Anti-Front-Running (Mencegah Bot Nyamber Orderan)
 Kalau ada orderan renovasi senilai Rp5 Juta, pasti ada *developer* nakal yang bikin bot buat ngeklik "Terima" dalam 0.01 detik.
-*   **Mitigasi Rust:** Server kita menerapkan *Delay-Jitter* acak (1-3 detik) sebelum melempar notifikasi orderan besar ke worker. Selain itu, worker dengan *Karma tinggi* dan *radius terdekat* akan mendapatkan notifikasi 5 detik lebih awal. Bot yang jaraknya jauh nggak akan dapet jatah.
-
-### 14.2. Privasi Data Pekerja (Anti-Pinjol)
-Di era di mana data adalah emas hitam, kita nggak akan jual data KTP atau histori penghasilan worker ke perusahaan Pinjol (meskipun godaannya miliaran).
-*   **Enkripsi Zero-Knowledge:** Data penghasilan dan alamat tersimpan dalam bentuk *hash* di database Postgres. Pihak ketiga nggak bisa nge-*scraping* data profil worker untuk dijadiin target iklan kredit motor atau pinjaman *payday*.
+*   **Mitigasi Rust:** Server kita menerapkan *Delay-Jitter* acak (1-3 detik) sebelum melempar notifikasi orderan besar ke Jagoan. Selain itu, Jagoan dengan *Pamor tinggi* dan *radius terdekat* akan mendapatkan notifikasi 5 detik lebih awal. Bot yang jaraknya jauh nggak akan dapet jatah.
+Di era di mana data adalah emas hitam, kita nggak akan jual data KTP atau histori penghasilan Jagoan ke perusahaan Pinjol (meskipun godaannya miliaran).
+*   **Enkripsi Zero-Knowledge:** Data penghasilan dan alamat tersimpan dalam bentuk *hash* di database Postgres. Pihak ketiga nggak bisa nge-*scraping* data profil Jagoan untuk dijadiin target iklan kredit motor atau pinjaman *payday*.
 
 ### 14.3. Enkripsi Database & Security
 Karena kita pakai Virtual Ledger (user nggak pegang *Private Key*), server kitalah yang mengelola miliaran Rupiah di Escrow.
@@ -418,7 +424,7 @@ Kita nggak halu pengen ngalahin Gojek besok pagi. Ini adalah maraton yang teruku
 ### 15.4. Phase 4: Ekspansi (Tahun ke-2)
 *   [ ] Integrasi BI-FAST.
 *   [ ] Ekspansi ke kota-kota lapis kedua.
-*   [ ] Dividen perdana untuk pemegang Karma.
+*   [ ] Dividen perdana untuk pemegang Pamor.
 
 ---
 
@@ -427,7 +433,7 @@ Kita nggak halu pengen ngalahin Gojek besok pagi. Ini adalah maraton yang teruku
 ### 16.1. Platform Cooperative Model
 Kita nggak akan mendaftar sebagai PT (Perseroan Terbatas) konvensional yang tunduk pada *Venture Capital*. 
 *   SiapAja.id akan berbadan hukum **Koperasi Multi-Pihak**. 
-*   Pekerja (Worker) bukan sekadar "Mitra", mereka adalah **Anggota Koperasi** yang sah di mata hukum Indonesia. Mereka berhak atas Sisa Hasil Usaha (SHU) tahunan.
+*   Jagoan bukan sekadar "Mitra", mereka adalah **Anggota Koperasi** yang sah di mata hukum Indonesia. Mereka berhak atas Sisa Hasil Usaha (SHU) tahunan.
 
 ### 16.2. ⚠️ Non-Liability Disclaimer (FFFI Principle)
 SiapAja.id bertindak **MURNI sebagai penyedia infrastruktur kode** (Software-as-a-Service).
@@ -449,14 +455,9 @@ SiapAja.id bertindak **MURNI sebagai penyedia infrastruktur kode** (Software-as-
 1.  **Backend & Core (AGPL v3):** Bebas di-*fork*, dimodifikasi, dan dipakai oleh BEM Kampus, Karang Taruna, atau komunitas RT/RW secara **GRATIS**. Syaratnya: kalian harus *open source*-kan juga perubahannya.
 2.  **Commercial/Enterprise (SSPL):** Kalau ada BUMN, korporat raksasa, atau perusahaan asing yang mau mengambil infrastruktur SiapAja.id ini untuk dijalankan secara tertutup (*Closed-source SaaS*) demi meraup triliunan... **Mereka wajib membeli lisensi komersial dari kami.** 
 
-*(Disclaimer: Kontributor GitHub yang dibayar dengan Karma Equity Points akan mendapatkan porsi bagi hasil dari setiap penjualan lisensi SSPL ini).*
-
----
-
-## BAB 18: ❓ FAQ (Menjawab Para "Devil's Advocate")
-
-**Q: Gimana kalau setelah ketemu di aplikasi, Worker dan Customer janjian *offline* lewat WA biar nggak usah pakai platform lagi?**
-> A: *Bagus!* Silakan. Platform kita tidak memungut komisi, jadi kita tidak rugi apa-apa kalau kalian transaksi *offline*. Tapi ingat, transaksi *offline* berarti kalian **kehilangan perlindungan Escrow** (kalau ditipu uangnya hilang), **kehilangan Asuransi Kecelakaan 1%**, dan **tidak mendapat poin Karma**. Pilihan di tangan kalian.
+*(Disclaimer: Kontributor GitHub yang dibayar dengan Pamor Equity Points akan mendapatkan porsi bagi hasil dari setiap penjualan lisensi SSPL ini).*
+**Q: Gimana kalau setelah ketemu di aplikasi, Jagoan dan Pembuat Job janjian *offline* lewat WA biar nggak susah pakai platform lagi?**
+> A: *Bagus!* Silakan. Platform kita tidak memungut komisi, jadi kita tidak rugi apa-apa kalau kalian transaksi *offline*. Tapi ingat, transaksi *offline* berarti kalian **kehilangan perlindungan Escrow** (kalau ditipu uangnya hilang), **kehilangan Asuransi Kecelakaan 1%**, dan **tidak mendapat poin Pamor**. Pilihan di tangan kalian.
 
 **Q: Ini kan butuh modal gede buat promosi (bakar uang)?**
 > A: Kita pakai strategi *Word-of-Mouth* hiper-lokal. Ketika seorang Ketua RT di satu komplek mewajibkan warganya pakai aplikasi ini untuk cari tukang atau satpam panggilan, aplikasi ini akan viral dengan sendirinya tanpa perlu baliho di jalan protokol.
@@ -480,7 +481,7 @@ Kita benci kode yang asal jalan.
 Punya ide sinting? Nemu *bug* di sistem AI kita? Atau BUMN yang mau beli lisensi SSPL kita seharga Rp100 Miliar? Hubungi kami:
 
 *   **Discord Developer:** [Join the Backroom](#)
-*   **Channel Telegram (Komunitas Worker/User):** [Warga SiapAja](#)
+*   **Channel Telegram (Komunitas Jagoan/User):** [Warga SiapAja](#)
 *   **Email Business & Licensing:** `core@siapaja.id`
 
 ---
