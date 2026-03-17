@@ -838,12 +838,12 @@ CREATE TABLE community_treasury_logs (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Founder/Management Wallet (Private Tracking)
-CREATE TABLE management_wallets (
-    user_id UUID PRIMARY KEY REFERENCES users(id),
+-- Solidarity-ID / Technology Service Wallet (Private Tracking)
+CREATE TABLE technology_service_wallets (
+    entity_name VARCHAR(50) DEFAULT 'SOLIDARITY_ID',
     total_earned_idr BIGINT DEFAULT 0,
     withdrawable_balance_idr BIGINT DEFAULT 0,
-    tier_level VARCHAR(20) DEFAULT 'CORE_FOUNDER'
+    allocation_category VARCHAR(20) DEFAULT 'INFRASTRUCTURE' -- INFRASTRUCTURE, R&D, COMPLIANCE
 );
 
 -- Future Web3 Settlement Table

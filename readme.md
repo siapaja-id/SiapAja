@@ -53,10 +53,8 @@ Platform tetap gratis buat rakyat kecil. Tapi untuk menjaga keberlanjutan infras
 | Diatas Rp10jt | **10%** | 50% Pembuat Job : 50% Jagoan
 
 **Alokasi Fee Platform (The Distribution):**
-* **40% Operational & Server:** Biaya infrastruktur Rust & SpacetimeDB.
-* **30% Founder & Core Devs:** Jatah "Kaya Raya" buat para perancang sistem (Operational Carry).
-* **20% Community Treasury:** Kas Koperasi untuk SHU & Dividen.
-* **10% Solidarity Pool:** Asuransi kecelakaan/kesehatan anggota.
+* **60% Community Treasury (Koperasi):** Kas Koperasi untuk SHU, Dana Sosial, dan Operasional Koperasi.
+* **40% Technology Service (Solidarity-ID):** Biaya infrastruktur (Server) + R&D (Gaji Dev) + Lisensi IP.
 
 **Untuk transaksi di bawah Rp500.000, Jagoan tetap terima 100% UTUH.**
 Fee untuk transaksi besar dibebankan secara *adil* ke kedua belah pihak (split fee), bukan cuma memeras Jagoan.
@@ -206,11 +204,11 @@ Pamor bukan cuma buat pamer. Semakin tinggi Pamor, semakin besar **Hak Suara (Vo
 
 ---
 
-## BAB 8: 💸 Tokenomics & "The Founder's Secret" (Model Bisnis)
+## BAB 8: 💸 Tokenomics & "Technology Service Model" (Model Bisnis)
 
 > **📋 Source of Truth:** Untuk detail lengkap revenue streams, tokenomics roadmap, dan distribution, lihat [ECONOMICS.md](./docs/ECONOMICS.md)
 
-*"Kalau komisi 0%, dari mana platform dan Founder dapet duit? Jangan-jangan cuma tipu-tipu bakar duit VC?"* 
+*"Kalau komisi 0%, dari mana platform dan Solidarity-ID dapet duit? Jangan-jangan cuma tipu-tipu bakar duit VC?"* 
 Ini adalah rahasia terbesar kita. Kita nggak memeras recehan dari keringat tukang angkut barang, kita mengambil keuntungan dari **Ekosistem dan Korporat**.
 
 ### 8.1. Tiered Protection (Janji Suci)
@@ -228,7 +226,7 @@ Fee hanya dikenakan untuk transaksi kelas menengah ke atas, dan dibebankan secar
 *   **Bunganya (Yield):** Dibagikan sebagai dividen bulanan kepada pemegang Pamor tertinggi. Pekerja bukan cuma buruh, mereka adalah **Investor Ekosistem**.
 
 ### 8.5. Enterprise Licensing (SSPL - The Trillion Rupiah Path)
-Ini cara Founder dan *Core Contributor* menjadi *Crazy Rich* secara elegan.
+Ini cara Solidarity-ID (Research Lab) mendanai riset berkelanjutan secara elegan.
 *   Teknologi SiapAja.id (stack Rust modern) sangat canggih. Kalau ada BUMN, Perusahaan Tambang, atau Startup lain yang mau me-rakit ulang (*fork*) kode kita untuk bisnis **komersial/privat** mereka...
 *   Mereka diikat oleh Lisensi **SSPL (Server Side Public License)**. Artinya: Mereka wajib *open source*-kan seluruh bisnis mereka, **ATAU** membayar **Lisensi Komersial Triliunan Rupiah** ke perusahaan kita. 
 
@@ -253,7 +251,7 @@ Issue di GitHub diklasifikasikan dengan label:
 ### 9.3. Sistem Tipping "Seikhlasnya"
 Kita jujur dari awal: **Saat ini modal kita Rp0**. 
 *   Kalau kamu (*Developer*) berkontribusi (*Pull Request* di-merge), jangan harap langsung cair Rp10 juta.
-*   Namun, jika *Community Pool* (dari donasi/revenue platform) ada isinya, Founder atau Komunitas bisa mengklik tombol **"Appreciate"** pada kontributor tertentu. Bonus Rupiah akan otomatis masuk ke saldo akunmu sebagai bentuk terima kasih "seikhlasnya". Tanpa paksaan, tanpa eksploitasi.
+*   Namun, jika *Community Pool* (dari donasi/revenue platform) ada isinya, Koperasi atau Komunitas bisa mengklik tombol **"Appreciate"** pada kontributor tertentu. Bonus Rupiah akan otomatis masuk ke saldo akunmu sebagai bentuk terima kasih "seikhlasnya". Tanpa paksaan, tanpa eksploitasi.
 
 ---
 

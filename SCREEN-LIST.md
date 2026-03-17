@@ -892,10 +892,10 @@
 
 # 14. SPECIAL SCREENS
 
-## 14.0 MANAGEMENT & FOUNDER HUB (The Sultan View)
+## 14.0 MANAGEMENT & SOLIDARITY-ID HUB (Technology Service View)
 ### 14.0.1 Global Revenue Stream
-- **14.0.1.1** Real-time Fee Tracker: Pantau jatah 3% dari transaksi harian.
-- **14.0.1.2** Founder Wallet: Tombol withdraw untuk jatah pengurus.
+- **14.0.1.1** Real-time Fee Tracker: Pantau jatah 40% dari transaksi harian.
+- **14.0.1.2** Technology Service Wallet: Tombol withdraw untuk jatak Solidarity-ID (Server + R&D).
 
 ## 14.1 Contributor Zone (Developer)
 
