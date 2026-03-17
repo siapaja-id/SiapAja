@@ -135,13 +135,13 @@ Kami nggak pakai CS yang jawabannya "Mohon maaf atas ketidaknyamanannya". Kami p
 
 ---
 
-## 7. Pamor Equity Points (untuk Developer)
+## 7. Contribution Logic: Technology vs Operations
 
-Setiap Pull Request di-merge ke cabang `main` akan memberikan **Pamor Equity Points**:
+Sistem ini memisahkan kontribusi menjadi dua jalur:
+1. **Jalur Operasional (Koperasi):** Jagoan berkontribusi melalui kerja lapangan dan mendapatkan SHU dari porsi 60% pendapatan Koperasi.
+2. **Jalur Riset (Solidarity-ID):** Developer berkontribusi melalui kode (GitHub PR) dan mendapatkan **Pamor Equity** yang bersumber dari alokasi 40% biaya teknologi.
 
-- **Definisi:** Poin ini merepresentasikan **Porsi Kepemilikan (Shares)** dari platform
-- **Nilai:** Saat ini harganya Rp0. Tapi, saat SiapAja.id jualan Lisensi SSPL ke BUMN, keuntungan dibagi dividen berdasarkan jumlah commit
-- **Filosofi:** Ini bukan eksploitasi kerja gratis. Ini adalah **Fair Equity Distribution**. Kontributor adalah Co-Founders telat.
+Koperasi tidak perlu mempekerjakan developer secara internal, sehingga terhindari dari beban manajemen teknologi yang kompleks. Koperasi cukup memastikan layanan dari Solidarity-ID berjalan sesuai standar yang disepakati (SLA).
 
 ---
 

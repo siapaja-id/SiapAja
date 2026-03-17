@@ -40,10 +40,21 @@ Dari total fee yang terkumpulkan, distribusi adalah:
 
 | Komponen | Persentase | Keterangan |
 |----------|-----------|------------|
-| **Operational & Server** | 40% | Biaya infrastruktur Rust & SpacetimeDB |
-| **Founder & Core Devs** | 30% | Jatah "Kaya Raya" buat perancang sistem (Founder's Carry) |
-| **Community Treasury** | 20% | Kas Koperasi untuk SHU & Dividen |
-| **Solidarity Pool** | 10% | Cadangan untuk operasional asuransi |
+| **Community Treasury (Koperasi)** | **60%** | Alokasi utama untuk SHU, Dana Sosial, dan Operasional Koperasi. |
+| **Technology Service (Solidarity-ID)** | **40%** | Biaya infrastruktur (Server) + R&D (Gaji Dev) + Lisensi IP. |
+
+---
+
+### 3.1 Transparency of Technology Fee (Solidarity-ID Allocation)
+Sebagai bentuk transparansi radikal, alokasi 40% yang dikelola oleh **Solidarity-ID** (PT) diaudit secara terbuka dengan target distribusi sebagai berikut:
+
+| Komponen Riset & Ops | Alokasi | Keterangan |
+|-----------------------|---------|------------|
+| **Infrastructure Hosting** | 15% | Biaya Cloud (SpacetimeDB, S3, Rust Nodes, API Gateway). |
+| **R&D / Core Engineering** | 20% | Biaya pengembangan fitur baru, keamanan, dan optimasi algoritma (Gaji Devs). |
+| **Compliance & IP Defense** | 5% | Biaya legalitas, audit keamanan (Pentest), dan perlindungan lisensi SSPL. |
+
+**Prinsip Surplus Riset:** Jika terdapat sisa dari alokasi operasional server (efisiensi Rust), dana tersebut dialokasikan kembali ke dalam **Dana Inovasi** untuk pengembangan fitur perlindungan Jagoan berbasis AI.
 
 ---
 

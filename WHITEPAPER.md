@@ -107,19 +107,18 @@ SiapAja.id menggunakan strategi *Hybrid Entity* untuk menjembatani regulasi dome
     - Status hukum: Token tata kelola yang dirilis melalui *Offshore Foundation* untuk menarik modal global.
     - Mekanisme: Pemegang SMD memiliki hak prioritas untuk konversi (swap) menjadi $SIAP Token saat infrastruktur *Dual-Entity* diaktifkan.
 
-### 5.2. Revenue Streams (The Management Carry)
+### 5.2. Revenue Streams (Technology Service Model)
 Platform bukan hanya infrastruktur, tapi mesin ekonomi bagi para *Founder* dan Anggota.
-*   **Pembuat Job-Side Admin Fee (3%):** Untuk transaksi <Rp500.000, biaya dibebankan 100% ke Pembuat Job. Jagoan menerima 100% utuh (Zero Commission Branding).
-*   **The Founder's Carry (30%):** Dari total *Fee Platform* yang terkumpul, 30% dialokasikan langsung sebagai royalti IP dan biaya manajemen bagi tim *Founder* (Pengurus Inti).
 
-### 5.3. Multi-Channel Revenue & Hyper-Local Ads
-Platform membiayai dirinya sendiri tanpa memeras pekerja harian melalui:
+Koperasi SiapAja adalah pemilik ekosistem massa. Untuk menjalankan operasionalnya, Koperasi mengikat perjanjian dengan **Solidarity-ID** melalui *Technology Service Agreement*.
+*   **60% Kedaulatan Massa:** Masuk ke kas Koperasi untuk dibagikan kembali sebagai SHU, asuransi, dan dana darurat anggota.
+*   **40% Kedaulatan Teknologi:** Masuk ke Solidarity-ID untuk menanggung biaya infrastruktur Cloud (SpacetimeDB/Rust) dan biaya riset para pengembang inti (Core Devs).
 
-1.  **Tiered Transaction Fee:** Transaksi di atas Rp500.000 dikenakan fee progresif (2.5% - 10%). Fee dibebankan secara adil (split 50:50) ke kedua belah pihak. Pekerja harian (mikro) tetap bebas potongan.
+### 5.2.1 Technology Auditability
+Solidarity-ID berkomitmen pada **Open-Book Technology Fee**. Anggota Koperasi berhak mengetahui efisiensi penggunaan dana teknologi. Melalui performa Rust yang efisien, kami menargetkan pengurangan biaya infrastruktur dari waktu ke waktu, sehingga porsi R&D dapat lebih besar untuk menciptakan fitur-fitur yang meningkatkan pendapatan Jagoan.
 
-2.  **Contextual Ads Engine:** Sistem menyisipkan iklan hyper-local (radius <5km) yang relevan berdasarkan konteks pencarian. Contoh: User cari "Tukang AC" → Sistem tampilin iklan "Toko Sparepart AC Terdekat". Warung, laundry, toko bangunan bisa pasang iklan dengan budget lokal.
-
-3.  **Identity-as-a-Service:** Biaya verifikasi Centang Biru sebagai filter trust. **PENTING:** Ini adalah *trust signal*, BUKAN garansi. Platform tidak bertanggung jawab atas kerugian finansial atau fisik.
+### 5.3. Wealth Distribution & Open Ledger
+Dengan porsi 60% di tangan Koperasi, anggota memiliki kontrol penuh atas arah kebijakan finansial melalui RAT (Rapat Anggota Tahunan) yang terintegrasi di dalam aplikasi.
 
 ### 5.4. Manajemen Likuiditas & Open Ledger (Transparansi Radikal)
 Dana IDR yang tersimpan di *Escrow* menghasilkan *Float* (dana mengendap) yang dikelola secara kolektif.

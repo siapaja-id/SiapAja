@@ -919,9 +919,11 @@
 
 ### 14.2.2 Open Ledger (Transparansi Radikal)
 - **14.2.2.1** Real-time Treasury Clock: Counter duit yang masuk ke kas koperasi per detik
-- **14.2.2.2** Allocation Chart: Visualisasi kemana duit fee & yield pergi (Ops vs SHU vs Solidarity)
-- **14.2.2.3** Public Log: Daftar transaksi treasury (anonymized) yang bisa di-scroll siapa aja
-- **14.2.2.4** Solidarity Pool Balance: Total dana asuransi yang siap pake
+- **14.2.2.2** Allocation Chart: Visualisasi kemana duit fee & yield pergi (60% Koperasi vs 40% Teknologi).
+- **14.2.2.3** **Technology Breakdown (Solidarity View):** Klik pada bagian 40% untuk melihat detail penggunaan (Server vs R&D vs Legal).
+- **14.2.2.4** Public Log: Daftar transaksi treasury (anonymized) yang bisa di-scroll siapa aja
+- **14.2.2.5** Solidarity Pool Balance: Total dana asuransi yang siap pake
+- **14.2.2.6** **R&D Progress Link:** Link langsung ke GitHub Pull Requests yang didanai oleh alokasi 40% tersebut (Build in Public).
 
 ### 14.2.3 Governance & Voting (Satu Orang Satu Suara)
 - **14.2.3.1** Proposal Policy: List usulan perubahan sistem (misal: "Naikin tarif min di Depok")
