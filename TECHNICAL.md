@@ -386,14 +386,25 @@ crates/sa-spacetimedb/
         └── mod.rs                  # Auto-generated client code
 ```
 
-#### Crate: `sa-worker` (Background Jobs)
-**Purpose:** Cron jobs dan background processing.
+#### Crate: `sa-worker` (Billing & SA-TEV Module)
+**Purpose:** Menghitung penggunaan sumber daya server untuk invoice teknologi.
+
+- **CPU Cycles Tracker:** Menghitung waktu eksekusi setiap `Reducer` (SpacetimeDB) dan `Handler` (Axum).
+- **I/O Metering:** Mencatat volume data yang ditulis/dibaca dari PostgreSQL dan SpacetimeDB.
+- **SA-TEV Integrator:** Mengonversi metrik teknis menjadi unit SA-TEV berdasarkan koefisien yang ditetapkan Solidarity-ID.
+- **Billing Ledger:** Mencatat tagihan harian ke tabel `solidarity_usage_logs` untuk transparansi audit Kopi.
 
 ```
 crates/sa-worker/
 ├── Cargo.toml
 └── src/
     ├── lib.rs
+    ├── billing/
+    │   ├── mod.rs
+    │   ├── cpu_cycles.rs              # CPU execution time tracking
+    │   ├── io_metering.rs             # Data I/O volume tracking
+    │   ├── sa_tev_calculator.rs       # SA-TEV unit conversion
+    │   └── billing_ledger.rs         # Daily invoice generation
     ├── jobs/
     │   ├── mod.rs
     │   ├── karma_decay.rs          # Monthly karma decay job

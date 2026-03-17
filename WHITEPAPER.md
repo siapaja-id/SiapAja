@@ -2,7 +2,7 @@
 <div align="center">
 
 # 📜 WHITEPAPER v1.0: SiapAja.id
-### Mendekonstruksi Monopoli Gig Economy melalui Efisiensi Engine Real-time dan Komputasi Tinggi.
+### Model Koperasi Jasa Multi-Pihak Tanpa Iuran: Partisipasi sebagai Modal Masa Depan.
 
 **Penulis:** Core Developers & Komunitas SiapAja.id  
 **Tanggal:** [Bulan, Tahun]  
@@ -15,7 +15,7 @@
 ## 🛑 ABSTRAK
 Sistem *gig economy* (ekonomi serabutan) di Indonesia saat ini telah berevolusi menjadi bentuk baru feodalisme digital. Platform raksasa (aplikasi ojol/jasa) yang awalnya bertindak sebagai inovator penghubung, kini bertransformasi menjadi makelar monopolistik yang mengekstraksi hingga 30% dari nilai keringat pekerja, sambil berlindung di balik ilusi "Kemitraan". 
 
-**SiapAja.id** hadir sebagai infrastruktur publik alternatif. Melalui kombinasi **Rust** (untuk efisiensi server ekstrem), **SpacetimeDB** (sebagai state-engine untuk matching instan), dan antarmuka **React PWA** yang modern, kami mendesain ulang ekonomi pekerja lepas dengan **0% komisi untuk mikro, progresif fee untuk makro**. Whitepaper ini menjabarkan arsitektur teknis, model ekonomi anti-bakar duit, mekanisme *Decentralized Justice*, dan strategi monetisasi *Enterprise* (SSPL) yang memastikan keberlanjutan platform tanpa harus menghisap darah pekerja tingkat bawah.
+**SiapAja.id** hadir sebagai **koperasi jasa yang bebas beban iuran**. Kami mengganti model setoran modal tradisional dengan akumulasi kontribusi transaksi. Whitepaper ini menjabarkan arsitektur teknis, model ekonomi anti-bakar duit, mekanisme *Decentralized Justice*, dan strategi monetisasi *Enterprise* (SSPL) yang memastikan keberlanjutan platform tanpa harus menghisap darah pekerja tingkat bawah.
 
 ---
 
@@ -98,11 +98,9 @@ Kami menolak keras sistem lelang buta yang membuat pekerja saling banting harga 
 
 Bagaimana *Founder*, Komunitas, dan Platform meraup keuntungan finansial jika komisi operasional adalah 0%? Ini adalah desain makroekonomi kita.
 
-### 5.1. Evolusi Permodalan: Dari SMD ke $SIAP Token
-SiapAja.id menggunakan strategi *Hybrid Entity* untuk menjembatani regulasi domestik dan likuiditas global.
+### 5.1. Evolusi Permodalan: Partisipasi murni (Zero-Entry Fee)
 *   **Phase 1: Sertifikat Modal Digital (SMD)**
-    - Status hukum: Bukti penyertaan modal anggota Koperasi Multi-Pihak yang sah secara digital.
-    - Fokus: Kepatuhan regulasi Indonesia (Kemenkop & OJK).
+    - Status hukum: Bukti partisipasi transaksi yang dikonversi menjadi unit penyertaan modal.
 *   **Phase 4: Global Tokenization ($SIAP)**
     - Status hukum: Token tata kelola yang dirilis melalui *Offshore Foundation* untuk menarik modal global.
     - Mekanisme: Pemegang SMD memiliki hak prioritas untuk konversi (swap) menjadi $SIAP Token saat infrastruktur *Dual-Entity* diaktifkan.
@@ -111,11 +109,11 @@ SiapAja.id menggunakan strategi *Hybrid Entity* untuk menjembatani regulasi dome
 Platform bukan hanya infrastruktur, tapi mesin ekonomi bagi para *Founder* dan Anggota.
 
 Koperasi SiapAja adalah pemilik ekosistem massa. Untuk menjalankan operasionalnya, Koperasi mengikat perjanjian dengan **Solidarity-ID** melalui *Technology Service Agreement*.
-*   **60% Kedaulatan Massa:** Masuk ke kas Koperasi untuk dibagikan kembali sebagai SHU, asuransi, dan dana darurat anggota.
-*   **40% Kedaulatan Teknologi:** Masuk ke Solidarity-ID untuk menanggung biaya infrastruktur Cloud (SpacetimeDB/Rust) dan biaya riset para pengembang inti (Core Devs).
+*   **Kedaulatan Massa (100% Platform Fee):** Seluruh pendapatan dari fee transaksi dikuasai oleh Koperasi untuk kesejahteraan anggota (SHU).
+*   **Layanan Infrastruktur (SA-TEV):** Koperasi membayar Solidarity-ID berdasarkan biaya penggunaan komputasi (Execution Value) dan lisensi tahunan. 
 
-### 5.2.1 Technology Auditability
-Solidarity-ID berkomitmen pada **Open-Book Technology Fee**. Anggota Koperasi berhak mengetahui efisiensi penggunaan dana teknologi. Melalui performa Rust yang efisien, kami menargetkan pengurangan biaya infrastruktur dari waktu ke waktu, sehingga porsi R&D dapat lebih besar untuk menciptakan fitur-fitur yang meningkatkan pendapatan Jagoan.
+### 5.2.1 Insentif Optimasi
+Solidarity-ID didorong untuk menciptakan kode Rust paling efisien di dunia. Semakin efisien kodenya, semakin kecil biaya SA-TEV yang harus dibayar Koperasi, dan semakin besar margin profit yang bisa dipertahankan Solidarity-ID untuk mendanai riset masa depan tanpa bergantung pada pendanaan eksternal (VC).
 
 ### 5.3. Wealth Distribution & Open Ledger
 Dengan porsi 60% di tangan Koperasi, anggota memiliki kontrol penuh atas arah kebijakan finansial melalui RAT (Rapat Anggota Tahunan) yang terintegrasi di dalam aplikasi.
@@ -164,8 +162,8 @@ SiapAja.id bertindak **MURNI sebagai penyedia infrastruktur kode** (Software-as-
 *   **Jury-Led Resolution:** Semua sengketa diselesaikan secara *peer-to-peer* melalui sistem Juri Netizen. Keputusan juri adalah final dan mengikat secara algoritma.
 *   **User Autonomy:** User setuju bahwa penggunaan aplikasi ini adalah **atas resiko sendiri** (*Use at your own risk*).
 
-### 8.2. Struktur Koperasi Multi-Pihak
-SiapAja.id menolak bentuk Perseroan Terbatas (PT) yang murni kapitalis. Platform akan didaftarkan sebagai **Koperasi Multi-Pihak**. Pekerja di lapangan, pengembang perangkat lunak, dan dewan pengawas memiliki porsi kepemilikan yang sah secara hukum negara, menghindari label "Mitra Palsu".
+### 8.2. Struktur Koperasi Jasa Multi-Pihak
+SiapAja.id menolak bentuk Perseroan Terbatas (PT) yang murni kapitalis. Platform akan didaftarkan sebagai **Koperasi Jasa Multi-Pihak**. Pekerja di lapangan, pengembang perangkat lunak, dan dewan pengawas memiliki porsi kepemilikan yang sah secara hukum negara, tanpa dibebani setoran modal di awal.
 
 ### 8.3. Strategi Lisensi Ganda (AGPL + SSPL)
 Kode sumber kami adalah senjata komersial yang dilindungi secara hukum:

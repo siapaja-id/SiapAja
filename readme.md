@@ -1,7 +1,7 @@
 <div align="center">
 
 # 🦀 SiapAja.id: The Ultra-Fast Real-time Gig Economy
-**"Scroll medsos dapet duit. Posting butuh bantuan langsung ada yang nyamber. 0% Komisi. 100% Keadilan."**
+**"Scroll medsos dapet duit. 0% Komisi. Tanpa Iuran Anggota. 100% Keadilan."**
 
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](#)
 [![Rust](https://img.shields.io/badge/Rust-1.75%2B-orange.svg)](#)
@@ -11,7 +11,7 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Corporate: SSPL](https://img.shields.io/badge/Corporate_License-SSPL-red.svg)](#)
 
-[Whitepaper (WIP)](#) • [Discord Devs](#) • [App Demo](#) • [Gabung Koperasi](#)
+[Whitepaper (WIP)](#) • [Discord Devs](#) • [App Demo](#) • [Mulai Bertransaksi](#)
 
 </div>
 
@@ -19,7 +19,7 @@
 
 Selamat datang di *Ground Zero* pemberontakan gig economy. Repository ini bukan sekadar *source code* aplikasi ojol atau marketplace jasa biasa. Ini adalah **senjata digital** yang dibangun menggunakan performa brutal dari **Rust**, dan antarmuka mobile modern dari **Flutter**, serta real-time sync super cepat dari **SpacetimeDB**. 
 
-Kita membangun platform di mana **komisi 0% untuk rakyat kecil, tiered fee untuk proyek besar**, harga dilindungi oleh AI dari perang tarif, transaksi aman pakai *Virtual Ledger Escrow* (tapi user tetap melihatnya sebagai Rupiah), dan setiap baris kode yang kalian sumbangkan akan diubah menjadi kepemilikan saham (*Equity*) masa depan.
+Kita membangun platform di mana **komisi 0% untuk rakyat kecil**, tanpa beban Simpanan Pokok atau Wajib. Keanggotaan didapat murni dari partisipasi. Setiap baris kode atau setiap job yang diselesaikan diubah menjadi **Pamor Equity** (Kepemilikan Berbasis Kontribusi).
 
 ---
 
@@ -53,8 +53,8 @@ Platform tetap gratis buat rakyat kecil. Tapi untuk menjaga keberlanjutan infras
 | Diatas Rp10jt | **10%** | 50% Pembuat Job : 50% Jagoan
 
 **Alokasi Fee Platform (The Distribution):**
-* **60% Community Treasury (Koperasi):** Kas Koperasi untuk SHU, Dana Sosial, dan Operasional Koperasi.
-* **40% Technology Service (Solidarity-ID):** Biaya infrastruktur (Server) + R&D (Gaji Dev) + Lisensi IP.
+* **Community Treasury (Koperasi):** Menerima 100% surplus Platform Fee untuk SHU Anggota.
+* **Technology Service (Solidarity-ID):** Dibayar berdasarkan penggunaan (SA-TEV) dan Lisensi IP tahunan.
 
 **Untuk transaksi di bawah Rp500.000, Jagoan tetap terima 100% UTUH.**
 Fee untuk transaksi besar dibebankan secara *adil* ke kedua belah pihak (split fee), bukan cuma memeras Jagoan.
@@ -430,7 +430,7 @@ Kita nggak halu pengen ngalahin Gojek besok pagi. Ini adalah maraton yang teruku
 
 ### 16.1. Platform Cooperative Model
 Kita nggak akan mendaftar sebagai PT (Perseroan Terbatas) konvensional yang tunduk pada *Venture Capital*. 
-*   SiapAja.id akan berbadan hukum **Koperasi Multi-Pihak**. 
+*   SiapAja.id adalah **Koperasi Jasa Multi-Pihak**. Tidak ada biaya pendaftaran, Simpanan Pokok, maupun Simpanan Wajib. Anggota cukup berkontribusi melalui jasa atau penggunaan platform. 
 *   Jagoan bukan sekadar "Mitra", mereka adalah **Anggota Koperasi** yang sah di mata hukum Indonesia. Mereka berhak atas Sisa Hasil Usaha (SHU) tahunan.
 
 ### 16.2. ⚠️ Non-Liability Disclaimer (FFFI Principle)

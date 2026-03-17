@@ -59,10 +59,8 @@ Return JSON: {
 **Model:** Claude 3 Haiku (fast, cheap, good enough)
 **Fallback:** GPT-3.5 Turbo
 
-**Logic:**
-- AI menghitung biaya hidup per wilayah, tingkat kesulitan kerja, dan jarak tempuh
-- Kalau AI bilang harga wajar benerin pompa air adalah Rp150.000, maka tombol "Bidding" di bawah angka itu akan **dimatikan**
-- Kita pastikan kompetisi terjadi di *kualitas*, bukan di *kemiskinan*
+**Logic (Anti-Guling Koperasi):**
+- AI memastikan harga tidak jatuh di bawah titik layak. Ini melindungi pemasukan anggota sekaligus memastikan *platform fee* yang masuk ke kas koperasi tetap stabil untuk mendanai infrastruktur tanpa perlu menarik iuran anggota.
 
 ---
 

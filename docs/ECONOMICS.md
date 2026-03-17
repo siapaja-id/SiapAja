@@ -12,14 +12,14 @@
 |------------------|-------------|-----------|
 | `tasker` | **Pembuat Job** | User yang posting kebutuhan & bayar escrow. |
 | `taskee` | **Jagoan** | User yang ambil job & ngerjain tugas. |
-| `platform_fee` | **Biaya Kopi** | Fee operasional platform. |
+| `platform_fee` | **Kontribusi Koperasi** | Kontribusi transaksi untuk dana bersama & pengembangan. |
 | `solidarity_pool` | **Dana Solidaritas** | Asuransi komunitas untuk kecelakaan kerja. |
 
 ---
 
 ## 2. Tiered Fee Structure
 
-Fee platform diterapkan secara progresif berdasarkan budget pekerjaan:
+Koperasi tidak menarik iuran anggota. Sebagai gantinya, dana bersama (Treasury) dibangun melalui kontribusi progresif per transaksi:
 
 | Budget Pekerjaan | Fee Platform | Beban Biaya |
 |------------------|--------------|-------------|
@@ -34,27 +34,27 @@ Fee platform diterapkan secara progresif berdasarkan budget pekerjaan:
 
 ---
 
-## 3. Fee Distribution (Alokasi Fee Platform)
+## 3. Revenue & Technology Service Model
 
-Dari total fee yang terkumpulkan, distribusi adalah:
+Seluruh porsi **Platform Fee** (100%) masuk ke dalam **Community Treasury (Kas Kopi)**. Kopi kemudian membayar biaya operasional teknologi kepada **Solidarity-ID** sebagai vendor infrastruktur eksklusif.
 
-| Komponen | Persentase | Keterangan |
-|----------|-----------|------------|
-| **Community Treasury (Koperasi)** | **60%** | Alokasi utama untuk SHU, Dana Sosial, dan Operasional Koperasi. |
-| **Technology Service (Solidarity-ID)** | **40%** | Biaya infrastruktur (Server) + R&D (Gaji Dev) + Lisensi IP. |
+### 3.1 Komponen Biaya Teknologi (Triple-Tax Logic)
+Solidarity-ID menagih Kopi berdasarkan penggunaan nyata di server lokal (Self-Hosted):
 
----
+1. **SA-TEV (SiapAja Total Execution Value):** Biaya per unit komputasi (CPU/RAM/IO) pada setiap interaksi aplikasi. Solidarity-ID berhak mengatur harga unit SA-TEV secara mandiri.
+2. **Success Transaction Fee:** Biaya tetap (Fixed Fee) per transaksi sukses untuk pemeliharaan ledger.
+3. **Annual License Fee:** Biaya tahunan hak pakai kekayaan intelektual (SSPL) dan dukungan R&D inti.
 
-### 3.1 Transparency of Technology Fee (Solidarity-ID Allocation)
-Sebagai bentuk transparansi radikal, alokasi 40% yang dikelola oleh **Solidarity-ID** (PT) diaudit secara terbuka dengan target distribusi sebagai berikut:
+### 3.2 Prinsip Surplus Optimasi (Non-Audit)
+Solidarity-ID memiliki hak penuh atas efisiensi kode Rust yang dikembangkan. 
+- Jika pengembang Solidarity-ID berhasil mengoptimasi kode sehingga penggunaan **SA-TEV** menjadi rendah (murah), margin keuntungan tetap milik Solidarity-ID sebagai insentif inovasi.
+- Kopi tidak berhak meminta pengembalian atau audit atas margin efisiensi teknis Solidarity-ID.
 
-| Komponen Riset & Ops | Alokasi | Keterangan |
-|-----------------------|---------|------------|
-| **Infrastructure Hosting** | 15% | Biaya Cloud (SpacetimeDB, S3, Rust Nodes, API Gateway). |
-| **R&D / Core Engineering** | 20% | Biaya pengembangan fitur baru, keamanan, dan optimasi algoritma (Gaji Devs). |
-| **Compliance & IP Defense** | 5% | Biaya legalitas, audit keamanan (Pentest), dan perlindungan lisensi SSPL. |
-
-**Prinsip Surplus Riset:** Jika terdapat sisa dari alokasi operasional server (efisiensi Rust), dana tersebut dialokasikan kembali ke dalam **Dana Inovasi** untuk pengembangan fitur perlindungan Jagoan berbasis AI.
+### 3.3 Aliran Dana (The Flow)
+1. **Platform Fee** ditarik dari transaksi besar → Masuk **100%** ke Kas Kopi.
+2. **SA-TEV Tracker** mencatat beban kerja server per request/action.
+3. **Invoice Bulanan:** Solidarity-ID menagih Kopi berdasarkan akumulasi SA-TEV + Transaction Fee.
+4. **Settlement:** Kopi membayar tagihan dari Kas Treasury. Sisa saldo Treasury sepenuhnya milik Kopi untuk SHU dan asuransi.
 
 ---
 
@@ -106,7 +106,10 @@ User bisa beli verifikasi centang biru. **PENTING:** Ini murni signal, BUKAN gar
 ### 5.3 Hyper-Local Ads Marketplace
 Warung, laundry, toko bangunan di radius 2km bisa pasang iklan kontekstual di Feed. Iklan muncul pas user scroll nyari jasa relevan.
 
-### 5.4 B2B API Integration
+### 5.4 Revenue Surplus: Partisipasi sebagai Modal
+Karena tidak ada Simpanan Pokok, modal koperasi berasal dari akumulasi surplus transaksi. Anggota yang aktif bertransaksi secara otomatis meningkatkan "Penyertaan Modal" mereka yang tercatat di sistem sebagai SMD (Sertifikat Modal Digital) berbasis partisipasi.
+
+### 5.5 B2B API Integration
 Mall atau Apartemen yang mau pakai worker kita secara borongan wajib langganan API (Enterprise Tier).
 
 ---
@@ -117,7 +120,7 @@ Dana Treasury (dari denda dan sisa fee) yang belum terpakai tidak dibiarkan ngan
 
 - **Mekanisme:** Sistem otomatis memutar dana di instrumen Reksadana Pasar Uang berisiko rendah
 - **Hasil (Yield):** Dibagikan sebagai dividen bulanan kepada pemegang Pamor tertinggi
-- **Filosofi:** Pekerja bukan cuma buruh, mereka adalah Investor Ekosistem
+- **Filosofi:** Pekerja menjadi investor melalui keringat (jasa), bukan melalui iuran tunai.
 
 ---
 
@@ -138,7 +141,7 @@ Ini bukan monopoli harga. Ini **Social Correction** - komunitas punya suara buat
 ## 9. Tokenomics Roadmap
 
 ### Phase 1: Sertifikat Modal Digital (SMD)
-- Status hukum: Bukti penyertaan modal anggota Koperasi Multi-Pihak
+- Status hukum: Bukti penyertaan modal berbasis akumulasi kontribusi transaksi (bukan setoran tunai).
 - Fokus: Kepatuhan regulasi Indonesia (Kemenkop & OJK)
 
 ### Phase 4: Global Tokenization ($SIAP)

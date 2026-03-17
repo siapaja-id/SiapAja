@@ -18,7 +18,7 @@
 
 ## 2. Sistem Pamor
 
-Pamor adalah aset reputasi yang direkam permanen (tapi anonim) di database. Ini BUKAN sistem Kredit Sosial ala China - ini adalah sistem reputasi peer-to-peer.
+Pamor adalah **Modal Sosial** sekaligus bukti keanggotaan aktif. Di SiapAja, Anda tidak "membeli" hak suara dengan uang simpanan, Anda "menanam" hak suara melalui kualitas kerja.
 
 ### 2.1 Metrik Pamor
 
@@ -67,7 +67,7 @@ Pamor bukan sekadar angka di profil, tapi deretan event yang di-hash.
 
 ## 5. Voting Power (Hak Suara)
 
-Pamor bukan cuma buat pamer. Semakin tinggi Pamor, semakin besar **Hak Suara** dalam menentukan arah platform:
+Pamor menggantikan fungsi Simpanan Wajib sebagai syarat hak suara:
 
 - **Konversi:** 100 Pamor = 1 Suara
 - **Maksimal:** 10 Suara per orang (supaya Sultan Pamor tidak bisa memonopoli keputusan)
@@ -138,10 +138,10 @@ Kami nggak pakai CS yang jawabannya "Mohon maaf atas ketidaknyamanannya". Kami p
 ## 7. Contribution Logic: Technology vs Operations
 
 Sistem ini memisahkan kontribusi menjadi dua jalur:
-1. **Jalur Operasional (Koperasi):** Jagoan berkontribusi melalui kerja lapangan dan mendapatkan SHU dari porsi 60% pendapatan Koperasi.
-2. **Jalur Riset (Solidarity-ID):** Developer berkontribusi melalui kode (GitHub PR) dan mendapatkan **Pamor Equity** yang bersumber dari alokasi 40% biaya teknologi.
+1. **Jalur Operasional (Koperasi):** Jagoan berkontribusi melalui kerja lapangan dan mendapatkan SHU dari surplus pendapatan Koperasi.
+2. **Jalur Riset (Solidarity-ID):** Solidarity-ID bertindak sebagai mitra vendor teknologi eksklusif yang dibayar melalui mekanisme **SA-TEV (Usage Billing)** dan biaya Lisensi IP.
 
-Koperasi tidak perlu mempekerjakan developer secara internal, sehingga terhindari dari beban manajemen teknologi yang kompleks. Koperasi cukup memastikan layanan dari Solidarity-ID berjalan sesuai standar yang disepakati (SLA).
+Koperasi tidak mempekerjakan developer secara internal. Hubungan bersifat kemitraan strategis di mana Solidarity-ID bertanggung jawab penuh atas ketersediaan sistem dan keamanan data (SLA) dengan skema bayar-sesuai-penggunaan (SA-TEV).
 
 ---
 
