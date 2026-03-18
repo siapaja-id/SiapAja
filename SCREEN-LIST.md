@@ -14,14 +14,14 @@
 - **No Mode Switching**: Every user can perform any action anytime (Reddit-style)
 - **Pay-to-Post**: Job visible only after escrow funded (anti-spam)
 - **Fast-Bid Matching**: 15-minute enrollment window, customer selects or auto-match
-- **Anti-Senior Bias**: New workers have equal visibility + karma boost
+- **Anti-Senior Bias**: New workers have equal visibility + pamor boost
 - **Transparent Algorithms**: All scoring factors visible to users
 
 ## 0.2 User States (Not Roles)
 | State | Description | Unlocks |
 |-------|-------------|---------|
-| Unverified | Phone only, no KTP | Browse, Chat, Post Job (with limits) |
-| Verified | KTP + Bank verified | Claim Jobs, Withdraw, Jury Duty |
+| Unverified | Phone only | Browse Only (Read-Only) |
+| Verified | KTP Verified | Post Job, Claim Job, Chat, Wallet |
 | Active | Completed 1+ job | Full platform access |
 | Boosted | First 10 jobs | Pamor display boost, "New Jagoan" badge |
 
@@ -313,7 +313,7 @@
 - **5.1.5.1** Total budget (large)
 - **5.1.5.2** Fee breakdown (if applicable)
   - Platform fee: 0% (if <500k) or X%
-  - Solidarity pool: 1%
+  - Solidarity pool: 1% (Opsional Checkbox)
 - **5.1.5.3** Escrow status indicator (Locked/Safe)
 - **5.1.5.4** "Nego" indicator (if enabled)
 
@@ -323,11 +323,10 @@
 - **5.1.6.3** Applicants preview (avatars list)
 - **5.1.6.4** "Lihat Semua Pelamar" (if poster)
 
-### 5.1.7 Action Bar (Context-Aware, Sticky Bottom)
+### 5.1.7 Action Bar
 
 **For Unverified Viewers:**
-- "Verifikasi untuk Melamar" (primary, educational)
-- "Tanya Dulu" (secondary, chat allowed)
+- "Verifikasi KTP untuk bertransaksi (Wajib)"
 
 **For Verified Viewers (Not Applied):**
 - "Saya Bisa Bantu" (primary, apply)
@@ -356,7 +355,7 @@
 
 ### 5.2.1 Jagoan Profile Header
 - **5.2.1.1** Avatar + cover photo
-- **5.2.1.2** Name + verification + karma percentile ("Top 15%")
+- **5.2.1.2** Name + verification + pamor percentile ("Top 15%")
 - **5.2.1.3** Online status + last active
 - **5.2.1.4** "New Jagoan" badge (if <10 jobs)
 
@@ -422,7 +421,7 @@
 - **6.2.1.1** Header: "X Jagoan Melamar" + time remaining
 - **6.2.1.2** Sort options (Recommended/Jarak/Pamor/Terbaru)
 - **6.2.1.3** Applicant cards:
-  - Avatar + name + karma percentile
+  - Avatar + name + pamor percentile
   - Distance + estimated arrival
   - Message preview
   - "New Jagoan" badge (if applicable)
@@ -522,7 +521,7 @@
 - **8.1.1.1** Saldo Rupiah: Dana operasional harian.
 - **8.1.1.2** Sertifikat Modal Digital (SMD): Jumlah unit penyertaan modal (Phase 1).
 - **8.1.1.3** $SIAP Token: (Status: Roadmap - "Ready for Global Swap after Phase 4").
-- **8.1.1.4** Transaction Immutability: Tombol cek hash transaksi untuk memastikan data sudah masuk *batch on-chain*.
+- **8.1.1.4** Transaction Immutability: Tombol cek hash transaksi untuk memastikan data sudah masuk *immutable internal ledger* (On-chain Phase 4).
 
 ## 8.2 Top Up Flow
 
@@ -579,9 +578,9 @@
 - **8.4.2.4** Download receipt
 - **8.4.2.5** Report issue
 - **8.4.2.6** **Immutable Receipt**: Menampilkan Hash SHA-256 transaksi (contoh: `0x7f83b1657ff1fc53b92dc18148a1d65dfa1350f`).
-- **8.4.2.7** **Verify Link**: Tombol buat verifikasi data ke Public Ledger Browser (transparansi radikal) - buka modal yang nampilin payload JSON + hash chain.
+- **8.4.2.7** **Verify Link (Future/Phase 4)**: Tombol buat verifikasi data ke Public Ledger Browser (transparansi radikal) - buka modal yang nampilin payload JSON + hash chain.
 
-### 8.4.3 Ledger Browser (Public Audit View)
+### 8.4.3 Ledger Browser (Internal Audit / Public Future Phase 4)
 - **8.4.3.1** Search by hash: Input field buat cari transaksi berdasarkan hash.
 - **8.4.3.2** Filter by type: Toggle antara 'financial' dan 'pamor'.
 - **8.4.3.3** Chain visualization: Timeline entry dengan indikator hash validity (centang hijau kalau chain intact).
@@ -591,7 +590,7 @@
 
 ### 9.2.3 Pamor Audit Trail
 - **9.2.3.1** List kronologis mutasi Pamor (contoh: "+10 dari Job #123", "-5 dari downvote").
-- **9.2.3.2** Tiap baris punya indikator "Verified by Ledger" (Centang hijau kecil).
+- **9.2.3.2** Tiap baris punya indikator "Verified by Internal Ledger" (Centang hijau kecil).
 - **9.2.3.3** Hash preview: Klik buat liat full hash entry di modal.
 - **9.2.3.4** Filter by source: Job completion, downvote, jury duty, decay.
 - **9.2.3.5** Export Pamor Ledger: Tombol download entire Pamor history sebagai JSON + hash chain (buat portabilitas reputasi).
@@ -605,7 +604,7 @@
 ## 9.1 Pamor Dashboard
 
 ### 9.1.1 Score Display
-- **9.1.1.1** Current karma (large number)
+- **9.1.1.1** Current pamor (large number)
 - **9.1.1.2** Percentile rank ("Anda di Top 20% bulan ini")
 - **9.1.1.3** Trend indicator (↗️ improving)
 - **9.1.1.4** Progress to next tier
@@ -670,7 +669,7 @@
 - **10.2.1.1** Notification: "Anda Dipilih sebagai Juri"
 - **10.2.1.2** Case preview (anonymized)
 - **10.2.1.3** Time commitment (24h to vote)
-- **10.2.1.4** Reward preview (karma + fee)
+- **10.2.1.4** Reward preview (pamor + fee)
 - **10.2.1.5** Accept/Decline
 
 ### 10.2.2 Evidence Review
@@ -692,7 +691,7 @@
 ### 10.2.4 Results
 - **10.2.4.1** "Menunggu juror lain" progress
 - **10.2.4.2** Final decision reveal
-- **10.2.4.3** Your reward (karma + rupiah)
+- **10.2.4.3** Your reward (pamor + rupiah)
 - **10.2.4.4** Case archive
 
 ## 10.3 Dispute History
@@ -1098,7 +1097,7 @@ Jury Review → Voting → Result → Fund Release
 ## 18.2 Color Palette
 - **Primary**: #00A86B (Islamic green - trust, growth)
 - **Secondary**: #1A1A1A (Near black - strength)
-- **Accent**: #FFD700 (Gold - karma, quality)
+- **Accent**: #FFD700 (Gold - pamor, quality)
 - **Success**: #00C853
 - **Warning**: #FFAB00
 - **Error**: #FF1744

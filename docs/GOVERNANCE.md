@@ -10,7 +10,7 @@
 
 | Teknis (Backend) | Publik (UI) | Deskripsi |
 |------------------|-------------|-----------|
-| `karma_score` | **Pamor** | Skor reputasi user di komunitas. |
+| `pamor_score` | **Pamor** | Skor reputasi user di komunitas. |
 | `pamor_score` | **Pamor** | Alias untuk backward compatibility. |
 | `downvote` | **Downvote** | Sinyal bahwa konten/行为 violate norma komunitas. |
 
@@ -149,8 +149,8 @@ Koperasi tidak mempekerjakan developer secara internal. Hubungan bersifat kemitr
 
 | State | Description | Unlocks |
 |-------|-------------|---------|
-| Unverified | Phone only, no KTP | Browse, Chat, Post Job (with limits) |
-| Verified | KTP + Bank verified | Claim Jobs, Withdraw, Jury Duty |
+| Unverified | Phone only | Browse Only |
+| Verified | KTP Verified | Post Job, Claim Job, Chat, Wallet |
 | Active | Completed 1+ job | Full platform access |
 | Boosted | First 10 jobs | Pamor display boost, "New Jagoan" badge |
 
@@ -162,7 +162,7 @@ Koperasi tidak mempekerjakan developer secara internal. Hubungan bersifat kemitr
 |---------|------|---------|
 | 1.0 | 2026-03-16 | Initial creation - consolidated from readme.md, WHITEPAPER.md & SCREEN-LIST.md |
 | 1.1 | 2026-03-16 | Added Bab 3: Mekanisme Downvote & Sanksi Sosial (Anti-Brigading, Cost of Downvoting, Pamor Decay on Negative Feedback) |
-| 1.2 | 2026-03-16 | Terminology update: Karma → Pamor, Worker → Jagoan, Customer → Pembuat Job. Added UI vs Technical terminology tables. |
+| 1.2 | 2026-03-16 | Terminology update: Pamor → Pamor, Worker → Jagoan, Customer → Pembuat Job. Added UI vs Technical terminology tables. |
 | 1.3 | 2026-03-16 | Added Immutable Pamor Audit section with event sourcing and hash chain verification |
 
 ---

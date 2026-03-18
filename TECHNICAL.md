@@ -103,7 +103,7 @@ SiapAja.id menyelesaikan ini melalui:
 │  - Entities (User, Job, Escrow)         │
 │  - Repository traits                    │
 │  - Domain errors                        │
-│  - Business rules (Karma, Price Floor)  │
+│  - Business rules (Pamor, Price Floor)  │
 ├─────────────────────────────────────────┤
 │         Presentation Layer              │
 │  - Axum routes (thin adapters)         │
@@ -204,7 +204,7 @@ crates/sa-domain/
     │   ├── user.rs                 # User entity dengan behavior
     │   ├── job.rs                  # Job entity dengan state machine
     │   ├── escrow.rs               # Escrow domain logic
-    │   └── karma.rs                # Karma calculation rules
+    │   └── pamor.rs                # Pamor calculation rules
     ├── repositories/
     │   ├── mod.rs
     │   ├── user_repo.rs            # Trait: UserRepository
@@ -215,7 +215,7 @@ crates/sa-domain/
     │   ├── mod.rs
     │   ├── pricing_engine.rs       # Price floor calculation
     │   ├── matching_engine.rs      # Job-worker matching logic
-    │   ├── karma_engine.rs         # Karma decay & calculation
+    │   ├── karma_engine.rs         # Pamor decay & calculation
     │   └── dispute_resolver.rs     # Jury selection & voting
     ├── errors/
     │   ├── mod.rs
@@ -240,7 +240,7 @@ crates/sa-application/
     │   ├── feed_service.rs         # Personalized feed generation
     │   ├── payment_service.rs      # Deposit, withdrawal, escrow ops
     │   ├── dispute_service.rs      # Dispute lifecycle management
-    │   ├── user_service.rs         # Profile, karma, settings
+    │   ├── user_service.rs         # Profile, pamor, settings
     │   └── ai_service.rs           # OpenRouter integration
     ├── commands/
     │   ├── mod.rs
@@ -407,7 +407,7 @@ crates/sa-worker/
     │   └── billing_ledger.rs         # Daily invoice generation
     ├── jobs/
     │   ├── mod.rs
-    │   ├── karma_decay.rs          # Monthly karma decay job
+    │   ├── karma_decay.rs          # Monthly pamor decay job
     │   ├── escrow_cleanup.rs       # Expired escrow refund
     │   ├── treasury_yield.rs       # Monthly yield calculation
     │   ├── feed_refresh.rs         # Feed personalization refresh
@@ -595,7 +595,7 @@ ios/                                # iOS native config
 - Binary protocol (bukan REST/OpenAPI) dengan community Dart SDK untuk Flutter
 
 **Background Worker Container:**
-- Cron jobs: karma decay, escrow cleanup, treasury yield
+- Cron jobs: pamor decay, escrow cleanup, treasury yield
 - Queue processing: job matching notifications
 
 ### 5.3 Escrow Flow dengan Pihak Ketiga (Xendit)
@@ -616,7 +616,7 @@ ios/                                # iOS native config
 1. Jagoan tap "Selesai"
 2. Pembuat Job tap "Konfirmasi"
 3. Backend call Xendit: `release_escrow(escrow_id, taskee_id, amount: 148500)`
-4. Xendit transfer ke rekening Jagoan (minus 1% solidarity pool ke rekening koperasi)
+4. Xendit transfer ke rekening Jagoan (minus 1% solidarity pool ke rekening Kopi jika checkbox Solidarity Pool diaktifkan)
 5. Xendit webhook: release completed
 6. Backend update job: "COMPLETED"
 
@@ -677,14 +677,14 @@ Sort by score descending, limit 50
 **Database Schema:**
 - Table `users` tidak punya role fixed
 - Field `can_work_as_worker: boolean` (verified via KTP)
-- Field `can_post_as_customer: boolean` (default true)
+- Field `can_post_as_customer: boolean` (verified via KTP)
 
 **Switching Logic:**
 - User bisa switch role dalam satu session
 - State disimpan di frontend (React Context)
 - Backend tidak peduli role, cek permission per-action:
   - `create_job`: cek `can_post_as_customer`
-  - `claim_job`: cek `can_work_as_worker` dan `karma >= threshold`
+  - `claim_job`: cek `can_work_as_worker` dan `pamor >= threshold`
 
 **UI Pattern:**
 - Toggle switch di header: "Mode Pembuat Job" / "Mode Jagoan"
@@ -710,7 +710,7 @@ CREATE TABLE users (
     ktp_hash VARCHAR(64), -- hash saja, bukan nomor asli
     can_work_as_worker BOOLEAN DEFAULT FALSE,
     can_post_as_customer BOOLEAN DEFAULT TRUE,
-    karma_score INTEGER DEFAULT 100,
+    pamor_score INTEGER DEFAULT 100,
     voting_power INTEGER DEFAULT 1,
     blue_check_verified BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -812,7 +812,7 @@ CREATE TABLE disputes (
     outcome dispute_outcome,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     resolved_at TIMESTAMPTZ,
-    expires_at TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '7 days')
+    expires_at TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '365 days')
 );
 
 -- Jury Votes
@@ -1131,7 +1131,7 @@ pub async fn verify_entry(
 
 **Solution:**
 1. **In-Memory Latest Hash Cache**: Simpan latest hash di SpacetimeDB singleton state.
-2. **Batch Inserts**: Untuk operasi bulk (misal: monthly karma decay), gunakan batch insert dengan pre-calculated hashes.
+2. **Batch Inserts**: Untuk operasi bulk (misal: monthly pamor decay), gunakan batch insert dengan pre-calculated hashes.
 3. **Snapshot Checkpoints**: Setiap 10,000 entries, buat snapshot dengan Merkle root untuk faster verification.
 
 **SpacetimeDB Integration:**
@@ -1201,7 +1201,7 @@ pub struct ActiveJob {
     pub expires_at: u64,
     pub required_workers: i32,
     pub joined_workers: Vec<Uuid>, // untuk squad jobs
-    pub karma_tier: i32, // minimum karma untuk lihat job ini
+    pub karma_tier: i32, // minimum pamor untuk lihat job ini
 }
 
 // Worker Locations (GPS tracking)
@@ -1213,7 +1213,7 @@ pub struct WorkerLocation {
     pub gps_lng: f64,
     pub accuracy_meters: f32,
     pub last_updated: u64,
-    pub karma_score: i32,
+    pub pamor_score: i32,
     pub current_job_id: Option<Uuid>,
     pub is_online: bool,
     pub available_until: u64, // timestamp sampai kapan available
@@ -1324,7 +1324,7 @@ pub struct FeedPersonalization {
 **Error Categories:**
 - `400`: Validation error, business logic violation
 - `401`: Unauthorized (JWT invalid/expired)
-- `403`: Forbidden (karma too low, not verified, wrong role)
+- `403`: Forbidden (pamor too low, not verified, wrong role)
 - `404`: Resource not found
 - `409`: Conflict (job sudah di-claim, race condition)
 - `422`: Xendit API error (escrow creation failed)
@@ -1464,7 +1464,7 @@ pub struct FeedPersonalization {
 
 - KTP: hanya hash, bukan nomor asli
 - GPS history: tidak disimpan (hanya last location)
-- Dispute evidence: auto-delete 90 hari
+- Dispute evidence: auto-delete 1 tahun (365 hari)
 - User identities: masked di jury voting
 
 ---

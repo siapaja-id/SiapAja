@@ -60,9 +60,9 @@ Solidarity-ID memiliki hak penuh atas efisiensi kode Rust yang dikembangkan.
 
 ## 4. Solidarity Pool (Dana Solidaritas)
 
-- **Rate:** 1% auto-deduction dari setiap transaksi
+- **Rate:** Opsional 1% (Checkbox pilihan Pembuat Job/Jagoan)
 - **Tujuan:** Asuransi komunitas untuk kecelakaan kerja
-- **Mekanisme:** Setiap transaksi potong 1%, masuk ke Solidarity Pool di Virtual Ledger
+- **Mekanisme:** Jika checkbox dipilih, potong 1%, masuk ke Solidarity Pool di Virtual Ledger
 - **Klaim:** Jagoan kecelakaan saat narik barang → klaim diambil dari pool ini lewat persetujuan pengurus Koperasi
 
 ---

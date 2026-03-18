@@ -137,7 +137,7 @@ Perubahan data langsung terpropagasi ke semua client dalam milidetik. Jagoan kli
 Kita nggak pakai koin yang harganya naik-turun. Dana ditampung oleh **Xendit Escrow** (berizin OJK).
 *   **Deposit:** Pembuat Job bayar Rp100.000 via GoPay/OVO/VA/QRIS ke Xendit.
 *   **Escrow Lock:** Dana dikunci di escrow, tidak bisa diambil sampai pekerjaan selesai.
-*   **Release:** Jagoan terima uang (dikurangi 1% solidarity pool) langsung ke rekening bank/e-wallet.
+*   **Release:** Jagoan terima uang (dikurangi 1% solidarity pool jika dipilih) langsung ke rekening bank/e-wallet.
 
 ---
 
@@ -221,7 +221,7 @@ Fee hanya dikenakan untuk transaksi kelas menengah ke atas, dan dibebankan secar
 2.  **Premium Blue Check (Trust Signal):** User bisa beli verifikasi centang biru. **PENTING:** Ini murni *signal*, BUKAN garansi. Platform TIDAK bertanggung jawab atas kerugian finansial/fisik. Sengketa diselesaikan Juri Netizen.
 3.  **Hyper-Local Ads Marketplace:** Warung, laundry, toko bangunan di radius 2km bisa pasang iklan kontekstual di Feed. Iklan muncul pas user scroll nyari jasa relevan. Contoh: User cari "Tukang AC" → Sistem tampilin iklan "Toko Sparepart AC Terdekat".
 4.  **B2B API Integration:** Mall atau Apartemen yang mau pakai Jagoan kita secara borongan wajib langganan API (*Enterprise Tier*).
-*   **Solidarity Pool:** Setiap transaksi potong 1% otomatis buat asuransi.
+*   **Solidarity Pool:** Setiap transaksi potong 1% (opsional/checkbox) buat asuransi.
 *   Kalau ada Jagoan kecelakaan saat narik barang, klaim pengobatannya diambil dari *pool* ini lewat persetujuan (voting) pengurus Koperasi. 
 *   **Bunganya (Yield):** Dibagikan sebagai dividen bulanan kepada pemegang Pamor tertinggi. Pekerja bukan cuma buruh, mereka adalah **Investor Ekosistem**.
 
@@ -373,7 +373,7 @@ Virtual Ledger kita (ditulis dalam Rust) hanya melakukan 3 hal, tapi melakukanny
 ### 13.1. Escrow Initialization (InitJob)
 *   **Fungsi:** Membuat *Escrow Account* khusus untuk satu pekerjaan.
 *   **Keamanan:** Uang (IDR) dipindahkan dari saldo Pembuat Job ke Escrow ini. Hanya instruksi `ReleaseFund` atau `Refund` dari platform yang bisa mengeluarkan uang ini.
-*   **Fungsi:** Menyerahkan 100% uang ke Jagoan setelah Pembuat Job klik "Selesai", minus 1% (otomatis dipotong ke *Solidarity Pool* untuk asuransi).
+*   **Fungsi:** Menyerahkan 100% uang ke Jagoan setelah Pembuat Job klik "Selesai", minus 1% (jika checkbox Solidarity Pool diaktifkan).
 *   **Speed:** Transaksi selesai dan masuk ke saldo Jagoan dalam milidetik.
 
 ### 13.3. Dispute Freeze (LockJob)
