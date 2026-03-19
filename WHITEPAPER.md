@@ -15,7 +15,7 @@
 ## 🛑 ABSTRAK
 Sistem *gig economy* (ekonomi serabutan) di Indonesia saat ini telah berevolusi menjadi bentuk baru feodalisme digital. Platform raksasa (aplikasi ojol/jasa) yang awalnya bertindak sebagai inovator penghubung, kini bertransformasi menjadi makelar monopolistik yang mengekstraksi hingga 30% dari nilai keringat pekerja, sambil berlindung di balik ilusi "Kemitraan". 
 
-**SiapAja.id** hadir sebagai **koperasi jasa yang bebas beban iuran**. Kami mengganti model setoran modal tradisional dengan akumulasi kontribusi transaksi. Whitepaper ini menjabarkan arsitektur teknis, model ekonomi anti-bakar duit, mekanisme *Decentralized Justice*, dan strategi monetisasi *Enterprise* (SSPL) yang memastikan keberlanjutan platform tanpa harus menghisap darah pekerja tingkat bawah.
+**SiapAja.id** hadir sebagai **Ekosistem ERP Koperasi Multi-Aplikasi** yang bebas beban iuran. Kita tidak hanya membangun satu aplikasi, melainkan sebuah suite alat kerja digital (7 Apps) yang didukung oleh satu backend Rust Modular Monolith yang sangat efisien.
 
 ---
 
@@ -53,8 +53,9 @@ SiapAja.id membuang konsep "Katalog Jasa" (di mana pekerja memajang profil dan m
 
 Untuk menjalankan platform dengan 0% komisi, biaya operasional infrastruktur harus ditekan hingga mendekati angka nol (Zero Marginal Cost).
 
-### 3.1. Backend Komputasi Ekstrem (Rust + Axum)
-Kami menolak penggunaan bahasa pemrograman *garbage-collected* yang rakus memori. Server inti SiapAja.id ditulis menggunakan **Rust**.
+### 3.1. Backend Modular Monolith (Rust + Axum)
+Kami menggunakan pendekatan **Modular Monolith** dalam Rust Workspace. Hal ini memungkinkan integrasi data yang sangat ketat (ACID) antar modul akuntansi, marketplace, dan tata kelola, namun tetap memberikan keleluasaan untuk pengembangan front-end yang terpisah (7 Apps).
+*   **Mengapa Rust:** Kami menolak bahasa pemrograman *garbage-collected* yang rakus memori. Server inti SiapAja.id ditulis menggunakan **Rust**.
 *   **Efisiensi VPS:** Sebuah server *virtual* seharga Rp100.000/bulan dengan RAM 1GB mampu menangani +50.000 koneksi bersamaan berkat asinkronisasi Tokio/Axum.
 *   **Crash-Proof:** Jaminan *Memory Safety* Rust memastikan server tidak akan mengalami *Null Pointer Exception* di tengah malam.
 

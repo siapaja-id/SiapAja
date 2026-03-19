@@ -99,6 +99,41 @@ Status user menentukan akses fitur (Unverified, Verified, Active, Boosted). Deta
 
 ---
 
+# 2. THE MULTI-APP ERP SUITE
+
+## 2.1 SiapAja (The Main Social-Job App)
+- **Home Feed:** Social-Utility Mix (Markdown focus).
+- **Post Job:** Universal Post Composer (Pay-to-post).
+- **Wallet:** Saldo Rupiah & SMD (Merkle-Receipt).
+
+## 2.2 Siap Jago (Pro-Worker Command Center)
+- **Active Job Tracking:** GPS & Progress Evidence.
+- **Squad Lobby:** Koordinasi tim untuk job berat.
+- **Pamor Analytics:** Grafik performa & Hak Dividen.
+
+## 2.3 Siap Affiliate (Creator Hub)
+- **Deep-Link Generator:** Alat rujukan konten.
+- **Bounty Dashboard:** Pantau pundi Rupiah dari Growth Fund.
+
+## 2.4 Siap Ads (Merchant Portal)
+- **Ads Manager:** Buat iklan radius 2km.
+- **Contextual Config:** Hubungkan iklan ke kategori job.
+
+## 2.5 Siap Coop (Governance Portal)
+- **Open Ledger:** Transparansi kas Koperasi (Immutable).
+- **Voting Room:** RAK & RAT Digital.
+- **Digital Constitution:** Akses AD/ART.
+
+## 2.6 Siap Enterprise (B2B Dashboard)
+- **Bulk Orders:** Pesan Jagoan skala besar.
+- **API Key Management:** Integrasi sistem eksternal.
+
+## 2.7 Siap Ops (Internal ERP - Admin Only)
+- **KYC Queue:** Panel review identitas warga.
+- **Internal Ledger:** Pencatatan pengeluaran manual (Petty Cash).
+- **Claim Investigator:** Review bukti sengketa & asuransi.
+- **Regional Dashboard:** Monitor metrik per kecamatan.
+
 # 2. CORE NAVIGATION
 
 ## 2.1 Bottom Tab Bar (Fixed 5 Items)

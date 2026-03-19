@@ -1,7 +1,7 @@
 <div align="center">
 
-# 🦀 SiapAja.id: The Ultra-Fast Real-time Gig Economy
-**"Scroll medsos dapet duit. 0% Komisi Jagoan. Tanpa Iuran Anggota. 100% Keadilan."**
+# 🦀 SiapAja.id: The Cooperative ERP Ecosystem
+**"Sistem Operasi Ekonomi Rakyat. 0% Komisi Jagoan. Transparansi Radikal. 7 Apps, 1 Modular Backend."**
 
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](#)
 [![Rust](https://img.shields.io/badge/Rust-1.75%2B-orange.svg)](#)
@@ -37,7 +37,14 @@ Kalian sadar nggak kalau sistem ojol dan platform *freelance* hari ini sudah ber
 ### 1.2. The SiapAja Solution (Demand-Only Feed)
 Platform sebelah isinya katalog jasa. Tukang AC, *driver*, dan *cleaner* harus banting harga dan bayar iklan biar jasanya dilirik. 
 
-SiapAja.id membalik logika itu. Kita pakai sistem **Demand-Only Feed** yang bentuknya persis kayak timeline X/Threads. Isinya bukan orang pamer liburan, tapi kumpulan orang di radius 5km yang teriak: *"Genset mati nih, siapa bisa benerin sekarang? Budget Rp200.000!"* Jagoan tinggal *scroll*, nemu yang cocok, klik "Terima", dan langsung berangkat.
+SiapAja.id adalah ekosistem **ERP Koperasi Multi-Pihak**. Kita membagi fungsionalitas ke dalam 7 aplikasi spesifik untuk efisiensi UX:
+1. **SiapAja:** Super-app warga (Social-Utility & Job Posting). sistem **Demand-Only Feed** seperti timeline X/Threads.
+2. **Siap Jago:** Command center untuk Jagoan profesional (Manage Jobs & Squads).
+3. **Siap Affiliate:** Dashboard kreator konten & bounty hunters.
+4. **Siap Ads:** Portal iklan kontekstual untuk UMKM & Warung.
+5. **Siap Coop:** Portal Transparansi Radikal & Voting (RAK/RAT).
+6. **Siap Enterprise:** Dashboard korporat, B2B, & API management.
+7. **Siap Ops:** Sistem operasional internal pengurus (Akuntansi & KYC).
 
 ### 1.3. Zero-Commission & Tiered Scalability
 Platform tetap gratis buat rakyat kecil (transaksi < Rp500rb). Model ekonomi kita berbasis kontribusi progresif yang mendanai infrastruktur tanpa iuran anggota.
@@ -51,7 +58,7 @@ Mengadaptasi fenomena *Ojol Vlogger* atau *Santo Suruh*, kita merangkul para Jag
 
 ---
 
-## BAB 2: 🚀 Konsep Utama & Killer Features
+## BAB 2: 🛠️ Fitur Unggulan (Killer Features)
 
 ### 2.1. Timeline "Pay-to-Post" (Anti-Spam Mutlak)
 Di sini, nggak ada cerita "Pembuat Job PHP" atau nanya-nanya doang trus ngilang. 

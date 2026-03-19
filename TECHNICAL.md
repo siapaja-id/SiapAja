@@ -26,7 +26,8 @@ Platform gig economy konvensional memiliki masalah fundamental:
 
 ### 2.2 Solution Approach
 SiapAja.id menyelesaikan ini melalui:
-1. **Third-party Escrow Integration** - Xendit/Flip/ Midtrans Escrow API menampung dana, bukan SiapAja
+1. **Modular Monolith Architecture:** Satu backend Rust (Monorepo) yang melayani 7 front-end apps berbeda melalui kebijakan akses (RBAC) yang ketat.
+2. **Third-party Escrow Integration** - Xendit/Flip/ Midtrans Escrow API menampung dana, bukan SiapAja
 2. **Dual Database Architecture:**
    - **PostgreSQL:** REST API (Axum) dengan OpenAPI auto-generation untuk persistent data (user profiles, transactions, financial records)
    - **SpacetimeDB:** Binary protocol dengan community Dart SDK untuk real-time state (job feed, GPS tracking, live notifications)
@@ -138,16 +139,19 @@ siapaja-core/
 │   ├── ARCHITECTURE.md
 │   ├── API_GUIDELINES.md
 │   └── DEPLOYMENT.md
-└── crates/                       # Workspace members
-    ├── sa-schema/                # #1 Shared domain models & types
-    ├── sa-domain/                # #2 Domain logic (entities, traits)
-    ├── sa-application/           # #3 Use cases & services (includes pamor_engine)
-    ├── sa-infrastructure/        # #4 External implementations
-    ├── sa-api/                   # #5 Axum HTTP handlers
-    ├── sa-spacetimedb/           # #6 SpacetimeDB module
-    ├── sa-pamor/                 # #7 Pamor calculation engine (Logic from PAMOR-SYSTEM.md)
-    ├── sa-worker/                # #8 Background jobs
-    └── sa-cli/                   # #9 CLI tools & admin
+└── crates/                       # Modular Monolith Workspace
+    ├── sa-schema/                # Shared Types & Models
+    ├── sa-domain/                # Pure Business Logic
+    ├── sa-application/           # Orchestration & Services
+    ├── sa-infrastructure/        # DB, S3, Xendit, OpenRouter Impls
+    ├── sa-api/                   # Public API (SiapAja, Siap Jago, Affiliate)
+    ├── sa-ads/                   # Contextual Ads Engine (Siap Ads)
+    ├── sa-coop/                  # Transparency & Governance API (Siap Coop)
+    ├── sa-enterprise/            # B2B & Bulk Order API (Siap Enterprise)
+    ├── sa-ops/                   # Internal Admin ERP (Siap Ops)
+    ├── sa-spacetimedb/           # Real-time State Sync
+    ├── sa-worker/                # Billing (SA-TEV), Decay, & Manual Sync
+    └── sa-cli/                   # DevOps & Admin CLI Tools
 ```
 
 ### 4.2 Crate Details
@@ -387,8 +391,13 @@ crates/sa-spacetimedb/
         └── mod.rs                  # Auto-generated client code
 ```
 
-#### Crate: `sa-worker` (Billing & SA-TEV Module)
-**Purpose:** Menghitung penggunaan sumber daya server untuk invoice teknologi.
+#### Crate: `sa-worker` (ERP Ops & SA-TEV Module)
+**Purpose:** Menangani operasional internal koperasi, billing, dan akuntansi manual.
+
+- **Manual Expense Engine:** Modul pencatatan pengeluaran non-otomatis (petty cash, gaji admin).
+- **Ledger Synchronizer:** Jembatan audit antara data manual `sa-ops` ke `sa-coop` (Public Ledger).
+- **KYC/KYB Processor:** Workflow verifikasi identitas manual oleh tim pengurus.
+- **SA-TEV Tracker:** Monitoring beban server untuk invoice teknologi.
 
 - **CPU Cycles Tracker:** Menghitung waktu eksekusi setiap `Reducer` (SpacetimeDB) dan `Handler` (Axum).
 - **I/O Metering:** Mencatat volume data yang ditulis/dibaca dari PostgreSQL dan SpacetimeDB.
@@ -567,6 +576,10 @@ ios/                                # iOS native config
 - **Object Storage:** S3/Spaces untuk evidence foto
 
 ### 5.2 C4 Model: Container Diagram
+
+**Multi-App Gateway (Axum):**
+- Menangani 7 Client Apps berbeda melalui satu REST & WebSocket Interface.
+- RBAC (Role-Based Access Control) ketat: Membedakan akses user biasa (SiapAja) vs pengurus (Siap Ops).
 
 **API Gateway Container (Axum):**
 - Stateless, bisa scale horizontal
@@ -807,10 +820,44 @@ CREATE TABLE community_treasury_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     entry_type VARCHAR(50) NOT NULL, 
     amount_idr BIGINT NOT NULL,
-    solidarity_id_cut_idr BIGINT NOT NULL, -- Jatah vendor teknologi (SA-TEV)
-    community_cut_idr BIGINT NOT NULL, -- Jatah kas koperasi (SHU)
+    solidarity_id_cut_idr BIGINT NOT NULL,
+    community_cut_idr BIGINT NOT NULL,
     description TEXT,
     balance_snapshot BIGINT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Siap Ops: Akuntansi Manual & Internal (Dapur)
+CREATE TABLE internal_ops_ledger (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    admin_id UUID NOT NULL REFERENCES users(id),
+    category VARCHAR(50), -- OFFICE_RENT, SALARY, ELECTRICITY, ATK
+    amount_idr BIGINT NOT NULL,
+    evidence_url TEXT, -- Foto struk/invoice di S3
+    is_synced_to_public BOOLEAN DEFAULT FALSE, -- Flag audit Siap Coop
+    notes TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Siap Ops: Antrean Verifikasi KYC
+CREATE TABLE kyc_verification_queue (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id),
+    status VARCHAR(20) DEFAULT 'PENDING', -- PENDING, APPROVED, REJECTED
+    reviewer_id UUID REFERENCES users(id),
+    rejection_reason TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    reviewed_at TIMESTAMPTZ
+);
+
+-- Internal Ops Table (Petty Cash & Admin)
+CREATE TABLE internal_ops_ledger (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    admin_id UUID NOT NULL REFERENCES users(id),
+    category VARCHAR(50), -- OFFICE_RENT, ELECTRICITY, SALARY, ATK
+    amount_idr BIGINT NOT NULL,
+    evidence_url TEXT, -- Foto struk/invoice
+    is_synced_to_public BOOLEAN DEFAULT FALSE, -- Status audit di Siap Coop
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

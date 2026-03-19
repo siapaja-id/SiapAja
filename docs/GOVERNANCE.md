@@ -49,15 +49,11 @@ Pamor menggantikan fungsi Simpanan Wajib sebagai syarat hak suara:
   - Mau uang denda di Treasury dipakai buat bagi-bagi sembako atau asuransi kecelakaan? Voting!
   - Pemilihan pengurus wilayah
 
-### 4.1 Struktur Demokrasi Digital (RAK ke RAT)
-
-Untuk menghindari "Formalitas Klik Setuju", SiapAja.id menggunakan sistem **Rapat Anggota Kelompok (RAK)** sebelum menuju RAT Nasional:
-
-1.  **Pembentukan Kelompok (RAK):** Anggota dikelompokkan otomatis berdasarkan **Wilayah (Kecamatan)** atau **Kategori Profesi (misal: Skuad Tukang AC)**.
-2.  **Diskusi Substantif (RAK):** Di dalam aplikasi, setiap kelompok memiliki forum diskusi khusus untuk membahas usulan kebijakan.
-3.  **Pemilihan Delegasi:** Setiap kelompok (misal 100 orang) memilih 1 **Utusan/Delegasi** (berdasarkan Pamor tertinggi dan hasil voting internal kelompok).
-4.  **Mandat Delegasi:** Utusan membawa aspirasi kelompok ke RAT Nasional. Utusan memiliki **Delegated Voting Power** yang merupakan akumulasi suara dari anggotanya.
-5.  **Transparansi Mandat:** Anggota bisa menarik mandatnya secara real-time jika utusan memberikan suara yang berlawanan dengan kesepakatan kelompok di RAK.
+### 4.1 Struktur Demokrasi Digital (Via Siap Coop)
+Setiap proses demokrasi dilakukan secara eksklusif melalui aplikasi **Siap Coop**:
+1. **RAK Digital:** Forum diskusi tingkat kecamatan untuk membahas usulan warga.
+2. **Pemilihan Utusan:** Voting delegasi yang akan membawa mandat ke RAT Nasional.
+3. **Mandat Real-time:** Anggota dapat memantau bagaimana Utusan mereka memilih dan berhak menarik mandat melalui tombol "Tarik Suara" di Siap Coop.
 
 ---
 

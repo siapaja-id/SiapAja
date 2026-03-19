@@ -50,10 +50,11 @@ Solidarity-ID memiliki hak penuh atas efisiensi kode Rust yang dikembangkan.
 - Jika pengembang Solidarity-ID berhasil mengoptimasi kode sehingga penggunaan **SA-TEV** menjadi rendah (murah), margin keuntungan tetap milik Solidarity-ID sebagai insentif inovasi.
 - Koperasi tidak berhak meminta pengembalian atau audit atas margin efisiensi teknis Solidarity-ID.
 
-### 3.3 Aliran Dana (The Flow)
-1. **Platform Fee** ditarik dari transaksi besar + **Ads Revenue** → Masuk **100%** ke Kas Koperasi.
-2. **SA-TEV Tracker** mencatat beban kerja server per request/action.
-3. **Invoice Bulanan:** Solidarity-ID menagih Koperasi berdasarkan akumulasi SA-TEV + Transaction Fee.
+### 3.3 Aliran Dana (The ERP Flow)
+1. **Platform Fee & Ads Revenue:** Masuk otomatis ke **Kas Koperasi (Treasury)**.
+2. **Pengeluaran Manual (Siap Ops):** Pengurus mencatat biaya kantor, listrik, dan operasional manual lainnya.
+3. **Audit Sync:** Secara periodik, pengurus melakukan "Publish" dari **Siap Ops** ke **Siap Coop** (Open Ledger) agar seluruh anggota bisa mengaudit pengeluaran manual tersebut.
+4. **SA-TEV Tracking:** Solidarity-ID menagih Koperasi berdasarkan beban server yang dicatat otomatis oleh sistem.
 4. **Settlement & Alokasi Kas Koperasi (Treasury):** 
    Setelah dikurangi biaya infrastruktur (Solidarity-ID), sisa saldo dialokasikan secara *smart-contract* oleh Virtual Ledger:
    - **40% untuk SHU/Dividen:** Dibagikan ke anggota ber-Pamor tinggi.
