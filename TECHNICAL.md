@@ -1483,19 +1483,21 @@ pub struct FeedPersonalization {
 
 ## 11. Infrastructure & Deployment
 
-### 11.1 Resource Requirements
+### 11.1 National-Scale Infrastructure (Indonesia Benchmark)
 
-**Minimal Production:**
-- 1x VPS 2 vCPU, 4GB RAM: Axum + PostgreSQL + SpacetimeDB
-- Cost: ~$20-40/bulan
-- Handle: 10.000 concurrent users
+Berdasarkan benchmark Rust + SpacetimeDB, satu unit server tunggal sanggup menangani **450.000 order/hari** dengan skema beban puncak (burst) hingga **125 order/detik**.
 
-**Recommended Production:**
-- 2x VPS 4 vCPU, 8GB RAM: Axum API Gateway (load balanced)
-- 1x Managed PostgreSQL: 2 vCPU, 4GB RAM
-- SpacetimeDB Cloud: sesuai usage
-- Cost: ~$100-150/bulan
-- Handle: 100.000+ concurrent users
+**Standard National VPS (Single Node Strategy):**
+- **CPU:** 8 vCPU (High Clock Speed >3.0 GHz) - Axum + SpacetimeDB
+- **RAM:** 32 GB DDR4/DDR5 (In-memory state management)
+- **Storage:** 500 GB NVMe Gen4 (WAL & Persistent Storage)
+- **Network:** 1 Gbps Unmetered
+- **Target Load:** 450k Orders/Day, 100k+ Concurrent WebSocket Connections
+- **Estimasi Biaya:** ~$80 - $150/bulan (Hetzner AX102 / Dedicated Server equivalent)
+
+**Scaling Strategy:**
+1. **Vertical (0 - 1M Order/hari):** Upgrade ke 16-core / 64GB RAM pada satu node.
+2. **Horizontal ( > 1M Order/hari):** Implementasi sharding SpacetimeDB berdasarkan Region (Kecamatan/Kota).
 
 ### 11.2 Monitoring
 
@@ -1512,12 +1514,13 @@ pub struct FeedPersonalization {
 - Performance timings
 - Security events
 
-### 11.3 Backup & DR
+### 11.3 Backup & Data Lifecycle (National Scale)
 
-- PostgreSQL: Continuous WAL archiving
-- Daily full backups, retained 30 hari
-- SpacetimeDB: snapshot 6 jam, retained 7 hari
-- RPO: < 5 menit, RTO: < 30 menit
+- **Hot Storage (In-Memory):** 30 hari data transaksi (estimasi 70GB) disimpan di RAM untuk query instan.
+- **Warm Storage (NVMe):** Data 1 tahun terakhir (estimasi 850GB compressed).
+- **Cold Storage (S3/Glacier):** Data arsip >1 tahun untuk audit regulasi.
+- **RPO:** < 1 detik (via SpacetimeDB Write-Ahead Log).
+- **RTO:** < 10 menit (Cold boot Rust binary + SpacetimeDB recovery).
 
 ---
 

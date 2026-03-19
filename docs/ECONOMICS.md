@@ -41,8 +41,8 @@ Seluruh porsi **Platform Fee** (100%) masuk ke dalam **Community Treasury (Kas K
 ### 3.1 Komponen Biaya Teknologi (Triple-Tax Logic)
 Solidarity-ID menagih Koperasi berdasarkan penggunaan nyata di server lokal (Self-Hosted):
 
-1. **SA-TEV (SiapAja Total Execution Value):** Biaya per unit komputasi (CPU/RAM/IO) pada setiap interaksi aplikasi. Solidarity-ID berhak mengatur harga unit SA-TEV secara mandiri.
-2. **Success Transaction Fee:** Biaya tetap (Fixed Fee) per transaksi sukses untuk pemeliharaan ledger.
+1. **SA-TEV (SiapAja Total Execution Value):** Biaya per unit komputasi yang ditekan serendah mungkin berkat arsitektur Rust. Untuk **450k order/hari**, efisiensi SA-TEV memungkinkan Koperasi hanya membayar biaya infrastruktur tetap yang minimal, mengalokasikan sisa margin sebesar-besarnya untuk SHU Anggota.
+2. **National Scale Billing:** Sistem billing teknologi dirancang untuk menampung volume nasional tanpa kenaikan biaya eksponensial (linear scaling).
 3. **Annual License Fee:** Biaya tahunan hak pakai kekayaan intelektual (SSPL) dan dukungan R&D inti.
 
 ### 3.2 Prinsip Surplus Optimasi (Non-Audit)

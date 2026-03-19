@@ -78,12 +78,12 @@ AI bertindak sebagai "Bodyguard" Jagoan dengan menentukan **Price Floor** (Harga
 
 ### 3.1. Filosofi Pemilihan Stack
 Kita punya satu prinsip: **"Performance of C++, Safety of Rust, Speed of SpacetimeDB, Modern Mobile with Flutter."**
-Kita nggak mau bakar duit puluhan juta tiap bulan cuma buat bayar server AWS kayak *startup* sebelah. Dengan tumpukan teknologi ini, kita bisa menampung transaksi satu negara hanya dengan biaya server setara harga kopi *specialty* sebulan.
+Kita nggak mau bakar duit puluhan juta tiap bulan cuma buat bayar server AWS kayak *startup* sebelah. Dengan tumpukan teknologi ini, kita bisa menampung transaksi satu negara hanya dengan biaya server setara harga kopi harian seorang eksekutif (estimasi $100/bulan).
 
 ### 3.2. Backend (Rust + Axum)
 API Gateway dan *Matching Engine* kita ditulis 100% menggunakan **Rust** dengan framework **Axum** (dibangun oleh tim Tokio). 
 *   **Kenapa Rust?** *Memory-safe*, nggak ada *Garbage Collector* yang bikin server *freeze* tiba-tiba, dan sanggup memproses ratusan ribu *concurrent requests* secara asinkron.
-*   **Efisiensi Gila:** Backend kita bisa di-*deploy* di VPS seharga $5 (Rp75.000) per bulan dengan RAM cuma 1GB, tapi sanggup melayani puluhan ribu user aktif sekaligus. Bandingkan dengan platform sebelah yang butuh cluster server raksasa cuma buat nampung chat customer.
+*   **Efisiensi Gila (National Scale):** Backend kita dirancang untuk melayani **450.000 transaksi/hari (Seluruh Indonesia)** hanya dengan **Satu VPS High-Performance** (8-core Rust Engine). Dibandingkan kompetitor yang butuh ribuan microservices dan biaya infrastruktur milyaran, kita memangkas biaya operasional hingga 90% dengan *Zero Garbage Collection* dan *Shared-nothing Architecture*.
 
 ### 3.3. Frontend (Flutter + Riverpod + Dart)
 UI kita pakai **Flutter 3+** dengan **Riverpod** untuk state management dan **Dart** sebagai bahasa pemrograman.

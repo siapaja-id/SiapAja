@@ -15,6 +15,53 @@ WHITEPAPER.md
 
 # Files
 
+## File: repomix.config.json
+````json
+{
+  "$schema": "https://repomix.com/schemas/latest/schema.json",
+  "input": {
+    "maxFileSize": 52428800
+  },
+  "output": {
+    "filePath": "dev-docs/repomix.md",
+    "style": "markdown",
+    "parsableStyle": true,
+    "fileSummary": false,
+    "directoryStructure": true,
+    "files": true,
+    "removeComments": false,
+    "removeEmptyLines": false,
+    "compress": false,
+    "topFilesLength": 5,
+    "showLineNumbers": false,
+    "truncateBase64": false,
+    "copyToClipboard": true,
+    "includeFullDirectoryStructure": false,
+    "tokenCountTree": false,
+    "git": {
+      "sortByChanges": true,
+      "sortByChangesMaxCommits": 100,
+      "includeDiffs": false,
+      "includeLogs": false,
+      "includeLogsCount": 50
+    }
+  },
+  "include": [],
+  "ignore": {
+    "useGitignore": true,
+    "useDotIgnore": true,
+    "useDefaultPatterns": true,
+    "customPatterns": []
+  },
+  "security": {
+    "enableSecurityCheck": true
+  },
+  "tokenCount": {
+    "encoding": "o200k_base"
+  }
+}
+````
+
 ## File: docs/PAMOR-SYSTEM.md
 ````markdown
 # PAMOR-SYSTEM.md
@@ -151,12 +198,352 @@ Setiap perubahan Pamor **WAJIB** dicatat dalam `ledger_entries` dengan skema:
 - [AI-SPECS.md](./AI-SPECS.md) - Spesifikasi LLM & AI
 ````
 
+## File: docs/STORAGE.md
+````markdown
+# Storage & Data Lifecycle Policy
+
+## 1. Object Storage (S3 Compatible)
+
+Kita pake S3-Compatible storage (Cloudflare R2 atau DigitalOcean Spaces) buat ngejar **Zero Egress Fee**.
+
+**Rekomendasi Provider:**
+| Provider | Egress Fee | Storage Cost | Recommendation |
+|----------|------------|--------------|----------------|
+| **Cloudflare R2** | **$0/GB** | $0.015/GB/mo | ✅ **Primary Choice** |
+| DigitalOcean Spaces | $0/GB (within DO ecosystem) | $5/100GB/mo | Alternative if hosting on DO |
+| AWS S3 | $0.09/GB | $0.023/GB/mo | ❌ Avoid (egress fee mahal) |
+
+---
+
+## 2. Bucket Structure & Hierarchy
+
+Kita bagi bucket berdasarkan **Urgency**, **Privacy**, dan **Access Pattern**:
+
+| Folder / Prefix | Isi | Access Level | Retention (Age) |
+|-----------------|-----|--------------|-----------------|
+| `/profiles` | Foto Profil Jagoan & Pembuat Job | Public-Read | Selamanya (atau sampai akun didelete) |
+| `/jobs-evidence` | Foto Sebelum/Sesudah Kerja | Presigned-URL (15 min expiry) | **30 Hari** setelah job selesai |
+| `/disputes` | Bukti Sengketa (Sangat Sensitif) | Restricted/Private | **1 Tahun** (Setelah itu Hard Delete) |
+| `/kyc-vault` | Foto KTP & Selfie (Enkripsi!) | Super-Private (AES-256) | Sesuai regulasi / Cold Storage |
+| `/invoices` | PDF Invoice & Transaksi | Presigned-URL | 1 tahun → Glacier |
+| `/logs` | System & Audit Logs | Private | 7 hari Standard → 30 hari Glacier |
+
+---
+
+## 3. Data Retention Rules
+
+### 3.1 Automatic Cleanup Policy
+
+| Data Type | Standard Storage | Archival (Glacier) | Deletion Policy |
+|-----------|------------------|--------------------|-----------------|
+| Job Photos (`/jobs-evidence`) | 30 Days | N/A | Hard Delete (unless linked to active Dispute) |
+| Dispute Evidence (`/disputes`) | 365 Days | N/A | Hard Delete + Secure Wipe |
+| Profile Photos (`/profiles`) | Indefinite | N/A | Delete on account deletion |
+| KYC Documents (`/kyc-vault`) | 1 Year | 7 Years (Compliance) | Secure Delete after 7 years |
+| Invoices (`/invoices`) | 1 Year | 6 Years (Glacier) | Delete after 7 years |
+| System Logs (`/logs`) | 7 Days | 30 Days | Auto Cleanup |
+
+### 3.2 S3 Lifecycle Rules Configuration
+
+**Rule 1: Job Evidence Cleanup**
+```json
+{
+  "Rule": {
+    "ID": "DeleteJobEvidenceAfter30Days",
+    "Prefix": "jobs-evidence/",
+    "Status": "Enabled",
+    "Expiration": { "Days": 30 },
+    "NoncurrentVersionExpiration": { "NoncurrentDays": 1 }
+  }
+}
+```
+
+**Rule 2: Dispute Evidence Cleanup**
+```json
+{
+  "Rule": {
+    "ID": "DeleteDisputeEvidenceAfter1Year",
+    "Prefix": "disputes/",
+    "Status": "Enabled",
+    "Expiration": { "Days": 365 },
+    "NoncurrentVersionExpiration": { "NoncurrentDays": 1 }
+  }
+}
+```
+
+**Rule 3: Invoice Archival**
+```json
+{
+  "Rule": {
+    "ID": "ArchiveInvoicesAfter1Year",
+    "Prefix": "invoices/",
+    "Status": "Enabled",
+    "Transitions": [
+      {
+        "Days": 365,
+        "StorageClass": "GLACIER_INSTANT_RETRIEVAL"
+      }
+    ],
+    "Expiration": { "Days": 2555 }
+  }
+}
+```
+
+**Rule 4: Log Rotation**
+```json
+{
+  "Rule": {
+    "ID": "LogRotation",
+    "Prefix": "logs/",
+    "Status": "Enabled",
+    "Transitions": [
+      { "Days": 7, "StorageClass": "GLACIER" }
+    ],
+    "Expiration": { "Days": 30 }
+  }
+}
+```
+
+---
+
+## 4. Privacy & Security
+
+### 4.1 Access Control
+
+| Folder | Public | Presigned URL | IAM Policy |
+|--------|--------|---------------|------------|
+| `/profiles` | ✅ Read | ❌ | `s3:GetObject` for public |
+| `/jobs-evidence` | ❌ | ✅ 15 min expiry | `s3:GetObject` restricted |
+| `/disputes` | ❌ | ✅ 15 min expiry (jury only) | `s3:GetObject` restricted |
+| `/kyc-vault` | ❌ | ❌ | `s3:GetObject` + decryption key |
+| `/invoices` | ❌ | ✅ 15 min expiry | `s3:GetObject` restricted |
+
+### 4.2 Presigned URL Requirements
+
+Semua file di `/jobs-evidence`, `/disputes`, dan `/invoices` **WAJIB** diakses lewat **Presigned URL** dengan:
+
+- **Expiry Time:** 15 menit maximum
+- **HTTP Method:** GET only
+- **IP Restriction:** Optional (untuk dispute evidence)
+- **User Identity:** Logged in JWT required untuk generate
+
+**Contoh Generate Presigned URL (Rust):**
+```rust
+use aws_sdk_s3::presigning::PresigningConfig;
+use std::time::Duration;
+
+async fn generate_evidence_presigned_url(
+    s3_client: &s3::Client,
+    bucket: &str,
+    key: &str,
+) -> Result<String> {
+    let presign_config = PresigningConfig::builder()
+        .expires_in(Duration::from_secs(900)) // 15 menit
+        .build();
+    
+    let presigned = s3_client
+        .get_object()
+        .bucket(bucket)
+        .key(key)
+        .presigned(presign_config)
+        .await?;
+    
+    Ok(presigned.uri().to_string())
+}
+```
+
+### 4.3 Encryption Requirements
+
+**At-Rest Encryption:**
+- Semua file: AES-256 (S3 managed keys)
+- `/kyc-vault`: Customer-Managed Keys (CMK) via AWS KMS / HashiCorp Vault
+
+**In-Transit Encryption:**
+- TLS 1.3 mandatory untuk semua S3 requests
+- Certificate pinning di Flutter App
+
+---
+
+## 5. Cost Optimization
+
+### 5.1 Image Compression (Client-Side)
+
+**Flutter App Requirements:**
+- **Max Resolution:** 1920x1080 (Full HD) untuk evidence foto
+- **Max File Size:** 500KB - 1MB per image
+- **Format:** JPEG quality 80% atau WebP
+- **Compression:** Lakukan sebelum upload (bukan di server)
+
+**Contoh Flutter Compression:**
+```dart
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_compression/image_compression.dart';
+
+Future<File> compressEvidenceImage(File imageFile) async {
+  // Crop & resize first
+  final cropped = await ImageCropper().cropImage(
+    sourcePath: imageFile.path,
+    maxWidth: 1920,
+    maxHeight: 1080,
+    compressQuality: 80,
+  );
+  
+  // Compress to target size
+  final compressed = await ImageCompression.compressWithFile(
+    File(cropped!.path),
+    targetSize: 500 * 1024, // 500KB
+  );
+  
+  return compressed;
+}
+```
+
+### 5.2 Upload Strategy
+
+**Multipart Upload:**
+- Trigger untuk file > 5MB
+- Chunk size: 5MB per part
+- Parallel upload: 3 concurrent parts
+
+**Retry Logic:**
+- Exponential backoff: 1s, 2s, 4s, 8s, 16s
+- Max retries: 5
+- Circuit breaker: Fail fast setelah 3 consecutive failures
+
+### 5.3 Egress Fee Mitigation
+
+**Strategi:**
+1. **Cloudflare R2** untuk zero egress fee (prioritas utama)
+2. **CDN Caching** untuk `/profiles` (public assets)
+3. **Presigned URL Caching** di client (15 min cache)
+4. **Bandwidth Monitoring** dengan alert threshold $50/bulan
+
+---
+
+## 6. Implementation Checklist
+
+### 6.1 Backend (Rust)
+
+- [ ] S3 client initialization dengan Cloudflare R2 endpoint
+- [ ] Presigned URL generation untuk `/jobs-evidence`, `/disputes`, `/invoices`
+- [ ] File upload endpoint dengan multipart support
+- [ ] Image metadata stripping (EXIF removal untuk privacy)
+- [ ] S3 Lifecycle Rules deployment via Terraform/CloudFormation
+
+### 6.2 Frontend (Flutter)
+
+- [ ] Image compression sebelum upload
+- [ ] EXIF data removal (GPS location stripping)
+- [ ] Multipart upload untuk large files
+- [ ] Retry logic dengan exponential backoff
+- [ ] Presigned URL caching (15 min)
+
+### 6.3 Infrastructure
+
+- [ ] S3 bucket creation dengan versioning enabled
+- [ ] Lifecycle rules configuration
+- [ ] CORS policy untuk Flutter App
+- [ ] Bucket policy untuk public `/profiles`
+- [ ] CloudWatch alarm untuk storage cost monitoring
+
+---
+
+## 7. Disaster Recovery
+
+### 7.1 Backup Strategy
+
+| Data Type | Backup Frequency | Retention | Recovery Point Objective |
+|-----------|------------------|-----------|--------------------------|
+| `/profiles` | Daily snapshot | 30 days | 24 hours |
+| `/jobs-evidence` | None (ephemeral) | N/A | N/A (can be re-uploaded) |
+| `/disputes` | Weekly snapshot | 90 days | 7 days |
+| `/kyc-vault` | Daily snapshot + Cross-region | 7 years | 1 hour |
+| `/invoices` | Daily snapshot | 7 years | 24 hours |
+
+### 7.2 Data Recovery Procedure
+
+**Scenario: Accidental Deletion**
+1. Check S3 Versioning → restore previous version
+2. If versioning disabled → restore from daily snapshot
+3. If snapshot unavailable → request user re-upload (untuk ephemeral data)
+
+**Scenario: Bucket Corruption**
+1. Failover to cross-region replica (untuk `/kyc-vault`)
+2. Restore from latest snapshot
+3. Verify integrity dengan checksum validation
+
+---
+
+## 8. Compliance & Audit
+
+### 8.1 Data Sovereignty
+
+- Semua data disimpan di region **Indonesia (Jakarta)** untuk compliance
+- Cross-border transfer: prohibited untuk KYC data
+- Audit log: semua akses ke `/kyc-vault` dan `/disputes` dicatat
+
+### 8.2 Right to Erasure (GDPR-like)
+
+**User Account Deletion Flow:**
+1. Delete `/profiles/{user_id}/*` immediately
+2. Soft-delete `/jobs-evidence` (30 days grace period)
+3. Hard-delete `/jobs-evidence` setelah 30 days
+4. Retain `/kyc-vault` sesuai regulasi (7 years)
+5. Anonymize `/disputes` (remove PII, retain evidence)
+
+---
+
+## 9. Monitoring & Alerting
+
+### 9.1 Metrics to Track
+
+| Metric | Threshold | Alert Channel |
+|--------|-----------|---------------|
+| Storage Growth Rate | > 10GB/hour | Slack #infra-alerts |
+| Egress Cost | > $50/month | Email + Slack |
+| Failed Upload Rate | > 1% | PagerDuty |
+| Presigned URL Error Rate | > 5% | Slack #infra-alerts |
+
+### 9.2 Cost Monitoring Dashboard
+
+**Daily Report:**
+- Total storage per prefix
+- Egress bandwidth per prefix
+- Estimated monthly cost projection
+- Top 10 users by storage usage
+
+**Weekly Report:**
+- Storage growth trend
+- Cost per user segment
+- Lifecycle rule effectiveness (GB saved)
+
+---
+
+## 10. Related Documents
+
+- [`TECHNICAL.md`](../TECHNICAL.md) - Technical specification overview
+- [`TECHNICAL.md#security-architecture`](../TECHNICAL.md#10-security-architecture) - Security requirements
+- [`TECHNICAL.md#infrastructure`](../TECHNICAL.md#11-infrastructure--deployment) - Deployment guidelines
+
+---
+
+**Document Control:**
+- **Author:** Core Technical Team
+- **Version:** 1.0
+- **Date:** 2026-03-16
+- **Next Review:** 2026-06-16
+
+---
+
+*End of Document*
+````
+
 ## File: README.md
 ````markdown
 <div align="center">
 
-# 🦀 SiapAja.id: The Ultra-Fast Real-time Gig Economy
-**"Scroll medsos dapet duit. 0% Komisi Jagoan. Tanpa Iuran Anggota. 100% Keadilan."**
+# 🦀 SiapAja.id: The Cooperative ERP Ecosystem
+**"Sistem Operasi Ekonomi Rakyat. 0% Komisi Jagoan. Transparansi Radikal. 7 Apps, 1 Modular Backend."**
 
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](#)
 [![Rust](https://img.shields.io/badge/Rust-1.75%2B-orange.svg)](#)
@@ -192,13 +579,19 @@ Kalian sadar nggak kalau sistem ojol dan platform *freelance* hari ini sudah ber
 ### 1.2. The SiapAja Solution (Demand-Only Feed)
 Platform sebelah isinya katalog jasa. Tukang AC, *driver*, dan *cleaner* harus banting harga dan bayar iklan biar jasanya dilirik. 
 
-SiapAja.id membalik logika itu. Kita pakai sistem **Demand-Only Feed** yang bentuknya persis kayak timeline X/Threads. Isinya bukan orang pamer liburan, tapi kumpulan orang di radius 5km yang teriak: *"Genset mati nih, siapa bisa benerin sekarang? Budget Rp200.000!"* Jagoan tinggal *scroll*, nemu yang cocok, klik "Terima", dan langsung berangkat.
+SiapAja.id adalah ekosistem **ERP Koperasi Multi-Pihak**. Kita membagi fungsionalitas ke dalam 7 aplikasi spesifik untuk efisiensi UX:
+1. **SiapAja:** Super-app warga (Social-Utility & Job Posting). sistem **Demand-Only Feed** seperti timeline X/Threads.
+2. **Siap Jago:** Command center untuk Jagoan profesional (Manage Jobs & Squads).
+3. **Siap Affiliate:** Dashboard kreator konten & bounty hunters.
+4. **Siap Ads:** Portal iklan kontekstual untuk UMKM & Warung.
+5. **Siap Coop:** Portal Transparansi Radikal & Voting (RAK/RAT).
+6. **Siap Enterprise:** Dashboard korporat, B2B, & API management.
+7. **Siap Ops:** Sistem operasional internal pengurus (Akuntansi & KYC).
 
 ### 1.3. Zero-Commission & Tiered Scalability
+Platform tetap gratis buat rakyat kecil (transaksi < Rp500rb). Model ekonomi kita berbasis kontribusi progresif yang mendanai infrastruktur tanpa iuran anggota.
 
-> **📋 Source of Truth:** Untuk detail lengkap fee structure, distribution, dan escrow system, lihat [ECONOMICS.md](./docs/ECONOMICS.md)
-
-Platform tetap gratis buat rakyat kecil (transaksi < Rp500rb). Untuk transaksi besar, kita menerapkan **Tiered Fee** yang dibebankan secara adil ke kedua belah pihak. 100% surplus fee masuk ke **Kas Koperasi** untuk dibagikan sebagai SHU, setelah dikurangi biaya infrastruktur teknologi (**SA-TEV**).
+> **📋 Source of Truth:** Untuk detail lengkap fee structure, revenue model, dan distribusi surplus (SHU), lihat [docs/ECONOMICS.md](./docs/ECONOMICS.md).
 
 ### 1.4. Anti-Bakar Duit (The Creator-Led Growth)
 Kita nggak punya VC yang ngasih triliunan buat bakar duit iklan di Facebook/Google Ads. Dan kita memang nggak mau. Daripada bayar Mark Zuckerberg, **kita membayar Jagoan kita sendiri.**
@@ -207,7 +600,7 @@ Mengadaptasi fenomena *Ojol Vlogger* atau *Santo Suruh*, kita merangkul para Jag
 
 ---
 
-## BAB 2: 🚀 Konsep Utama & Killer Features
+## BAB 2: 🛠️ Fitur Unggulan (Killer Features)
 
 ### 2.1. Timeline "Pay-to-Post" (Anti-Spam Mutlak)
 Di sini, nggak ada cerita "Pembuat Job PHP" atau nanya-nanya doang trus ngilang. 
@@ -216,17 +609,10 @@ Mau bikin postingan butuh bantuan? **Duitnya harus di-lock di depan.** Kalau bud
 ### 2.2. Ultra-Fast State Sync
 Data sinkron instan, tanpa loading, secepat aplikasi chat. User cuma lihat saldo "Rupiah", tapi di belakang layar sistem mengelola Virtual Ledger dengan latensi milidetik. Semua perubahan langsung terpropagasi ke semua client tanpa polling. *Magic!*
 
-### 2.3. AI Man-Power Estimator (Perlindungan K3)
+### 2.3. AI Safety & Squad Formation
+AI bertindak sebagai "Bodyguard" Jagoan dengan menentukan **Price Floor** (Harga Bawah) dan mendeteksi risiko fisik (berat >50kg) untuk memicu pembentukan tim otomatis (**Squad Lobby**).
 
-> **📋 Source of Truth:** Untuk detail lengkap AI pipeline, LLM models, dan JSON schemas, lihat [AI-SPECS.md](./docs/AI-SPECS.md)
-
-AI kita bertindak sebagai "Bodyguard" pekerja. LLM membaca deskripsi pekerjaan untuk menentukan **Price Floor** (Harga Bawah) dan mendeteksi risiko fisik. 
-
-### 2.4. Pembentukan Tim Otomatis (Squad Formation)
-
-> **📋 Source of Truth:** Untuk detail lengkap squad formation logic dan threshold, lihat [AI-SPECS.md](./docs/AI-SPECS.md)
-
-Jika AI mendeteksi pekerjaan berat (beban >50kg), sistem otomatis membentuk **Squad Lobby**. Pekerjaan hanya dimulai jika jumlah Jagoan yang dibutuhkan terpenuhi.
+> **📋 Source of Truth:** Untuk detail AI Pipeline, LLM Prompts, dan logika Squad Formation, lihat [docs/AI-SPECS.md](./docs/AI-SPECS.md).
 
 ---
 
@@ -239,7 +625,7 @@ Kita nggak mau bakar duit puluhan juta tiap bulan cuma buat bayar server AWS kay
 ### 3.2. Backend (Rust + Axum)
 API Gateway dan *Matching Engine* kita ditulis 100% menggunakan **Rust** dengan framework **Axum** (dibangun oleh tim Tokio). 
 *   **Kenapa Rust?** *Memory-safe*, nggak ada *Garbage Collector* yang bikin server *freeze* tiba-tiba, dan sanggup memproses ratusan ribu *concurrent requests* secara asinkron.
-*   **Efisiensi Gila:** Backend kita bisa di-*deploy* di VPS seharga $5 (Rp75.000) per bulan dengan RAM cuma 1GB, tapi sanggup melayani puluhan ribu user aktif sekaligus. Bandingkan dengan platform sebelah yang butuh cluster server raksasa cuma buat nampung chat customer.
+*   **Efisiensi Gila (National Scale):** Backend kita dirancang untuk melayani **450.000 transaksi/hari (Seluruh Indonesia)** hanya dengan **Satu VPS High-Performance** (8-core Rust Engine). Dibandingkan kompetitor yang butuh ribuan microservices dan biaya infrastruktur milyaran, kita memangkas biaya operasional hingga 90% dengan *Zero Garbage Collection* dan *Shared-nothing Architecture*.
 
 ### 3.3. Frontend (Flutter + Riverpod + Dart)
 UI kita pakai **Flutter 3+** dengan **Riverpod** untuk state management dan **Dart** sebagai bahasa pemrograman.
@@ -642,53 +1028,6 @@ Punya ide sinting? Nemu *bug* di sistem AI kita? Atau BUMN yang mau beli lisensi
 - [docs/AI-SPECS.md](./docs/AI-SPECS.md) - Spesifikasi LLM & AI
 ````
 
-## File: repomix.config.json
-````json
-{
-  "$schema": "https://repomix.com/schemas/latest/schema.json",
-  "input": {
-    "maxFileSize": 52428800
-  },
-  "output": {
-    "filePath": "dev-docs/repomix.md",
-    "style": "markdown",
-    "parsableStyle": true,
-    "fileSummary": false,
-    "directoryStructure": true,
-    "files": true,
-    "removeComments": false,
-    "removeEmptyLines": false,
-    "compress": false,
-    "topFilesLength": 5,
-    "showLineNumbers": false,
-    "truncateBase64": false,
-    "copyToClipboard": true,
-    "includeFullDirectoryStructure": false,
-    "tokenCountTree": false,
-    "git": {
-      "sortByChanges": true,
-      "sortByChangesMaxCommits": 100,
-      "includeDiffs": false,
-      "includeLogs": false,
-      "includeLogsCount": 50
-    }
-  },
-  "include": [],
-  "ignore": {
-    "useGitignore": true,
-    "useDotIgnore": true,
-    "useDefaultPatterns": true,
-    "customPatterns": []
-  },
-  "security": {
-    "enableSecurityCheck": true
-  },
-  "tokenCount": {
-    "encoding": "o200k_base"
-  }
-}
-````
-
 ## File: docs/AI-SPECS.md
 ````markdown
 # AI-SPECS.md
@@ -827,8 +1166,8 @@ Return JSON: {
 }
 ```
 
-**Frequency:** Daily batch untuk semua active users
-**Cache:** Store di SpacetimeDB `feed_personalization` table
+**Frequency:** Incremental updates (per 1000 orders) untuk menjaga relevansi feed nasional tanpa membebani CPU.
+**Cache:** Store di SpacetimeDB `feed_personalization` table (Estimasi 22GB in-memory state untuk 100k user aktif).
 
 ---
 
@@ -905,346 +1244,6 @@ Return JSON: {
 - [GOVERNANCE.md](./GOVERNANCE.md) - Sistem Keadilan & Voting
 ````
 
-## File: docs/STORAGE.md
-````markdown
-# Storage & Data Lifecycle Policy
-
-## 1. Object Storage (S3 Compatible)
-
-Kita pake S3-Compatible storage (Cloudflare R2 atau DigitalOcean Spaces) buat ngejar **Zero Egress Fee**.
-
-**Rekomendasi Provider:**
-| Provider | Egress Fee | Storage Cost | Recommendation |
-|----------|------------|--------------|----------------|
-| **Cloudflare R2** | **$0/GB** | $0.015/GB/mo | ✅ **Primary Choice** |
-| DigitalOcean Spaces | $0/GB (within DO ecosystem) | $5/100GB/mo | Alternative if hosting on DO |
-| AWS S3 | $0.09/GB | $0.023/GB/mo | ❌ Avoid (egress fee mahal) |
-
----
-
-## 2. Bucket Structure & Hierarchy
-
-Kita bagi bucket berdasarkan **Urgency**, **Privacy**, dan **Access Pattern**:
-
-| Folder / Prefix | Isi | Access Level | Retention (Age) |
-|-----------------|-----|--------------|-----------------|
-| `/profiles` | Foto Profil Jagoan & Pembuat Job | Public-Read | Selamanya (atau sampai akun didelete) |
-| `/jobs-evidence` | Foto Sebelum/Sesudah Kerja | Presigned-URL (15 min expiry) | **30 Hari** setelah job selesai |
-| `/disputes` | Bukti Sengketa (Sangat Sensitif) | Restricted/Private | **1 Tahun** (Setelah itu Hard Delete) |
-| `/kyc-vault` | Foto KTP & Selfie (Enkripsi!) | Super-Private (AES-256) | Sesuai regulasi / Cold Storage |
-| `/invoices` | PDF Invoice & Transaksi | Presigned-URL | 1 tahun → Glacier |
-| `/logs` | System & Audit Logs | Private | 7 hari Standard → 30 hari Glacier |
-
----
-
-## 3. Data Retention Rules
-
-### 3.1 Automatic Cleanup Policy
-
-| Data Type | Standard Storage | Archival (Glacier) | Deletion Policy |
-|-----------|------------------|--------------------|-----------------|
-| Job Photos (`/jobs-evidence`) | 30 Days | N/A | Hard Delete (unless linked to active Dispute) |
-| Dispute Evidence (`/disputes`) | 365 Days | N/A | Hard Delete + Secure Wipe |
-| Profile Photos (`/profiles`) | Indefinite | N/A | Delete on account deletion |
-| KYC Documents (`/kyc-vault`) | 1 Year | 7 Years (Compliance) | Secure Delete after 7 years |
-| Invoices (`/invoices`) | 1 Year | 6 Years (Glacier) | Delete after 7 years |
-| System Logs (`/logs`) | 7 Days | 30 Days | Auto Cleanup |
-
-### 3.2 S3 Lifecycle Rules Configuration
-
-**Rule 1: Job Evidence Cleanup**
-```json
-{
-  "Rule": {
-    "ID": "DeleteJobEvidenceAfter30Days",
-    "Prefix": "jobs-evidence/",
-    "Status": "Enabled",
-    "Expiration": { "Days": 30 },
-    "NoncurrentVersionExpiration": { "NoncurrentDays": 1 }
-  }
-}
-```
-
-**Rule 2: Dispute Evidence Cleanup**
-```json
-{
-  "Rule": {
-    "ID": "DeleteDisputeEvidenceAfter1Year",
-    "Prefix": "disputes/",
-    "Status": "Enabled",
-    "Expiration": { "Days": 365 },
-    "NoncurrentVersionExpiration": { "NoncurrentDays": 1 }
-  }
-}
-```
-
-**Rule 3: Invoice Archival**
-```json
-{
-  "Rule": {
-    "ID": "ArchiveInvoicesAfter1Year",
-    "Prefix": "invoices/",
-    "Status": "Enabled",
-    "Transitions": [
-      {
-        "Days": 365,
-        "StorageClass": "GLACIER_INSTANT_RETRIEVAL"
-      }
-    ],
-    "Expiration": { "Days": 2555 }
-  }
-}
-```
-
-**Rule 4: Log Rotation**
-```json
-{
-  "Rule": {
-    "ID": "LogRotation",
-    "Prefix": "logs/",
-    "Status": "Enabled",
-    "Transitions": [
-      { "Days": 7, "StorageClass": "GLACIER" }
-    ],
-    "Expiration": { "Days": 30 }
-  }
-}
-```
-
----
-
-## 4. Privacy & Security
-
-### 4.1 Access Control
-
-| Folder | Public | Presigned URL | IAM Policy |
-|--------|--------|---------------|------------|
-| `/profiles` | ✅ Read | ❌ | `s3:GetObject` for public |
-| `/jobs-evidence` | ❌ | ✅ 15 min expiry | `s3:GetObject` restricted |
-| `/disputes` | ❌ | ✅ 15 min expiry (jury only) | `s3:GetObject` restricted |
-| `/kyc-vault` | ❌ | ❌ | `s3:GetObject` + decryption key |
-| `/invoices` | ❌ | ✅ 15 min expiry | `s3:GetObject` restricted |
-
-### 4.2 Presigned URL Requirements
-
-Semua file di `/jobs-evidence`, `/disputes`, dan `/invoices` **WAJIB** diakses lewat **Presigned URL** dengan:
-
-- **Expiry Time:** 15 menit maximum
-- **HTTP Method:** GET only
-- **IP Restriction:** Optional (untuk dispute evidence)
-- **User Identity:** Logged in JWT required untuk generate
-
-**Contoh Generate Presigned URL (Rust):**
-```rust
-use aws_sdk_s3::presigning::PresigningConfig;
-use std::time::Duration;
-
-async fn generate_evidence_presigned_url(
-    s3_client: &s3::Client,
-    bucket: &str,
-    key: &str,
-) -> Result<String> {
-    let presign_config = PresigningConfig::builder()
-        .expires_in(Duration::from_secs(900)) // 15 menit
-        .build();
-    
-    let presigned = s3_client
-        .get_object()
-        .bucket(bucket)
-        .key(key)
-        .presigned(presign_config)
-        .await?;
-    
-    Ok(presigned.uri().to_string())
-}
-```
-
-### 4.3 Encryption Requirements
-
-**At-Rest Encryption:**
-- Semua file: AES-256 (S3 managed keys)
-- `/kyc-vault`: Customer-Managed Keys (CMK) via AWS KMS / HashiCorp Vault
-
-**In-Transit Encryption:**
-- TLS 1.3 mandatory untuk semua S3 requests
-- Certificate pinning di Flutter App
-
----
-
-## 5. Cost Optimization
-
-### 5.1 Image Compression (Client-Side)
-
-**Flutter App Requirements:**
-- **Max Resolution:** 1920x1080 (Full HD) untuk evidence foto
-- **Max File Size:** 500KB - 1MB per image
-- **Format:** JPEG quality 80% atau WebP
-- **Compression:** Lakukan sebelum upload (bukan di server)
-
-**Contoh Flutter Compression:**
-```dart
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_compression/image_compression.dart';
-
-Future<File> compressEvidenceImage(File imageFile) async {
-  // Crop & resize first
-  final cropped = await ImageCropper().cropImage(
-    sourcePath: imageFile.path,
-    maxWidth: 1920,
-    maxHeight: 1080,
-    compressQuality: 80,
-  );
-  
-  // Compress to target size
-  final compressed = await ImageCompression.compressWithFile(
-    File(cropped!.path),
-    targetSize: 500 * 1024, // 500KB
-  );
-  
-  return compressed;
-}
-```
-
-### 5.2 Upload Strategy
-
-**Multipart Upload:**
-- Trigger untuk file > 5MB
-- Chunk size: 5MB per part
-- Parallel upload: 3 concurrent parts
-
-**Retry Logic:**
-- Exponential backoff: 1s, 2s, 4s, 8s, 16s
-- Max retries: 5
-- Circuit breaker: Fail fast setelah 3 consecutive failures
-
-### 5.3 Egress Fee Mitigation
-
-**Strategi:**
-1. **Cloudflare R2** untuk zero egress fee (prioritas utama)
-2. **CDN Caching** untuk `/profiles` (public assets)
-3. **Presigned URL Caching** di client (15 min cache)
-4. **Bandwidth Monitoring** dengan alert threshold $50/bulan
-
----
-
-## 6. Implementation Checklist
-
-### 6.1 Backend (Rust)
-
-- [ ] S3 client initialization dengan Cloudflare R2 endpoint
-- [ ] Presigned URL generation untuk `/jobs-evidence`, `/disputes`, `/invoices`
-- [ ] File upload endpoint dengan multipart support
-- [ ] Image metadata stripping (EXIF removal untuk privacy)
-- [ ] S3 Lifecycle Rules deployment via Terraform/CloudFormation
-
-### 6.2 Frontend (Flutter)
-
-- [ ] Image compression sebelum upload
-- [ ] EXIF data removal (GPS location stripping)
-- [ ] Multipart upload untuk large files
-- [ ] Retry logic dengan exponential backoff
-- [ ] Presigned URL caching (15 min)
-
-### 6.3 Infrastructure
-
-- [ ] S3 bucket creation dengan versioning enabled
-- [ ] Lifecycle rules configuration
-- [ ] CORS policy untuk Flutter App
-- [ ] Bucket policy untuk public `/profiles`
-- [ ] CloudWatch alarm untuk storage cost monitoring
-
----
-
-## 7. Disaster Recovery
-
-### 7.1 Backup Strategy
-
-| Data Type | Backup Frequency | Retention | Recovery Point Objective |
-|-----------|------------------|-----------|--------------------------|
-| `/profiles` | Daily snapshot | 30 days | 24 hours |
-| `/jobs-evidence` | None (ephemeral) | N/A | N/A (can be re-uploaded) |
-| `/disputes` | Weekly snapshot | 90 days | 7 days |
-| `/kyc-vault` | Daily snapshot + Cross-region | 7 years | 1 hour |
-| `/invoices` | Daily snapshot | 7 years | 24 hours |
-
-### 7.2 Data Recovery Procedure
-
-**Scenario: Accidental Deletion**
-1. Check S3 Versioning → restore previous version
-2. If versioning disabled → restore from daily snapshot
-3. If snapshot unavailable → request user re-upload (untuk ephemeral data)
-
-**Scenario: Bucket Corruption**
-1. Failover to cross-region replica (untuk `/kyc-vault`)
-2. Restore from latest snapshot
-3. Verify integrity dengan checksum validation
-
----
-
-## 8. Compliance & Audit
-
-### 8.1 Data Sovereignty
-
-- Semua data disimpan di region **Indonesia (Jakarta)** untuk compliance
-- Cross-border transfer: prohibited untuk KYC data
-- Audit log: semua akses ke `/kyc-vault` dan `/disputes` dicatat
-
-### 8.2 Right to Erasure (GDPR-like)
-
-**User Account Deletion Flow:**
-1. Delete `/profiles/{user_id}/*` immediately
-2. Soft-delete `/jobs-evidence` (30 days grace period)
-3. Hard-delete `/jobs-evidence` setelah 30 days
-4. Retain `/kyc-vault` sesuai regulasi (7 years)
-5. Anonymize `/disputes` (remove PII, retain evidence)
-
----
-
-## 9. Monitoring & Alerting
-
-### 9.1 Metrics to Track
-
-| Metric | Threshold | Alert Channel |
-|--------|-----------|---------------|
-| Storage Growth Rate | > 10GB/hour | Slack #infra-alerts |
-| Egress Cost | > $50/month | Email + Slack |
-| Failed Upload Rate | > 1% | PagerDuty |
-| Presigned URL Error Rate | > 5% | Slack #infra-alerts |
-
-### 9.2 Cost Monitoring Dashboard
-
-**Daily Report:**
-- Total storage per prefix
-- Egress bandwidth per prefix
-- Estimated monthly cost projection
-- Top 10 users by storage usage
-
-**Weekly Report:**
-- Storage growth trend
-- Cost per user segment
-- Lifecycle rule effectiveness (GB saved)
-
----
-
-## 10. Related Documents
-
-- [`TECHNICAL.md`](../TECHNICAL.md) - Technical specification overview
-- [`TECHNICAL.md#security-architecture`](../TECHNICAL.md#10-security-architecture) - Security requirements
-- [`TECHNICAL.md#infrastructure`](../TECHNICAL.md#11-infrastructure--deployment) - Deployment guidelines
-
----
-
-**Document Control:**
-- **Author:** Core Technical Team
-- **Version:** 1.0
-- **Date:** 2026-03-16
-- **Next Review:** 2026-06-16
-
----
-
-*End of Document*
-````
-
 ## File: docs/ECONOMICS.md
 ````markdown
 # ECONOMICS.md
@@ -1290,8 +1289,8 @@ Seluruh porsi **Platform Fee** (100%) masuk ke dalam **Community Treasury (Kas K
 ### 3.1 Komponen Biaya Teknologi (Triple-Tax Logic)
 Solidarity-ID menagih Koperasi berdasarkan penggunaan nyata di server lokal (Self-Hosted):
 
-1. **SA-TEV (SiapAja Total Execution Value):** Biaya per unit komputasi (CPU/RAM/IO) pada setiap interaksi aplikasi. Solidarity-ID berhak mengatur harga unit SA-TEV secara mandiri.
-2. **Success Transaction Fee:** Biaya tetap (Fixed Fee) per transaksi sukses untuk pemeliharaan ledger.
+1. **SA-TEV (SiapAja Total Execution Value):** Biaya per unit komputasi yang ditekan serendah mungkin berkat arsitektur Rust. Untuk **450k order/hari**, efisiensi SA-TEV memungkinkan Koperasi hanya membayar biaya infrastruktur tetap yang minimal, mengalokasikan sisa margin sebesar-besarnya untuk SHU Anggota.
+2. **National Scale Billing:** Sistem billing teknologi dirancang untuk menampung volume nasional tanpa kenaikan biaya eksponensial (linear scaling).
 3. **Annual License Fee:** Biaya tahunan hak pakai kekayaan intelektual (SSPL) dan dukungan R&D inti.
 
 ### 3.2 Prinsip Surplus Optimasi (Non-Audit)
@@ -1299,10 +1298,11 @@ Solidarity-ID memiliki hak penuh atas efisiensi kode Rust yang dikembangkan.
 - Jika pengembang Solidarity-ID berhasil mengoptimasi kode sehingga penggunaan **SA-TEV** menjadi rendah (murah), margin keuntungan tetap milik Solidarity-ID sebagai insentif inovasi.
 - Koperasi tidak berhak meminta pengembalian atau audit atas margin efisiensi teknis Solidarity-ID.
 
-### 3.3 Aliran Dana (The Flow)
-1. **Platform Fee** ditarik dari transaksi besar + **Ads Revenue** → Masuk **100%** ke Kas Koperasi.
-2. **SA-TEV Tracker** mencatat beban kerja server per request/action.
-3. **Invoice Bulanan:** Solidarity-ID menagih Koperasi berdasarkan akumulasi SA-TEV + Transaction Fee.
+### 3.3 Aliran Dana (The ERP Flow)
+1. **Platform Fee & Ads Revenue:** Masuk otomatis ke **Kas Koperasi (Treasury)**.
+2. **Pengeluaran Manual (Siap Ops):** Pengurus mencatat biaya kantor, listrik, dan operasional manual lainnya.
+3. **Audit Sync:** Secara periodik, pengurus melakukan "Publish" dari **Siap Ops** ke **Siap Coop** (Open Ledger) agar seluruh anggota bisa mengaudit pengeluaran manual tersebut.
+4. **SA-TEV Tracking:** Solidarity-ID menagih Koperasi berdasarkan beban server yang dicatat otomatis oleh sistem.
 4. **Settlement & Alokasi Kas Koperasi (Treasury):** 
    Setelah dikurangi biaya infrastruktur (Solidarity-ID), sisa saldo dialokasikan secara *smart-contract* oleh Virtual Ledger:
    - **40% untuk SHU/Dividen:** Dibagikan ke anggota ber-Pamor tinggi.
@@ -1485,15 +1485,11 @@ Pamor menggantikan fungsi Simpanan Wajib sebagai syarat hak suara:
   - Mau uang denda di Treasury dipakai buat bagi-bagi sembako atau asuransi kecelakaan? Voting!
   - Pemilihan pengurus wilayah
 
-### 4.1 Struktur Demokrasi Digital (RAK ke RAT)
-
-Untuk menghindari "Formalitas Klik Setuju", SiapAja.id menggunakan sistem **Rapat Anggota Kelompok (RAK)** sebelum menuju RAT Nasional:
-
-1.  **Pembentukan Kelompok (RAK):** Anggota dikelompokkan otomatis berdasarkan **Wilayah (Kecamatan)** atau **Kategori Profesi (misal: Skuad Tukang AC)**.
-2.  **Diskusi Substantif (RAK):** Di dalam aplikasi, setiap kelompok memiliki forum diskusi khusus untuk membahas usulan kebijakan.
-3.  **Pemilihan Delegasi:** Setiap kelompok (misal 100 orang) memilih 1 **Utusan/Delegasi** (berdasarkan Pamor tertinggi dan hasil voting internal kelompok).
-4.  **Mandat Delegasi:** Utusan membawa aspirasi kelompok ke RAT Nasional. Utusan memiliki **Delegated Voting Power** yang merupakan akumulasi suara dari anggotanya.
-5.  **Transparansi Mandat:** Anggota bisa menarik mandatnya secara real-time jika utusan memberikan suara yang berlawanan dengan kesepakatan kelompok di RAK.
+### 4.1 Struktur Demokrasi Digital (Via Siap Coop)
+Setiap proses demokrasi dilakukan secara eksklusif melalui aplikasi **Siap Coop**:
+1. **RAK Digital:** Forum diskusi tingkat kecamatan untuk membahas usulan warga.
+2. **Pemilihan Utusan:** Voting delegasi yang akan membawa mandat ke RAT Nasional.
+3. **Mandat Real-time:** Anggota dapat memantau bagaimana Utusan mereka memilih dan berhak menarik mandat melalui tombol "Tarik Suara" di Siap Coop.
 
 ---
 
@@ -1633,7 +1629,8 @@ Platform gig economy konvensional memiliki masalah fundamental:
 
 ### 2.2 Solution Approach
 SiapAja.id menyelesaikan ini melalui:
-1. **Third-party Escrow Integration** - Xendit/Flip/ Midtrans Escrow API menampung dana, bukan SiapAja
+1. **Modular Monolith Architecture:** Satu backend Rust (Monorepo) yang melayani 7 front-end apps berbeda melalui kebijakan akses (RBAC) yang ketat.
+2. **Third-party Escrow Integration** - Xendit/Flip/ Midtrans Escrow API menampung dana, bukan SiapAja
 2. **Dual Database Architecture:**
    - **PostgreSQL:** REST API (Axum) dengan OpenAPI auto-generation untuk persistent data (user profiles, transactions, financial records)
    - **SpacetimeDB:** Binary protocol dengan community Dart SDK untuk real-time state (job feed, GPS tracking, live notifications)
@@ -1745,16 +1742,19 @@ siapaja-core/
 │   ├── ARCHITECTURE.md
 │   ├── API_GUIDELINES.md
 │   └── DEPLOYMENT.md
-└── crates/                       # Workspace members
-    ├── sa-schema/                # #1 Shared domain models & types
-    ├── sa-domain/                # #2 Domain logic (entities, traits)
-    ├── sa-application/           # #3 Use cases & services (includes pamor_engine)
-    ├── sa-infrastructure/        # #4 External implementations
-    ├── sa-api/                   # #5 Axum HTTP handlers
-    ├── sa-spacetimedb/           # #6 SpacetimeDB module
-    ├── sa-pamor/                 # #7 Pamor calculation engine (Logic from PAMOR-SYSTEM.md)
-    ├── sa-worker/                # #8 Background jobs
-    └── sa-cli/                   # #9 CLI tools & admin
+└── crates/                       # Modular Monolith Workspace
+    ├── sa-schema/                # Shared Types & Models
+    ├── sa-domain/                # Pure Business Logic
+    ├── sa-application/           # Orchestration & Services
+    ├── sa-infrastructure/        # DB, S3, Xendit, OpenRouter Impls
+    ├── sa-api/                   # Public API (SiapAja, Siap Jago, Affiliate)
+    ├── sa-ads/                   # Contextual Ads Engine (Siap Ads)
+    ├── sa-coop/                  # Transparency & Governance API (Siap Coop)
+    ├── sa-enterprise/            # B2B & Bulk Order API (Siap Enterprise)
+    ├── sa-ops/                   # Internal Admin ERP (Siap Ops)
+    ├── sa-spacetimedb/           # Real-time State Sync
+    ├── sa-worker/                # Billing (SA-TEV), Decay, & Manual Sync
+    └── sa-cli/                   # DevOps & Admin CLI Tools
 ```
 
 ### 4.2 Crate Details
@@ -1994,8 +1994,13 @@ crates/sa-spacetimedb/
         └── mod.rs                  # Auto-generated client code
 ```
 
-#### Crate: `sa-worker` (Billing & SA-TEV Module)
-**Purpose:** Menghitung penggunaan sumber daya server untuk invoice teknologi.
+#### Crate: `sa-worker` (ERP Ops & SA-TEV Module)
+**Purpose:** Menangani operasional internal koperasi, billing, dan akuntansi manual.
+
+- **Manual Expense Engine:** Modul pencatatan pengeluaran non-otomatis (petty cash, gaji admin).
+- **Ledger Synchronizer:** Jembatan audit antara data manual `sa-ops` ke `sa-coop` (Public Ledger).
+- **KYC/KYB Processor:** Workflow verifikasi identitas manual oleh tim pengurus.
+- **SA-TEV Tracker:** Monitoring beban server untuk invoice teknologi.
 
 - **CPU Cycles Tracker:** Menghitung waktu eksekusi setiap `Reducer` (SpacetimeDB) dan `Handler` (Axum).
 - **I/O Metering:** Mencatat volume data yang ditulis/dibaca dari PostgreSQL dan SpacetimeDB.
@@ -2175,6 +2180,10 @@ ios/                                # iOS native config
 
 ### 5.2 C4 Model: Container Diagram
 
+**Multi-App Gateway (Axum):**
+- Menangani 7 Client Apps berbeda melalui satu REST & WebSocket Interface.
+- RBAC (Role-Based Access Control) ketat: Membedakan akses user biasa (SiapAja) vs pengurus (Siap Ops).
+
 **API Gateway Container (Axum):**
 - Stateless, bisa scale horizontal
 - JWT validation stateless (tanpa Redis)
@@ -2318,7 +2327,7 @@ CREATE TABLE users (
     ktp_hash VARCHAR(64),
     can_work_as_worker BOOLEAN DEFAULT FALSE,
     can_post_as_customer BOOLEAN DEFAULT TRUE,
-    pamor_score INTEGER DEFAULT 100, -- SSoT: Lihat PAMOR-SYSTEM.md Bab 5 untuk Tiering
+    pamor_score INTEGER DEFAULT 100, 
     -- voting_power dihitung dinamis dari pamor_score: 100 Pamor = 1 Suara (Max 10)
     blue_check_verified BOOLEAN DEFAULT FALSE,
     is_frozen BOOLEAN DEFAULT FALSE,
@@ -2327,6 +2336,9 @@ CREATE TABLE users (
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Note: Logika Tiering, Voting Power, dan Pamor Metrics dikelola oleh Pamor Engine.
+-- 📋 Source of Truth: [docs/PAMOR-SYSTEM.md](./docs/PAMOR-SYSTEM.md)
 
 -- Jobs (demand feed)
 CREATE TABLE jobs (
@@ -2411,10 +2423,44 @@ CREATE TABLE community_treasury_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     entry_type VARCHAR(50) NOT NULL, 
     amount_idr BIGINT NOT NULL,
-    solidarity_id_cut_idr BIGINT NOT NULL, -- Jatah vendor teknologi (SA-TEV)
-    community_cut_idr BIGINT NOT NULL, -- Jatah kas koperasi (SHU)
+    solidarity_id_cut_idr BIGINT NOT NULL,
+    community_cut_idr BIGINT NOT NULL,
     description TEXT,
     balance_snapshot BIGINT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Siap Ops: Akuntansi Manual & Internal (Dapur)
+CREATE TABLE internal_ops_ledger (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    admin_id UUID NOT NULL REFERENCES users(id),
+    category VARCHAR(50), -- OFFICE_RENT, SALARY, ELECTRICITY, ATK
+    amount_idr BIGINT NOT NULL,
+    evidence_url TEXT, -- Foto struk/invoice di S3
+    is_synced_to_public BOOLEAN DEFAULT FALSE, -- Flag audit Siap Coop
+    notes TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Siap Ops: Antrean Verifikasi KYC
+CREATE TABLE kyc_verification_queue (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id),
+    status VARCHAR(20) DEFAULT 'PENDING', -- PENDING, APPROVED, REJECTED
+    reviewer_id UUID REFERENCES users(id),
+    rejection_reason TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    reviewed_at TIMESTAMPTZ
+);
+
+-- Internal Ops Table (Petty Cash & Admin)
+CREATE TABLE internal_ops_ledger (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    admin_id UUID NOT NULL REFERENCES users(id),
+    category VARCHAR(50), -- OFFICE_RENT, ELECTRICITY, SALARY, ATK
+    amount_idr BIGINT NOT NULL,
+    evidence_url TEXT, -- Foto struk/invoice
+    is_synced_to_public BOOLEAN DEFAULT FALSE, -- Status audit di Siap Coop
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -3040,19 +3086,21 @@ pub struct FeedPersonalization {
 
 ## 11. Infrastructure & Deployment
 
-### 11.1 Resource Requirements
+### 11.1 National-Scale Infrastructure (Indonesia Benchmark)
 
-**Minimal Production:**
-- 1x VPS 2 vCPU, 4GB RAM: Axum + PostgreSQL + SpacetimeDB
-- Cost: ~$20-40/bulan
-- Handle: 10.000 concurrent users
+Berdasarkan benchmark Rust + SpacetimeDB, satu unit server tunggal sanggup menangani **450.000 order/hari** dengan skema beban puncak (burst) hingga **125 order/detik**.
 
-**Recommended Production:**
-- 2x VPS 4 vCPU, 8GB RAM: Axum API Gateway (load balanced)
-- 1x Managed PostgreSQL: 2 vCPU, 4GB RAM
-- SpacetimeDB Cloud: sesuai usage
-- Cost: ~$100-150/bulan
-- Handle: 100.000+ concurrent users
+**Standard National VPS (Single Node Strategy):**
+- **CPU:** 8 vCPU (High Clock Speed >3.0 GHz) - Axum + SpacetimeDB
+- **RAM:** 32 GB DDR4/DDR5 (In-memory state management)
+- **Storage:** 500 GB NVMe Gen4 (WAL & Persistent Storage)
+- **Network:** 1 Gbps Unmetered
+- **Target Load:** 450k Orders/Day, 100k+ Concurrent WebSocket Connections
+- **Estimasi Biaya:** ~$80 - $150/bulan (Hetzner AX102 / Dedicated Server equivalent)
+
+**Scaling Strategy:**
+1. **Vertical (0 - 1M Order/hari):** Upgrade ke 16-core / 64GB RAM pada satu node.
+2. **Horizontal ( > 1M Order/hari):** Implementasi sharding SpacetimeDB berdasarkan Region (Kecamatan/Kota).
 
 ### 11.2 Monitoring
 
@@ -3069,12 +3117,13 @@ pub struct FeedPersonalization {
 - Performance timings
 - Security events
 
-### 11.3 Backup & DR
+### 11.3 Backup & Data Lifecycle (National Scale)
 
-- PostgreSQL: Continuous WAL archiving
-- Daily full backups, retained 30 hari
-- SpacetimeDB: snapshot 6 jam, retained 7 hari
-- RPO: < 5 menit, RTO: < 30 menit
+- **Hot Storage (In-Memory):** 30 hari data transaksi (estimasi 70GB) disimpan di RAM untuk query instan.
+- **Warm Storage (NVMe):** Data 1 tahun terakhir (estimasi 850GB compressed).
+- **Cold Storage (S3/Glacier):** Data arsip >1 tahun untuk audit regulasi.
+- **RPO:** < 1 detik (via SpacetimeDB Write-Ahead Log).
+- **RTO:** < 10 menit (Cold boot Rust binary + SpacetimeDB recovery).
 
 ---
 
@@ -3169,7 +3218,7 @@ pub struct FeedPersonalization {
 ## 🛑 ABSTRAK
 Sistem *gig economy* (ekonomi serabutan) di Indonesia saat ini telah berevolusi menjadi bentuk baru feodalisme digital. Platform raksasa (aplikasi ojol/jasa) yang awalnya bertindak sebagai inovator penghubung, kini bertransformasi menjadi makelar monopolistik yang mengekstraksi hingga 30% dari nilai keringat pekerja, sambil berlindung di balik ilusi "Kemitraan". 
 
-**SiapAja.id** hadir sebagai **koperasi jasa yang bebas beban iuran**. Kami mengganti model setoran modal tradisional dengan akumulasi kontribusi transaksi. Whitepaper ini menjabarkan arsitektur teknis, model ekonomi anti-bakar duit, mekanisme *Decentralized Justice*, dan strategi monetisasi *Enterprise* (SSPL) yang memastikan keberlanjutan platform tanpa harus menghisap darah pekerja tingkat bawah.
+**SiapAja.id** hadir sebagai **Ekosistem ERP Koperasi Multi-Aplikasi** yang bebas beban iuran. Kita tidak hanya membangun satu aplikasi, melainkan sebuah suite alat kerja digital (7 Apps) yang didukung oleh satu backend Rust Modular Monolith yang sangat efisien.
 
 ---
 
@@ -3207,9 +3256,10 @@ SiapAja.id membuang konsep "Katalog Jasa" (di mana pekerja memajang profil dan m
 
 Untuk menjalankan platform dengan 0% komisi, biaya operasional infrastruktur harus ditekan hingga mendekati angka nol (Zero Marginal Cost).
 
-### 3.1. Backend Komputasi Ekstrem (Rust + Axum)
-Kami menolak penggunaan bahasa pemrograman *garbage-collected* yang rakus memori. Server inti SiapAja.id ditulis menggunakan **Rust**.
-*   **Efisiensi VPS:** Sebuah server *virtual* seharga Rp100.000/bulan dengan RAM 1GB mampu menangani +50.000 koneksi bersamaan berkat asinkronisasi Tokio/Axum.
+### 3.1. Backend Modular Monolith (Rust + Axum) - National Efficiency
+Kami menggunakan pendekatan **Modular Monolith** yang mampu melayani **seluruh Indonesia (450.000 transaksi/hari)** hanya dari satu infrastruktur terpusat yang efisien.
+*   **Mengapa Rust:** Kami menolak bahasa pemrograman *garbage-collected* yang menyebabkan jeda sistem (freeze). Dengan Rust, latensi p99 tetap stabil di bawah 20ms bahkan saat beban puncak 125 order/detik.
+*   **Efisiensi Infrastruktur:** Biaya server untuk melayani satu negara setara dengan harga kopi harian seorang eksekutif (estimasi $100/bulan). Inilah kunci **0% Komisi** Jagoan: Infrastruktur yang tidak lagi menjadi beban biaya.
 *   **Crash-Proof:** Jaminan *Memory Safety* Rust memastikan server tidak akan mengalami *Null Pointer Exception* di tengah malam.
 
 ### 3.2. Frontend Modern (Flutter + Riverpod + Dart)
@@ -3234,10 +3284,9 @@ Kami menggunakan SpacetimeDB untuk menghapus latency antara worker dan customer.
 ---
 
 ## BAB 4: Kecerdasan Buatan sebagai Pelindung Keselamatan (K3)
+Kami menggunakan kecerdasan buatan untuk menjamin standar keselamatan kerja (K3) dan keadilan harga. AI secara otomatis mengekstraksi parameter pekerjaan untuk mencegah eksploitasi fisik dan finansial.
 
-> **📋 Source of Truth:** Untuk detail lengkap AI pipeline, LLM models, dan JSON schemas, lihat [AI-SPECS.md](./docs/AI-SPECS.md)
-
-Kami menggunakan LLM (via OpenRouter) untuk ekstraksi data terstruktur dari teks deskripsi pekerjaan. AI menghitung **Price Floor** dan menegakkan aturan **Squad Formation** (otomasi kerja tim untuk beban >50kg) guna melindungi kesehatan fisik Jagoan.
+> **📋 Source of Truth:** Spesifikasi teknis AI dan parameter ekstraksi data tersedia di [docs/AI-SPECS.md](./docs/AI-SPECS.md).
 
 ---
 
@@ -3371,21 +3420,15 @@ Kita tidak butuh miliaran Dolar dari investor asing untuk membuat sistem ini ber
 # 0. PRINCIPLES & CONSTRAINTS
 
 ## 0.1 Core UX Philosophy
-- **Markdown-First**: Everything is a Post, and a Post is just Markdown
-- **AI Extraction**: OpenRouter API (Claude 3 Haiku, GPT-3.5) auto-extracts budget, location, category from text
-- **No Mode Switching**: Every user can perform any action anytime (Reddit-style)
-- **Pay-to-Post**: Job visible only after escrow funded (anti-spam)
-- **Fast-Bid Matching**: 15-minute enrollment window, customer selects or auto-match
-- **Anti-Senior Bias**: New workers have equal visibility + pamor boost
-- **Transparent Algorithms**: All scoring factors visible to users
+Aplikasi ini menggunakan paradigma **Markdown-First** dan **Unified Feed**. Tidak ada perpindahan mode "User vs Worker" secara kaku; semua aksi tersedia berdasarkan status verifikasi.
 
-## 0.2 User States (Not Roles)
-| State | Description | Unlocks |
-|-------|-------------|---------|
-| Unverified | Phone only | Browse Only (Read-Only) |
-| Verified | KTP Verified | Post Job, Claim Job, Chat, Wallet |
-| Active | Completed 1+ job | Full platform access |
-| Boosted | First 10 jobs | Pamor display boost, "New Jagoan" badge |
+> **📋 Source of Truth Logic:**
+> - Aturan Pamor & Tiering: [docs/PAMOR-SYSTEM.md](./docs/PAMOR-SYSTEM.md)
+> - Struktur Fee & Escrow: [docs/ECONOMICS.md](./docs/ECONOMICS.md)
+> - Mekanisme AI & Ekstraksi: [docs/AI-SPECS.md](./docs/AI-SPECS.md)
+
+## 0.2 User States (System Logic)
+Status user menentukan akses fitur (Unverified, Verified, Active, Boosted). Detail teknis transisi state ini mengikuti [docs/GOVERNANCE.md](./docs/GOVERNANCE.md).
 
 ---
 
@@ -3466,6 +3509,41 @@ Kita tidak butuh miliaran Dolar dari investor asing untuk membuat sistem ini ber
 - **1.3.4.3** First job recommendation (if location available)
 
 ---
+
+# 2. THE MULTI-APP ERP SUITE
+
+## 2.1 SiapAja (The Main Social-Job App)
+- **Home Feed:** Social-Utility Mix (Markdown focus).
+- **Post Job:** Universal Post Composer (Pay-to-post).
+- **Wallet:** Saldo Rupiah & SMD (Merkle-Receipt).
+
+## 2.2 Siap Jago (Pro-Worker Command Center)
+- **Active Job Tracking:** GPS & Progress Evidence.
+- **Squad Lobby:** Koordinasi tim untuk job berat.
+- **Pamor Analytics:** Grafik performa & Hak Dividen.
+
+## 2.3 Siap Affiliate (Creator Hub)
+- **Deep-Link Generator:** Alat rujukan konten.
+- **Bounty Dashboard:** Pantau pundi Rupiah dari Growth Fund.
+
+## 2.4 Siap Ads (Merchant Portal)
+- **Ads Manager:** Buat iklan radius 2km.
+- **Contextual Config:** Hubungkan iklan ke kategori job.
+
+## 2.5 Siap Coop (Governance Portal)
+- **Open Ledger:** Transparansi kas Koperasi (Immutable).
+- **Voting Room:** RAK & RAT Digital.
+- **Digital Constitution:** Akses AD/ART.
+
+## 2.6 Siap Enterprise (B2B Dashboard)
+- **Bulk Orders:** Pesan Jagoan skala besar.
+- **API Key Management:** Integrasi sistem eksternal.
+
+## 2.7 Siap Ops (Internal ERP - Admin Only)
+- **KYC Queue:** Panel review identitas warga.
+- **Internal Ledger:** Pencatatan pengeluaran manual (Petty Cash).
+- **Claim Investigator:** Review bukti sengketa & asuransi.
+- **Regional Dashboard:** Monitor metrik per kecamatan.
 
 # 2. CORE NAVIGATION
 
@@ -4524,10 +4602,11 @@ Jury Review → Voting → Result → Fund Release
 | 3.4 | 2026-03-16 | Immutable Ledger UI: Transaction hash display, Ledger Browser, Pamor Audit Trail with verification |
 | 3.5 | 2026-03-16 | Hyper-Local Ads: Iklan Warga (Contextual Ad Card, Creation Flow, Ads Manager Dashboard) |
 | 3.6 | 2026-03-19 | Terminology alignment: Removed "Kopi" terminology, replaced with "Koperasi". Removed rigid 60/40 fee percentages in favor of SA-TEV model. |
+| 3.7 | 2026-03-19 | DRY refactoring: Consolidated duplicated logic into SSoT docs, replaced inline blocks with reference callouts. |
 
 ---
 
-**Document Status**: 3.6 - Terminology Alignment & Business Model Sync
+**Document Status**: 3.7 - DRY Refactoring (Source of Truth Consolidation)
 **Next Review**: Pre-MVP Launch
 **Owner**: Product & Design Team
 ```

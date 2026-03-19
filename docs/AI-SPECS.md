@@ -134,8 +134,8 @@ Return JSON: {
 }
 ```
 
-**Frequency:** Daily batch untuk semua active users
-**Cache:** Store di SpacetimeDB `feed_personalization` table
+**Frequency:** Incremental updates (per 1000 orders) untuk menjaga relevansi feed nasional tanpa membebani CPU.
+**Cache:** Store di SpacetimeDB `feed_personalization` table (Estimasi 22GB in-memory state untuk 100k user aktif).
 
 ---
 

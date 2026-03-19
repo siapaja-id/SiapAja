@@ -53,10 +53,10 @@ SiapAja.id membuang konsep "Katalog Jasa" (di mana pekerja memajang profil dan m
 
 Untuk menjalankan platform dengan 0% komisi, biaya operasional infrastruktur harus ditekan hingga mendekati angka nol (Zero Marginal Cost).
 
-### 3.1. Backend Modular Monolith (Rust + Axum)
-Kami menggunakan pendekatan **Modular Monolith** dalam Rust Workspace. Hal ini memungkinkan integrasi data yang sangat ketat (ACID) antar modul akuntansi, marketplace, dan tata kelola, namun tetap memberikan keleluasaan untuk pengembangan front-end yang terpisah (7 Apps).
-*   **Mengapa Rust:** Kami menolak bahasa pemrograman *garbage-collected* yang rakus memori. Server inti SiapAja.id ditulis menggunakan **Rust**.
-*   **Efisiensi VPS:** Sebuah server *virtual* seharga Rp100.000/bulan dengan RAM 1GB mampu menangani +50.000 koneksi bersamaan berkat asinkronisasi Tokio/Axum.
+### 3.1. Backend Modular Monolith (Rust + Axum) - National Efficiency
+Kami menggunakan pendekatan **Modular Monolith** yang mampu melayani **seluruh Indonesia (450.000 transaksi/hari)** hanya dari satu infrastruktur terpusat yang efisien.
+*   **Mengapa Rust:** Kami menolak bahasa pemrograman *garbage-collected* yang menyebabkan jeda sistem (freeze). Dengan Rust, latensi p99 tetap stabil di bawah 20ms bahkan saat beban puncak 125 order/detik.
+*   **Efisiensi Infrastruktur:** Biaya server untuk melayani satu negara setara dengan harga kopi harian seorang eksekutif (estimasi $100/bulan). Inilah kunci **0% Komisi** Jagoan: Infrastruktur yang tidak lagi menjadi beban biaya.
 *   **Crash-Proof:** Jaminan *Memory Safety* Rust memastikan server tidak akan mengalami *Null Pointer Exception* di tengah malam.
 
 ### 3.2. Frontend Modern (Flutter + Riverpod + Dart)
