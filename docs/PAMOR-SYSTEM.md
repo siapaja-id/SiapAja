@@ -1,12 +1,23 @@
 # PAMOR-SYSTEM.md
 
-## Konstitusi Reputasi & Protokol Kontribusi SiapAja.id
+## Pusat Informasi Sistem Reputasi & Kontribusi SiapAja.id
 
-**Dokumen ini adalah "Single Source of Truth" untuk seluruh algoritma, metrik, dan logika sistem Pamor. Dokumen ini mengikat secara hukum algoritma bagi Pembuat Job, Jagoan, Juri, dan Kontributor.**
+**Dokumen ini adalah "Single Source of Truth" untuk seluruh algoritma, metrik, dan logika sistem Pamor. Dokumen ini mengikat secara hukum algoritma bagi Pembuat Job, Jagoan, Juri, dan Kontributor. Semua dokumen lain (GOVERNANCE.md, TECHNICAL.md, dll) HARUS me-reference dokumen ini untuk aturan Pamor.**
 
 ---
 
-## 1. Filosofi Pamor
+## 1. Terminologi
+
+| Teknis (Backend) | Publik (UI) | Deskripsi |
+|------------------|-------------|-----------|
+| `tasker` / `customer` | **Pembuat Job** | User yang posting kebutuhan & bayar escrow. |
+| `taskee` / `worker` | **Jagoan** | User yang ambil job & ngerjain tugas. |
+| `pamor_score` | **Pamor** | Skor reputasi user di komunitas. |
+| `platform_fee` | **Kontribusi Koperasi** | Kontribusi transaksi untuk dana bersama. |
+
+---
+
+## 2. Filosofi Pamor
 Pamor bukan sekadar "Rating Bintang". Pamor adalah **Sertifikat Kontribusi Digital**. 
 - **Bukan Uang:** Pamor tidak bisa dibeli dengan Rupiah.
 - **Bukan Hukuman Seumur Hidup:** Mengenal sistem *Decay* (Penebusan Dosa).
@@ -14,7 +25,7 @@ Pamor bukan sekadar "Rating Bintang". Pamor adalah **Sertifikat Kontribusi Digit
 
 ---
 
-## 2. Metrik Pamor: Jagoan (Worker)
+## 3. Metrik Pamor: Jagoan (Worker)
 
 Jagoan mengumpulkan Pamor untuk mendapatkan prioritas *feed* dan hak dividen Koperasi.
 
@@ -30,7 +41,7 @@ Jagoan mengumpulkan Pamor untuk mendapatkan prioritas *feed* dan hak dividen Kop
 
 ---
 
-## 3. Metrik Pamor: Pembuat Job (Customer)
+## 4. Metrik Pamor: Pembuat Job (Customer)
 
 Pamor bagi Pembuat Job menentukan apakah postingan mereka akan diprioritaskan oleh Jagoan-Jagoan terbaik.
 
@@ -45,7 +56,7 @@ Pamor bagi Pembuat Job menentukan apakah postingan mereka akan diprioritaskan ol
 
 ---
 
-## 4. Metrik Pamor: Juri & Kontributor (Governance)
+## 5. Metrik Pamor: Juri & Kontributor (Governance)
 
 Integritas sistem dijaga oleh mereka yang meluangkan waktu untuk keadilan dan teknologi.
 
@@ -62,7 +73,7 @@ Integritas sistem dijaga oleh mereka yang meluangkan waktu untuk keadilan dan te
 
 ---
 
-## 5. Struktur Tier & Akses (The Utility)
+## 6. Struktur Tier & Akses (The Utility)
 
 | Tier | Range Pamor | Akses & Keuntungan |
 |------|-------------|--------------------|
@@ -74,7 +85,7 @@ Integritas sistem dijaga oleh mereka yang meluangkan waktu untuk keadilan dan te
 
 ---
 
-## 6. Protokol Deaktivasi & Penebusan (Redemption)
+## 7. Protokol Deaktivasi & Penebusan (Redemption)
 
 ### 6.1 Otomasi Status Frozen (Mati)
 Sistem (Backend Rust) akan secara otomatis mengubah status akun menjadi `is_frozen = true` jika:
@@ -89,7 +100,7 @@ User yang berstatus **Frozen** tidak perlu bikin akun baru (KTP sudah terikat). 
 
 ---
 
-## 7. Mekanisme Anti-Gaming (Security)
+## 8. Mekanisme Anti-Gaming (Security)
 
 Untuk mencegah Jagoan/Pembuat Job saling "tembak" (fake rating) demi menaikkan Pamor:
 - **Radius Check:** Transaksi antara dua user yang berdekatan secara terus-menerus akan di-*flag* oleh AI.
@@ -99,7 +110,7 @@ Untuk mencegah Jagoan/Pembuat Job saling "tembak" (fake rating) demi menaikkan P
 
 ---
 
-## 8. Implementasi Teknis (Immutable Ledger)
+## 9. Implementasi Teknis (Immutable Ledger)
 
 Setiap perubahan Pamor **WAJIB** dicatat dalam `ledger_entries` dengan skema:
 1. `entry_type`: 'pamor'
@@ -111,3 +122,11 @@ Setiap perubahan Pamor **WAJIB** dicatat dalam `ledger_entries` dengan skema:
 ---
 
 **Revision 1.0** - *Sistem ini dirancang untuk menciptakan keseimbangan antara ketegasan dan pengampunan.*
+
+---
+
+**Related Documents:**
+- [TECHNICAL.md](../TECHNICAL.md) - Arsitektur Teknis
+- [ECONOMICS.md](./ECONOMICS.md) - Model Bisnis & Fee
+- [GOVERNANCE.md](./GOVERNANCE.md) - Sistem Keadilan & Voting
+- [AI-SPECS.md](./AI-SPECS.md) - Spesifikasi LLM & AI

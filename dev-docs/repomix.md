@@ -4,6 +4,7 @@ docs/
   AI-SPECS.md
   ECONOMICS.md
   GOVERNANCE.md
+  PAMOR-SYSTEM.md
   STORAGE.md
 README.md
 repomix.config.json
@@ -14,12 +15,148 @@ WHITEPAPER.md
 
 # Files
 
+## File: docs/PAMOR-SYSTEM.md
+````markdown
+# PAMOR-SYSTEM.md
+
+## Pusat Informasi Sistem Reputasi & Kontribusi SiapAja.id
+
+**Dokumen ini adalah "Single Source of Truth" untuk seluruh algoritma, metrik, dan logika sistem Pamor. Dokumen ini mengikat secara hukum algoritma bagi Pembuat Job, Jagoan, Juri, dan Kontributor. Semua dokumen lain (GOVERNANCE.md, TECHNICAL.md, dll) HARUS me-reference dokumen ini untuk aturan Pamor.**
+
+---
+
+## 1. Terminologi
+
+| Teknis (Backend) | Publik (UI) | Deskripsi |
+|------------------|-------------|-----------|
+| `tasker` / `customer` | **Pembuat Job** | User yang posting kebutuhan & bayar escrow. |
+| `taskee` / `worker` | **Jagoan** | User yang ambil job & ngerjain tugas. |
+| `pamor_score` | **Pamor** | Skor reputasi user di komunitas. |
+| `platform_fee` | **Kontribusi Koperasi** | Kontribusi transaksi untuk dana bersama. |
+
+---
+
+## 2. Filosofi Pamor
+Pamor bukan sekadar "Rating Bintang". Pamor adalah **Sertifikat Kontribusi Digital**. 
+- **Bukan Uang:** Pamor tidak bisa dibeli dengan Rupiah.
+- **Bukan Hukuman Seumur Hidup:** Mengenal sistem *Decay* (Penebusan Dosa).
+- **Multi-Dimensi:** Menilai profesionalisme (skill), moralitas (etika), dan integritas (kejujuran).
+
+---
+
+## 3. Metrik Pamor: Jagoan (Worker)
+
+Jagoan mengumpulkan Pamor untuk mendapatkan prioritas *feed* dan hak dividen Koperasi.
+
+| Aktivitas | Dampak Pamor | Keterangan |
+|-----------|--------------|------------|
+| Menyelesaikan Job | **+5 s/d +50** | Tergantung nilai budget & tingkat kesulitan AI. |
+| Rating Bintang 5 | **+10** | Bonus kepuasan Pembuat Job. |
+| Tepat Waktu (GPS) | **+5** | Terdeteksi otomatis saat tiba di radius 50m. |
+| **Creator Conversion** | **+25** | Per 1 Pembuat Job baru yang posting job dari link konten TikTok/IG Jagoan. |
+| Pembatalan Sepihak | **-20** | Membatalkan setelah klik "Terima" tanpa alasan valid. |
+| Kalah Sengketa | **-50** | Diputuskan oleh Juri Netizen sebagai pihak bersalah. |
+| Perilaku Buruk | **-10** | Laporan valid: Kasar, merusak barang, sampah. |
+
+---
+
+## 4. Metrik Pamor: Pembuat Job (Customer)
+
+Pamor bagi Pembuat Job menentukan apakah postingan mereka akan diprioritaskan oleh Jagoan-Jagoan terbaik.
+
+| Aktivitas | Dampak Pamor | Keterangan |
+|-----------|--------------|------------|
+| Konfirmasi Cepat | **+5** | Klik "Selesai" segera setelah pekerjaan beres. |
+| Tips untuk Jagoan | **+2** | Memberikan apresiasi finansial di luar budget. |
+| Deskripsi Jelas | **+3** | Memudahkan AI ekstraksi (minim revisi). |
+| Harga "Ngehe" | **-5** | Postingan di-downvote massal (-10 net downvote). |
+| PHP / Cancel Sering | **-15** | Membuat job tapi sering membatalkan saat Jagoan otw. |
+| Eksploitasi | **-30** | Meminta kerjaan tambahan di luar deskripsi tanpa bayar. |
+
+---
+
+## 5. Metrik Pamor: Juri & Kontributor (Governance)
+
+Integritas sistem dijaga oleh mereka yang meluangkan waktu untuk keadilan dan teknologi.
+
+| Aktivitas | Dampak Pamor | Keterangan |
+|-----------|--------------|------------|
+| Voting Juri (Benar) | **+15** | Voting searah dengan hasil mayoritas final. |
+| Voting Juri (Asal) | **-20** | Terdeteksi pola "ikut-ikutan" atau asal klik. |
+| Menjadi Utusan RAK | **+50** | Terpilih sebagai delegasi kelompok dan aktif di RAT. |
+| Menghadiri RAK | **+5** | Kehadiran aktif dalam diskusi kelompok (bukan cuma silent). |
+| Penarikan Mandat | **-30** | Mandat dicabut oleh anggota kelompok karena tidak amanah. |
+| Kontribusi Kode | **+100 s/d +1000** | Berdasarkan bobot PR yang di-merge di GitHub. |
+| Laporan Bug Valid | **+10** | Laporan via GitHub Issue yang diverifikasi tim infra. |
+| Bantuan Darurat | **+50** | Berdonasi/Membantu Jagoan yang kecelakaan saat kas Pool kosong. |
+
+---
+
+## 6. Struktur Tier & Akses (The Utility)
+
+| Tier | Range Pamor | Akses & Keuntungan |
+|------|-------------|--------------------|
+| **Platinum** | 1000+ | Prioritas Job Premium (>2jt), Voting Power 10x, Dividen Maksimal. |
+| **Gold** | 500 - 999 | Prioritas Job Menengah, Voting Power 5x, Dividen Menengah. |
+| **Silver** | 100 - 499 | Akses Standar, Voting Power 1x, Dividen Dasar. |
+| **Bronze** | 1 - 99 | Akun Baru / Pemulihan. Akses Terbatas, Tidak Ada Dividen. |
+| **Frozen** | ≤ 0 | **Deaktivasi Otomatis.** Tidak bisa bidding, tidak bisa post. |
+
+---
+
+## 7. Protokol Deaktivasi & Penebusan (Redemption)
+
+### 6.1 Otomasi Status Frozen (Mati)
+Sistem (Backend Rust) akan secara otomatis mengubah status akun menjadi `is_frozen = true` jika:
+1. **Pamor Negatif:** Akibat akumulasi sanksi.
+2. **Inaktivitas Ekstrem:** Pamor menyusut via *Decay* hingga 0 selama 180 hari tanpa login.
+
+### 6.2 Jalan Penebusan (The Redemption Path)
+User yang berstatus **Frozen** tidak perlu bikin akun baru (KTP sudah terikat). Mereka bisa aktif kembali dengan:
+1. **Jury Duty Sukarela:** Menjadi juri sengketa (tanpa dibayar Rupiah) hingga Pamor kembali ke angka +1.
+2. **Kontribusi Komunitas:** Melaporkan konten ilegal atau membantu user baru di forum diskusi.
+3. **Masa Inkubasi:** Menunggu *Pamor Decay* membersihkan poin negatif (hanya jika poin negatif berasal dari sanksi lama).
+
+---
+
+## 8. Mekanisme Anti-Gaming (Security)
+
+Untuk mencegah Jagoan/Pembuat Job saling "tembak" (fake rating) demi menaikkan Pamor:
+- **Radius Check:** Transaksi antara dua user yang berdekatan secara terus-menerus akan di-*flag* oleh AI.
+- **IP & Device Binding:** Satu perangkat hanya untuk satu identitas KTP.
+- **Pamor Weighting:** Rating dari user Tier Platinum memiliki bobot Pamor lebih besar dibanding user baru.
+- **Cost of Downvote:** Memberikan downvote mengurangi 1 Pamor Anda sendiri (mencegah *brigading*).
+
+---
+
+## 9. Implementasi Teknis (Immutable Ledger)
+
+Setiap perubahan Pamor **WAJIB** dicatat dalam `ledger_entries` dengan skema:
+1. `entry_type`: 'pamor'
+2. `payload`: `{ delta: i32, reason: String, current_score: i32 }`
+3. `entry_hash`: SHA-256 link ke transaksi sebelumnya.
+
+*Admin tidak memiliki tombol untuk mengubah Pamor secara manual. Pamor hanya berubah melalui aksi user yang valid secara kode.*
+
+---
+
+**Revision 1.0** - *Sistem ini dirancang untuk menciptakan keseimbangan antara ketegasan dan pengampunan.*
+
+---
+
+**Related Documents:**
+- [TECHNICAL.md](../TECHNICAL.md) - Arsitektur Teknis
+- [ECONOMICS.md](./ECONOMICS.md) - Model Bisnis & Fee
+- [GOVERNANCE.md](./GOVERNANCE.md) - Sistem Keadilan & Voting
+- [AI-SPECS.md](./AI-SPECS.md) - Spesifikasi LLM & AI
+````
+
 ## File: README.md
 ````markdown
 <div align="center">
 
 # 🦀 SiapAja.id: The Ultra-Fast Real-time Gig Economy
-**"Scroll medsos dapet duit. 0% Komisi. Tanpa Iuran Anggota. 100% Keadilan."**
+**"Scroll medsos dapet duit. 0% Komisi Jagoan. Tanpa Iuran Anggota. 100% Keadilan."**
 
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](#)
 [![Rust](https://img.shields.io/badge/Rust-1.75%2B-orange.svg)](#)
@@ -61,25 +198,12 @@ SiapAja.id membalik logika itu. Kita pakai sistem **Demand-Only Feed** yang bent
 
 > **📋 Source of Truth:** Untuk detail lengkap fee structure, distribution, dan escrow system, lihat [ECONOMICS.md](./docs/ECONOMICS.md)
 
-Platform tetap gratis buat rakyat kecil. Tapi untuk menjaga keberlanjutan infrastruktur, kita menerapkan **Tiered Fee** hanya untuk transaksi kelas menengah ke atas:
+Platform tetap gratis buat rakyat kecil (transaksi < Rp500rb). Untuk transaksi besar, kita menerapkan **Tiered Fee** yang dibebankan secara adil ke kedua belah pihak. 100% surplus fee masuk ke **Kas Koperasi** untuk dibagikan sebagai SHU, setelah dikurangi biaya infrastruktur teknologi (**SA-TEV**).
 
-| Budget Pekerjaan | Fee Platform | Beban Biaya (Pembuat Job : Jagoan)
-|------------------|--------------|--------------------------------
-| Dibawah Rp500.000 | **3%** | 100% Pembuat Job (Jagoan 0% Fee)
-| Rp500rb - Rp2jt | **5%** | 50% Pembuat Job : 50% Jagoan
-| Rp2jt - Rp10jt | **7.5%** | 50% Pembuat Job : 50% Jagoan
-| Diatas Rp10jt | **10%** | 50% Pembuat Job : 50% Jagoan
+### 1.4. Anti-Bakar Duit (The Creator-Led Growth)
+Kita nggak punya VC yang ngasih triliunan buat bakar duit iklan di Facebook/Google Ads. Dan kita memang nggak mau. Daripada bayar Mark Zuckerberg, **kita membayar Jagoan kita sendiri.**
 
-**Alokasi Fee Platform (The Distribution):**
-* **Community Treasury (Koperasi):** Menerima 100% surplus Platform Fee untuk SHU Anggota.
-* **Technology Service (Solidarity-ID):** Dibayar berdasarkan penggunaan (SA-TEV) dan Lisensi IP tahunan.
-
-**Untuk transaksi di bawah Rp500.000, Jagoan tetap terima 100% UTUH.**
-Fee untuk transaksi besar dibebankan secara *adil* ke kedua belah pihak (split fee), bukan cuma memeras Jagoan.
-
-### 1.4. Anti-Bakar Duit (Guerrilla Bootstrapping)
-Kita nggak punya VC (*Venture Capitalist*) yang ngasih triliunan buat bakar duit ngasih promo diskon. Dan kita emang nggak butuh.
-Strategi kita adalah **Hyper-Local Density**. Kita nggak akan rilis se-Indonesia sekaligus. Kita kuasai satu kecamatan dulu, sampai semua ibu-ibu dan pemuda nongkrong di kecamatan itu pakai aplikasi ini. Kalau satu ekosistem lokal sudah nyala, dia akan membiayai pertumbuhannya sendiri.
+Mengadaptasi fenomena *Ojol Vlogger* atau *Santo Suruh*, kita merangkul para Jagoan yang juga seorang *Content Creator*. Setiap Jagoan yang merekam hasil kerjanya, mempostingnya di TikTok/IG, dan berhasil mendatangkan *Pembuat Job* baru ke platform melalui *Deep-Link* mereka, akan dibayar tunai dari **Kas Koperasi (Treasury)**. Mereka adalah "Marketing Berjalan" kita. Konten nyata orang bekerja jauh lebih viral dan dipercaya daripada iklan baliho.
 
 ---
 
@@ -96,16 +220,13 @@ Data sinkron instan, tanpa loading, secepat aplikasi chat. User cuma lihat saldo
 
 > **📋 Source of Truth:** Untuk detail lengkap AI pipeline, LLM models, dan JSON schemas, lihat [AI-SPECS.md](./docs/AI-SPECS.md)
 
-Sering terjadi: Pembuat Job pelit minta pindahan kosan 3 lantai, barangnya ada kulkas 2 pintu, tapi bayarnya cuma buat 1 orang.
-Di SiapAja.id, **text-only LLM** (via OpenRouter API) membaca postingan untuk ekstraksi terstruktur.
-*   **Output AI:** *"Deteksi beban >70kg + Tangga. Risiko cedera tinggi. Pekerjaan ini wajib dikerjakan minimal 3 Jagoan. Harga dasar dikunci di Rp350.000."*
-*   Sistem menolak postingan jika Pembuat Job memaksa menawar di bawah *Price Floor* (Harga Bawah) yang sudah dihitung AI. Kita jaga tulang punggung Jagoan!
+AI kita bertindak sebagai "Bodyguard" pekerja. LLM membaca deskripsi pekerjaan untuk menentukan **Price Floor** (Harga Bawah) dan mendeteksi risiko fisik. 
 
 ### 2.4. Pembentukan Tim Otomatis (Squad Formation)
 
 > **📋 Source of Truth:** Untuk detail lengkap squad formation logic dan threshold, lihat [AI-SPECS.md](./docs/AI-SPECS.md)
 
-Kalau AI mendeteksi butuh 3 orang untuk angkat lemari raksasa, sistem nggak akan nge-lempar kerjaan ini ke 1 orang. Sistem otomatis bikin "Lobby" pencarian 3 Jagoan terdekat. Begitu 3 orang kumpul, mereka jalan bareng. Setelah kerjaan selesai, Virtual Ledger otomatis memecah pembayaran ke 3 akun Jagoan tersebut secara adil dalam waktu milidetik. Nggak ada lagi rebutan jatah di lapangan.
+Jika AI mendeteksi pekerjaan berat (beban >50kg), sistem otomatis membentuk **Squad Lobby**. Pekerjaan hanya dimulai jika jumlah Jagoan yang dibutuhkan terpenuhi.
 
 ---
 
@@ -185,7 +306,7 @@ Kalau ada masalah, kita nggak pake CS yang jawabannya "Mohon maaf atas ketidakny
 
 ### 6.1. Alur Sengketa (Dispute Lifecycle)
 1. Pembuat Job klaim: "Kerjaan nggak beres!" -> Dana di Virtual Escrow otomatis **BEKU**.
-2. Juri Netizen voting (7 orang dipilih secara random dari pool Jagoan di kategori yang sama).
+2. Juri Netizen voting (7 orang dipilih berdasarkan keahlian dari pool Jagoan di kategori yang sama).
 3. Jagoan & Pembuat Job upload bukti foto/video.
 4. Juri voting secara *anonymous*. 
 5. Pemenang voting dapet dananya, Juri dapet komisi kecil sebagai imbalan kejujuran.
@@ -209,10 +330,10 @@ Banyak yang takut sistem Pamor kita bakal kayak "Skor Kredit Sosial" ala negara 
 *   **Pamor Naik (+):** Tepat waktu sampai lokasi, rating bintang 5 dari *Pembuat Job* (dinilai dari kualitas kerja), atau rajin jadi Juri sengketa yang adil.
 *   **Pamor Turun (-):** Batalin orderan sepihak setelah setuju (Cancel), telat parah tanpa alasan, atau terbukti curang dalam sengketa.
 
-### 7.2. Pamor Decay (Penyusutan Otomatis)
-Kita percaya pada **Penebusan Dosa Digital**. Kalau Jagoan pernah salah (Pamor anjlok), mereka nggak dihukum seumur hidup.
+### 7.2. Pamor Decay & Redemption
+Kita percaya pada **Penebusan Dosa Digital**. Kalau Jagoan pernah salah hingga akunnya non-aktif (Pamor ≤ 0), mereka tidak dihukum seumur hidup. Akun dapat diaktifkan kembali dengan memulihkan Pamor melalui kontribusi yang divalidasi komunitas.
 *   Setiap 30 hari, poin Pamor negatif akan otomatis mengalami "Decay" (menyusut) sebesar 15% jika Jagoan terus berkelakuan baik.
-*   Sistem ini diatur oleh *CRON Job* di server Rust yang secara efisien mengkalkulasi jutaan data setiap akhir bulan.
+*   Akun yang mencapai Pamor ≤ 0 akan masuk status `DEACTIVATED` dan kehilangan akses ke platform. Pemulihan dapat dilakukan melalui jalur *Redemption* (Jury duty khusus atau kontribusi terverifikasi).
 
 ### 7.3. Hak Suara (Voting Power)
 Pamor bukan cuma buat pamer. Semakin tinggi Pamor, semakin besar **Hak Suara (Voting Power)** user dalam menentukan arah platform.
@@ -508,6 +629,17 @@ Punya ide sinting? Nemu *bug* di sistem AI kita? Atau BUMN yang mau beli lisensi
 **Built with 🦀, 💙, and Anger in Indonesia. LFG!**
 
 </div>
+
+---
+
+**Dokumentasi Terkait:**
+- [WHITEPAPER.md](./WHITEPAPER.md) - Model Bisnis & Visi
+- [TECHNICAL.md](./TECHNICAL.md) - Arsitektur Teknis
+- [SCREEN-LIST.md](./SCREEN-LIST.md) - Spesifikasi UI/UX
+- [docs/ECONOMICS.md](./docs/ECONOMICS.md) - Model Ekonomi & Fee
+- [docs/GOVERNANCE.md](./docs/GOVERNANCE.md) - Sistem Keadilan & Voting
+- [docs/PAMOR-SYSTEM.md](./docs/PAMOR-SYSTEM.md) - Aturan Reputasi
+- [docs/AI-SPECS.md](./docs/AI-SPECS.md) - Spesifikasi LLM & AI
 ````
 
 ## File: repomix.config.json
@@ -627,15 +759,15 @@ Return JSON: {
 
 ### 3.2 Manpower Estimation (Squad Formation)
 
-**Purpose:** Menentukan apakah pekerjaan butuh multiple workers
+**Purpose:** Menentukan apakah pekerjaan butuh multiple Jagoan
 
 **Input:**
 - Job description
-- Image URL (optional - worker upload foto, AI analyze)
+- Image URL (optional - Jagoan upload foto, AI analyze)
 
 **Prompt Template:**
 ```
-Analyze if this job needs multiple workers.
+Analyze if this job needs multiple Jagoan.
 Consider: weight, stairs, tools, complexity, hazard level.
 Return JSON: {
   "workers_needed": number (1-5),
@@ -645,13 +777,7 @@ Return JSON: {
 }
 ```
 
-**Threshold:** >50kg beban → wajib minimal 2 worker
-
-**Squad Formation Logic:**
-- Jika AI mendeteksi butuh 3 orang untuk angkat lemari raksasa
-- Sistem otomatis bikin "Lobby" pencarian 3 worker terdekat
-- Begitu 3 orang kumpulkan, mereka jalan bareng
-- Setelah kerjaan selesai, Virtual Ledger otomatis pecah pembayaran ke 3 akun worker secara adil
+**Threshold:** (SSoT) Berat >50kg atau Deskripsi mengandung kata 'Tangga/Lantai 2+' memicu Squad Formation otomatis.
 
 ---
 
@@ -769,6 +895,14 @@ Return JSON: {
 ---
 
 *Dokumen ini adalah Source of Truth. Untuk detail implementasi teknis, rujuk ke TECHNICAL.md.*
+
+---
+
+**Related Documents:**
+- [TECHNICAL.md](../TECHNICAL.md) - Arsitektur Teknis
+- [ECONOMICS.md](./ECONOMICS.md) - Model Bisnis & Fee
+- [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md) - Aturan Reputasi
+- [GOVERNANCE.md](./GOVERNANCE.md) - Sistem Keadilan & Voting
 ````
 
 ## File: docs/STORAGE.md
@@ -794,7 +928,7 @@ Kita bagi bucket berdasarkan **Urgency**, **Privacy**, dan **Access Pattern**:
 
 | Folder / Prefix | Isi | Access Level | Retention (Age) |
 |-----------------|-----|--------------|-----------------|
-| `/profiles` | Foto Profil Jagoan & Tasker | Public-Read | Selamanya (atau sampai akun didelete) |
+| `/profiles` | Foto Profil Jagoan & Pembuat Job | Public-Read | Selamanya (atau sampai akun didelete) |
 | `/jobs-evidence` | Foto Sebelum/Sesudah Kerja | Presigned-URL (15 min expiry) | **30 Hari** setelah job selesai |
 | `/disputes` | Bukti Sengketa (Sangat Sensitif) | Restricted/Private | **1 Tahun** (Setelah itu Hard Delete) |
 | `/kyc-vault` | Foto KTP & Selfie (Enkripsi!) | Super-Private (AES-256) | Sesuai regulasi / Cold Storage |
@@ -809,8 +943,8 @@ Kita bagi bucket berdasarkan **Urgency**, **Privacy**, dan **Access Pattern**:
 
 | Data Type | Standard Storage | Archival (Glacier) | Deletion Policy |
 |-----------|------------------|--------------------|-----------------|
-| Job Photos (`/jobs-evidence`) | 30 Days | N/A | Hard Delete |
-| Dispute Evidence (`/disputes`) | 1 Year | N/A | Hard Delete + Secure Wipe |
+| Job Photos (`/jobs-evidence`) | 30 Days | N/A | Hard Delete (unless linked to active Dispute) |
+| Dispute Evidence (`/disputes`) | 365 Days | N/A | Hard Delete + Secure Wipe |
 | Profile Photos (`/profiles`) | Indefinite | N/A | Delete on account deletion |
 | KYC Documents (`/kyc-vault`) | 1 Year | 7 Years (Compliance) | Secure Delete after 7 years |
 | Invoices (`/invoices`) | 1 Year | 6 Years (Glacier) | Delete after 7 years |
@@ -1121,7 +1255,7 @@ Future<File> compressEvidenceImage(File imageFile) async {
 
 ---
 
-## 1. Terminologi Data vs UI
+## 1. Terminologi
 
 | Teknis (Backend) | Publik (UI) | Deskripsi |
 |------------------|-------------|-----------|
@@ -1166,19 +1300,25 @@ Solidarity-ID memiliki hak penuh atas efisiensi kode Rust yang dikembangkan.
 - Koperasi tidak berhak meminta pengembalian atau audit atas margin efisiensi teknis Solidarity-ID.
 
 ### 3.3 Aliran Dana (The Flow)
-1. **Platform Fee** ditarik dari transaksi besar → Masuk **100%** ke Kas Koperasi.
+1. **Platform Fee** ditarik dari transaksi besar + **Ads Revenue** → Masuk **100%** ke Kas Koperasi.
 2. **SA-TEV Tracker** mencatat beban kerja server per request/action.
 3. **Invoice Bulanan:** Solidarity-ID menagih Koperasi berdasarkan akumulasi SA-TEV + Transaction Fee.
-4. **Settlement:** Koperasi membayar tagihan dari Kas Treasury. Sisa saldo Treasury sepenuhnya milik Koperasi untuk SHU dan asuransi.
+4. **Settlement & Alokasi Kas Koperasi (Treasury):** 
+   Setelah dikurangi biaya infrastruktur (Solidarity-ID), sisa saldo dialokasikan secara *smart-contract* oleh Virtual Ledger:
+   - **40% untuk SHU/Dividen:** Dibagikan ke anggota ber-Pamor tinggi.
+   - **30% untuk Creator & Growth Bounty:** Dana segar untuk membayar Jagoan-Kreator yang mendatangi *Pembuat Job* baru (Affiliate/Proof-of-Content).
+   - **30% untuk Solidarity Pool:** Dana cadangan asuransi komunitas.
 
 ---
 
-## 4. Solidarity Pool (Dana Solidaritas)
+## 4. Solidarity Pool & Emergency Crowdfunding
 
-- **Rate:** Opsional 1% (Checkbox pilihan Pembuat Job/Jagoan)
-- **Tujuan:** Asuransi komunitas untuk kecelakaan kerja
+- **Rate:** Opsional 1% (Checkbox)
+- **Asas Ketersediaan:** Perlindungan kecelakaan hanya berlaku jika saldo Pool mencukupi. 
 - **Mekanisme:** Jika checkbox dipilih, potong 1%, masuk ke Solidarity Pool di Virtual Ledger
 - **Klaim:** Jagoan kecelakaan saat narik barang → klaim diambil dari pool ini lewat persetujuan pengurus Koperasi melalui voting juri.
+- **Mekanisme Darurat (Fase Rintisan):** Jika terjadi kecelakaan parah saat kas Pool kosong/minim, sistem secara otomatis akan memicu **"Post Solidaritas Darurat"** di Feed lokal.
+- **Micro-Donation:** Anggota lain di radius 5km dapat menyumbangkan Pamor atau Saldo (Rp1.000 - Rp5.000) secara sukarela untuk membantu korban. Koperasi bertindak sebagai fasilitator penyaluran, bukan penanggung dana (underwriter).
 
 ---
 
@@ -1187,7 +1327,7 @@ Semua mutasi Rupiah (IDR) wajib masuk ke tabel `ledger_entries` yang bersifat *a
 
 - **Hash Chain**: Tiap transaksi punya `previous_hash`.
 - **Integrity**: Perubahan saldo tanpa entry di ledger dianggap invalid oleh logic Rust.
-- **Transparency**: Tasker & Jagoan bisa nge-cek "Hash Bukti Transaksi" via dashboard.
+- **Transparency**: Pembuat Job & Jagoan bisa nge-cek "Hash Bukti Transaksi" via dashboard.
 - **Audit Trail**: Setiap entry mengandung SHA-256 hash yang bisa diverifikasi publik.
 
 ---
@@ -1222,10 +1362,14 @@ User bisa beli verifikasi centang biru. **PENTING:** Ini murni signal, BUKAN gar
 Warung, laundry, toko bangunan di radius 2km bisa pasang iklan kontekstual di Feed. Iklan muncul pas user scroll nyari jasa relevan.
 
 ### 5.4 Revenue Surplus: Partisipasi sebagai Modal
-Karena tidak ada Simpanan Pokok, modal koperasi berasal dari akumulasi surplus transaksi. Anggota yang aktif bertransaksi secara otomatis meningkatkan "Penyertaan Modal" mereka yang tercatat di sistem sebagai SMD (Sertifikat Modal Digital) berbasis partisipasi.
+Karena tidak ada Simpanan Pokok, modal koperasi berasal dari akumulasi surplus transaksi. Anggota yang aktif bertransaksi secara otomatis meningkatkan "Penyertaan Modal" mereka (SMD).
+
+**Syarat Dividen (SHU):**
+- Akun harus dalam status `ACTIVE` (Pamor > 0).
+- Akun `FROZEN` atau `DEACTIVATED` (Pamor ≤ 0) kehilangan hak atas dividen periode berjalan. Dividen yang tidak terserap akan dikembalikan ke *Community Treasury*.
 
 ### 5.5 B2B API Integration
-Mall atau Apartemen yang mau pakai worker kita secara borongan wajib langganan API (Enterprise Tier).
+Mall atau Apartemen yang mau pakai Jagoan kita secara borongan wajib langganan API (Enterprise Tier).
 
 ---
 
@@ -1249,7 +1393,7 @@ Di feed **Demand**, Jagoan bisa downvote postingan Pembuat Job yang naruh harga 
 - **AI Price Floor:** Sistem AI bakal rekomendasikan harga fair berdasarkan histori pekerjaan sejenis di radius yang sama
 
 ### 7.2 Filosofi
-Ini bukan monopoli harga. Ini **Social Correction** - komunitas punya suara buat ngasih tau kalau harga terlalu rendah (yang bisa menyebabkan worker melayani dengan kualitas rendah) atau terlalu tinggi (yang bisa tanda scam).
+Ini bukan monopoli harga. Ini **Social Correction** - komunitas punya suara buat ngasih tau kalau harga terlalu rendah (yang bisa menyebabkan Jagoan melayani dengan kualitas rendah) atau terlalu tinggi (yang bisa tanda scam).
 
 ---
 
@@ -1273,10 +1417,19 @@ Ini bukan monopoli harga. Ini **Social Correction** - komunitas punya suara buat
 | 1.1 | 2026-03-16 | Added Bab 7: Downvote sebagai Social Price Controller (Anti-Price Gouging via Community Voting) |
 | 1.2 | 2026-03-16 | Terminology update: Worker → Jagoan, Customer → Pembuat Job. Added UI vs Technical terminology tables. |
 | 1.3 | 2026-03-16 | Added Immutable Financial Ledger section with hash chain architecture for audit trail |
+| 1.4 | 2026-03-19 | Terminology update: Removed "Kopi" terminology, replaced with "Koperasi". Added voting juri for solidarity pool claims. |
 
 ---
 
 *Dokumen ini adalah Source of Truth. Untuk detail implementasi teknis, rujuk ke TECHNICAL.md.*
+
+---
+
+**Related Documents:**
+- [TECHNICAL.md](../TECHNICAL.md) - Arsitektur Teknis
+- [GOVERNANCE.md](./GOVERNANCE.md) - Sistem Keadilan & Voting
+- [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md) - Aturan Reputasi
+- [AI-SPECS.md](./AI-SPECS.md) - Spesifikasi LLM & AI
 ````
 
 ## File: docs/GOVERNANCE.md
@@ -1293,52 +1446,25 @@ Ini bukan monopoli harga. Ini **Social Correction** - komunitas punya suara buat
 
 | Teknis (Backend) | Publik (UI) | Deskripsi |
 |------------------|-------------|-----------|
+| `tasker` / `customer` | **Pembuat Job** | User yang posting kebutuhan & bayar escrow. |
+| `taskee` / `worker` | **Jagoan** | User yang ambil job & ngerjain tugas. |
 | `pamor_score` | **Pamor** | Skor reputasi user di komunitas. |
-| `pamor_score` | **Pamor** | Alias untuk backward compatibility. |
+| `platform_fee` | **Kontribusi Koperasi** | Kontribusi transaksi untuk dana bersama. |
 | `downvote` | **Downvote** | Sinyal bahwa konten/行为 violate norma komunitas. |
 
 ---
 
 ## 2. Sistem Pamor
 
+> **📋 Source of Truth Reputasi:** Seluruh algoritma skor, tiering, dan sistem sanksi diatur secara hukum dalam [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md). Dokumen ini (GOVERNANCE.md) hanya mengatur prosedur pemilihan juri dan alur sengketa.
+
 Pamor adalah **Modal Sosial** sekaligus bukti keanggotaan aktif. Di SiapAja, Anda tidak "membeli" hak suara dengan uang simpanan, Anda "menanam" hak suara melalui kualitas kerja.
 
-### 2.1 Metrik Pamor
-
-**Pamor Naik (+):**
-- Tepat waktu sampai lokasi
-- Rating bintang 5 dari Pembuat Job (dinilai dari kualitas kerja)
-- Rajin jadi Juri sengketa yang adil
-- Kontribusi kode (GitHub PR merge)
-
-**Pamor Turun (-):**
-- Batalin orderan sepihak setelah setuju (Cancel)
-- Telat parah tanpa alasan
-- Terbukti curang dalam sengketa
-- Membuang sampah sembarangan di lokasi Pembuat Job
-
-### 2.2 Pamor Decay (Penyusutan Otomatis)
-
-Kami percaya pada **Penebusan Dosa Digital**:
-
-- **Rate:** Setiap 30 hari, poin Pamor negatif akan otomatis mengalami "Decay" (menyusut) sebesar **15%** jika Jagoan terus berkelakuan baik
-- **Mekanisme:** CRON Job di server Rust secara efisien mengkalkulasi jutaan data setiap akhir bulan
-- **Filosofi:** Jagoan tidak dihukum seumur hidup. Mereka bisa redemption.
+> **📋 Detail lengkap metrik Pamor (angka pasti):** Lihat [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md) Bab 2-5
 
 ---
 
-## 3. Pamor Tier System
-
-| Tier | Pamor Range | Benefits |
-|------|-------------|----------|
-| **Bronze** | 0-99 | Basic access |
-| **Silver** | 100-499 | Priority feed, higher rate limits |
-| **Gold** | 500-999 | Priority matching, voting power |
-| **Platinum** | 1000+ | Premium jobs, maximum voting, priority support |
-
----
-
-## 4. Immutable Pamor Audit
+## 3. Immutable Pamor Audit
 Pamor bukan sekadar angka di profil, tapi deretan event yang di-hash.
 
 - **Event Sourcing**: Pamor dihitung ulang dari nol setiap ada audit, atau pake snapshot yang di-verify hash-nya.
@@ -1348,7 +1474,7 @@ Pamor bukan sekadar angka di profil, tapi deretan event yang di-hash.
 
 ---
 
-## 5. Voting Power (Hak Suara)
+## 4. Voting Power (Hak Suara)
 
 Pamor menggantikan fungsi Simpanan Wajib sebagai syarat hak suara:
 
@@ -1358,6 +1484,16 @@ Pamor menggantikan fungsi Simpanan Wajib sebagai syarat hak suara:
   - Mau naikin Price Floor (Harga Bawah) di kota Jakarta? Voting!
   - Mau uang denda di Treasury dipakai buat bagi-bagi sembako atau asuransi kecelakaan? Voting!
   - Pemilihan pengurus wilayah
+
+### 4.1 Struktur Demokrasi Digital (RAK ke RAT)
+
+Untuk menghindari "Formalitas Klik Setuju", SiapAja.id menggunakan sistem **Rapat Anggota Kelompok (RAK)** sebelum menuju RAT Nasional:
+
+1.  **Pembentukan Kelompok (RAK):** Anggota dikelompokkan otomatis berdasarkan **Wilayah (Kecamatan)** atau **Kategori Profesi (misal: Skuad Tukang AC)**.
+2.  **Diskusi Substantif (RAK):** Di dalam aplikasi, setiap kelompok memiliki forum diskusi khusus untuk membahas usulan kebijakan.
+3.  **Pemilihan Delegasi:** Setiap kelompok (misal 100 orang) memilih 1 **Utusan/Delegasi** (berdasarkan Pamor tertinggi dan hasil voting internal kelompok).
+4.  **Mandat Delegasi:** Utusan membawa aspirasi kelompok ke RAT Nasional. Utusan memiliki **Delegated Voting Power** yang merupakan akumulasi suara dari anggotanya.
+5.  **Transparansi Mandat:** Anggota bisa menarik mandatnya secara real-time jika utusan memberikan suara yang berlawanan dengan kesepakatan kelompok di RAK.
 
 ---
 
@@ -1428,7 +1564,13 @@ Koperasi tidak mempekerjakan developer secara internal. Hubungan bersifat kemitr
 
 ---
 
-## 8. User States (Not Roles)
+## 8. User States & Legal Acknowledgment
+
+Sebelum masuk ke status `Verified`, user wajib menyetujui **Pakta Jagoan Mandiri**:
+
+1.  **Pernyataan Mandiri:** Jagoan mengakui tidak memiliki hubungan ketenagakerjaan dengan Koperasi.
+2.  **BPJS Disclaimer:** Jagoan memahami bahwa Koperasi tidak memotong/membayar BPJS. Jagoan disarankan mendaftar BPJS BPU (Mandiri) secara pribadi.
+3.  **Risiko Rintisan:** Jagoan memahami bahwa di fase awal, dana *Solidarity Pool* mungkin belum mencukupi untuk klaim besar, dan bersedia menanggung risiko kerja secara mandiri atau melalui skema gotong-royong komunitas.
 
 | State | Description | Unlocks |
 |-------|-------------|---------|
@@ -1451,6 +1593,14 @@ Koperasi tidak mempekerjakan developer secara internal. Hubungan bersifat kemitr
 ---
 
 *Dokumen ini adalah Source of Truth. Untuk detail implementasi teknis, rujuk ke TECHNICAL.md. Untuk detail economics, rujuk ke ECONOMICS.md.*
+
+---
+
+**Related Documents:**
+- [TECHNICAL.md](../TECHNICAL.md) - Arsitektur Teknis
+- [ECONOMICS.md](./ECONOMICS.md) - Model Bisnis & Fee
+- [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md) - Aturan Reputasi
+- [AI-SPECS.md](./AI-SPECS.md) - Spesifikasi LLM & AI
 ````
 
 ## File: TECHNICAL.md
@@ -1598,12 +1748,13 @@ siapaja-core/
 └── crates/                       # Workspace members
     ├── sa-schema/                # #1 Shared domain models & types
     ├── sa-domain/                # #2 Domain logic (entities, traits)
-    ├── sa-application/           # #3 Use cases & services
+    ├── sa-application/           # #3 Use cases & services (includes pamor_engine)
     ├── sa-infrastructure/        # #4 External implementations
     ├── sa-api/                   # #5 Axum HTTP handlers
     ├── sa-spacetimedb/           # #6 SpacetimeDB module
-    ├── sa-worker/                # #7 Background jobs
-    └── sa-cli/                   # #8 CLI tools & admin
+    ├── sa-pamor/                 # #7 Pamor calculation engine (Logic from PAMOR-SYSTEM.md)
+    ├── sa-worker/                # #8 Background jobs
+    └── sa-cli/                   # #9 CLI tools & admin
 ```
 
 ### 4.2 Crate Details
@@ -1618,7 +1769,7 @@ crates/sa-schema/
     ├── lib.rs
     ├── models/
     │   ├── mod.rs
-    │   ├── user.rs                 # User, UserRole, KarmaScore
+    │   ├── user.rs                 # User, UserRole, PamorScore
     │   ├── job.rs                  # Job, JobStatus, Category
     │   ├── escrow.rs               # Escrow, EscrowStatus (Xendit integration)
     │   ├── payment.rs              # Payment, Withdrawal, Deposit
@@ -1672,7 +1823,7 @@ crates/sa-domain/
     │   ├── mod.rs
     │   ├── pricing_engine.rs       # Price floor calculation
     │   ├── matching_engine.rs      # Job-worker matching logic
-    │   ├── karma_engine.rs         # Pamor decay & calculation
+    │   ├── pamor_engine.rs         # Pamor decay & calculation
     │   └── dispute_resolver.rs     # Jury selection & voting
     ├── errors/
     │   ├── mod.rs
@@ -2167,9 +2318,12 @@ CREATE TABLE users (
     ktp_hash VARCHAR(64),
     can_work_as_worker BOOLEAN DEFAULT FALSE,
     can_post_as_customer BOOLEAN DEFAULT TRUE,
-    pamor_score INTEGER DEFAULT 100, -- Default Pamor
+    pamor_score INTEGER DEFAULT 100, -- SSoT: Lihat PAMOR-SYSTEM.md Bab 5 untuk Tiering
     -- voting_power dihitung dinamis dari pamor_score: 100 Pamor = 1 Suara (Max 10)
     blue_check_verified BOOLEAN DEFAULT FALSE,
+    is_frozen BOOLEAN DEFAULT FALSE,
+    frozen_reason TEXT,
+    last_activity_at TIMESTAMPTZ DEFAULT NOW(),
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -2189,9 +2343,9 @@ CREATE TABLE jobs (
     status job_status DEFAULT 'POSTED',
     escrow_id VARCHAR(255),
     escrow_status escrow_status,
-    is_solidarity_pool_active BOOLEAN DEFAULT FALSE, -- Penambahan flag asuransi
-    ai_price_floor INTEGER, -- minimum harga dari AI
-    ai_workers_required INTEGER DEFAULT 1,
+    is_solidarity_pool_active BOOLEAN DEFAULT FALSE, -- SSoT: Lihat ECONOMICS.md Bab 4 untuk Mekanisme Pool
+    ai_price_floor INTEGER, -- SSoT: Lihat AI-SPECS.md Bab 3.1 untuk Price Floor logic
+    ai_workers_required INTEGER DEFAULT 1, -- SSoT: Lihat AI-SPECS.md Bab 3.2 untuk Squad Formation
     ai_risk_level risk_level,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     claimed_at TIMESTAMPTZ,
@@ -2250,15 +2404,7 @@ CREATE TABLE local_ads (
 );
 
 -- Pamor History (Renamed from karma_history)
-CREATE TABLE pamor_history (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL REFERENCES users(id),
-    delta INTEGER NOT NULL,
-    reason VARCHAR(50) NOT NULL,
-    reference_type VARCHAR(50),
-    reference_id UUID,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
+-- Pamor Ledger is the source of truth; Postgres users table is a read-only cache.
 
 -- Koperasi Open Ledger (Transparency Table)
 CREATE TABLE community_treasury_logs (
@@ -2984,6 +3130,7 @@ pub struct FeedPersonalization {
 **Changelog:**
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.2 | 2026-03-19 | Schema updates: Removed deprecated transactions table, added local_ads table, renamed karma_history to pamor_history, added is_solidarity_pool_active flag. Terminology alignment: Replaced "Kopi" with "Koperasi". |
 | 2.1 | 2026-03-16 | Added Immutable Ledger implementation with Merkle-chained hash chain, audit API, and SpacetimeDB integration |
 | 2.0 | 2026-03-15 | Third-party escrow, OpenRouter AI, personalized feed, dual-role, workspace structure |
 | 1.0 | 2026-03-01 | Initial specification |
@@ -2991,6 +3138,17 @@ pub struct FeedPersonalization {
 ---
 
 *End of Document*
+
+---
+
+**Related Documents:**
+- [README.md](../README.md) - Quick Start & Manifesto
+- [WHITEPAPER.md](../WHITEPAPER.md) - Business Logic
+- [SCREEN-LIST.md](../SCREEN-LIST.md) - UI/UX Specifications
+- [docs/ECONOMICS.md](./docs/ECONOMICS.md) - Model Bisnis & Fee
+- [docs/GOVERNANCE.md](./docs/GOVERNANCE.md) - Sistem Keadilan & Voting
+- [docs/PAMOR-SYSTEM.md](./docs/PAMOR-SYSTEM.md) - Aturan Reputasi
+- [docs/AI-SPECS.md](./docs/AI-SPECS.md) - Spesifikasi LLM & AI
 ````
 
 ## File: WHITEPAPER.md
@@ -3079,12 +3237,7 @@ Kami menggunakan SpacetimeDB untuk menghapus latency antara worker dan customer.
 
 > **📋 Source of Truth:** Untuk detail lengkap AI pipeline, LLM models, dan JSON schemas, lihat [AI-SPECS.md](./docs/AI-SPECS.md)
 
-Kami menolak keras sistem lelang buta yang membuat pekerja saling banting harga hingga upah tidak manusiawi. Di sinilah **AI Man-Power Estimator** bekerja melalui **OpenRouter API** (Claude 3 Haiku, GPT-3.5) - text-only LLM untuk ekstraksi data terstruktur dari teks tidak terstruktur.
-
-1.  **Text-to-Structured Extraction:** Saat *customer* memposting "Bantu angkut lemari 3 pintu ke lantai 4", LLM mengekstrak: budget, lokasi, estimasi difficulty.
-2.  **Risk & Effort Calculation:** AI menghitung estimasi kalori, risiko cedera, dan harga pasar di wilayah tersebut berdasarkan teks saja.
-3.  **Price Floor Enforcement:** AI akan mengunci **Harga Bawah**. *Pembuat Job* tidak bisa memposting tawaran di bawah harga minimum yang layak.
-4.  **Squad Formation:** Jika beban melampaui kapasitas 1 manusia (>50kg) berdasarkan teks deskripsi, AI secara otomatis memecah job menjadi *Multi-Jagoan Job* (misal: butuh 3 orang).
+Kami menggunakan LLM (via OpenRouter) untuk ekstraksi data terstruktur dari teks deskripsi pekerjaan. AI menghitung **Price Floor** dan menegakkan aturan **Squad Formation** (otomasi kerja tim untuk beban >50kg) guna melindungi kesehatan fisik Jagoan.
 
 ---
 
@@ -3111,8 +3264,10 @@ Koperasi SiapAja adalah pemilik ekosistem massa. Untuk menjalankan operasionalny
 ### 5.2.1 Insentif Optimasi
 Solidarity-ID didorong untuk menciptakan kode Rust paling efisien. Semakin efisien kodenya, semakin kecil biaya SA-TEV yang harus dibayar Koperasi, dan margin efisiensi tetap milik Solidarity-ID sebagai insentif inovasi.
 
-### 5.3. Wealth Distribution & Open Ledger
-Setelah pemotongan biaya teknologi (SA-TEV), sisa surplus di tangan Koperasi sepenuhnya dikontrol oleh anggota melalui RAT digital.
+### 5.3. Demokrasi Digital Substantif (RAK-RAT)
+SiapAja.id menolak demokrasi dangkal. Kami menerapkan **Rapat Anggota Kelompok (RAK)** sebagai filter substantif. 
+
+Aspirasi tidak langsung dilempar ke jutaan orang, melainkan digodok di tingkat komunitas (Kecamatan/Profesi) untuk memastikan setiap suara didengar. Delegasi yang dikirim ke RAT Nasional adalah mereka yang memiliki **Pamor tinggi** dan **integritas teruji**, menjamin bahwa keputusan besar platform adalah hasil dialektika, bukan sekadar algoritma populer.
 
 ### 5.4. Manajemen Likuiditas & Open Ledger (Transparansi Radikal)
 Dana IDR yang tersimpan di *Escrow* menghasilkan *Float* (dana mengendap) yang dikelola secara kolektif.
@@ -3151,10 +3306,11 @@ Di SiapAja.id, kami memperkenalkan konsep **PAMOR** sebagai alternatif dari sist
 
 ## BAB 8: Kerangka Hukum & Platform Non-Liability
 
-### 8.1. Non-Liability Disclaimer (FFFI Principle)
-SiapAja.id bertindak **MURNI sebagai penyedia infrastruktur kode** (Software-as-a-Service).
+### 8.1. Kemitraan Mandiri & Batasan Tanggung Jawab (Fase Rintisan)
+SiapAja.id adalah infrastruktur digital milik Koperasi. Hubungan Jagoan dengan Koperasi adalah **Hubungan Keanggotaan Mandiri (Non-Employment)**.
 
-*   **Zero Responsibility:** Platform TIDAK bertanggung jawab atas kualitas kerja, penipuan antar user, kecelakaan kerja, atau kerugian finansial/fisik apapun.
+*   **Pekerja Mandiri (BPU):** Jagoan berstatus Pekerja Bukan Penerima Upah (BPU). Segala kewajiban jaminan sosial negara (BPJS) adalah pilihan dan tanggung jawab pribadi masing-masing anggota. Koperasi tidak bertindak sebagai pemberi kerja (majikan).
+*   **Welfare Best-Effort:** Sesuai UU No. 25/1992, Koperasi mengupayakan kesejahteraan melalui *Solidarity Pool*. Namun, di fase rintisan dengan modal nol, perlindungan bersifat **"Best-Effort"** (sebatas ketersediaan kas pool). Platform tidak memberikan jaminan kompensasi jika kas pool kosong.
 *   **Jury-Led Resolution:** Semua sengketa diselesaikan secara *peer-to-peer* melalui sistem Juri Netizen. Keputusan juri adalah final dan mengikat secara algoritma.
 *   **User Autonomy:** User setuju bahwa penggunaan aplikasi ini adalah **atas resiko sendiri** (*Use at your own risk*).
 
@@ -3186,9 +3342,20 @@ Monopoli *gig economy* saat ini bukan didasarkan pada teknologi yang mustahil di
 Kita tidak butuh miliaran Dolar dari investor asing untuk membuat sistem ini berjalan. Kita hanya butuh kompilasi kode yang bersih, konsensus algoritma yang adil, dan semangat gotong royong digital yang nyata.
 
 **Pilih senjata kalian. Buka Pull Request. Mari kita ambil alih ekonomi ini.** 
+---
+
+*(Dokumen ini merupakan properti intelektual komunitas terbuka SiapAja.id. Silakan ajukan Issue di GitHub untuk mengusulkan amendemen).*
 
 ---
-*(Dokumen ini merupakan properti intelektual komunitas terbuka SiapAja.id. Silakan ajukan Issue di GitHub untuk mengusulkan amendemen).*
+
+**Dokumentasi Terkait:**
+- [README.md](./README.md) - Quick Start & Manifesto
+- [TECHNICAL.md](./TECHNICAL.md) - Arsitektur Teknis
+- [SCREEN-LIST.md](./SCREEN-LIST.md) - Spesifikasi UI/UX
+- [docs/ECONOMICS.md](./docs/ECONOMICS.md) - Model Ekonomi & Fee
+- [docs/GOVERNANCE.md](./docs/GOVERNANCE.md) - Sistem Keadilan & Voting
+- [docs/PAMOR-SYSTEM.md](./docs/PAMOR-SYSTEM.md) - Aturan Reputasi
+- [docs/AI-SPECS.md](./docs/AI-SPECS.md) - Spesifikasi LLM & AI
 ````
 
 ## File: SCREEN-LIST.md
@@ -3428,7 +3595,7 @@ Kita tidak butuh miliaran Dolar dari investor asing untuk membuat sistem ini ber
 
 ### 3.4.2 Contextual Targeting Logic
 - **3.4.2.1** Job-Based Targeting: Kalau Jagoan lagi liat job "Benerin Atap", iklan yang muncul adalah "Toko Genteng Terdekat"
-- **3.4.2.2** Service-Based Targeting: Kalau Tasker lagi cari "Cleaning Service", iklan yang muncul adalah "Layanan Laundry Sat-Set"
+- **3.4.2.2** Service-Based Targeting: Kalau Pembuat Job lagi cari "Cleaning Service", iklan yang muncul adalah "Layanan Laundry Sat-Set"
 - **3.4.2.3** Location-Based: Prioritas radius 1km > 2km > 5km
 - **3.4.2.4** Category Match: Ads diselaraskan dengan kategori skill/service yang lagi aktif di feed
 
@@ -3514,7 +3681,7 @@ Kita tidak butuh miliaran Dolar dari investor asing untuk membuat sistem ini ber
 
 ### 5.1.6 Enrollment Status (Dynamic)
 - **5.1.6.1** Time remaining ("12 menit lagi")
-- **5.1.6.2** Applicants count ("3 worker melamar")
+- **5.1.6.2** Applicants count ("3 Jagoan melamar")
 - **5.1.6.3** Applicants preview (avatars list)
 - **5.1.6.4** "Lihat Semua Pelamar" (if poster)
 
@@ -3565,12 +3732,12 @@ Kita tidak butuh miliaran Dolar dari investor asing untuk membuat sistem ini ber
 - **5.2.3.1** Jobs completed
 - **5.2.3.2** Completion rate
 - **5.2.3.3** Average rating (stars)
-- **5.2.3.4** Review list (as worker)
+- **5.2.3.4** Review list (as Jagoan)
 
 ### 5.2.4 Action Bar
 - **5.2.4.1** "Invite ke Job Saya" (if user has open job)
 - **5.2.4.2** "Chat" (start conversation)
-- **5.2.4.3** "Simpan" (bookmark worker)
+- **5.2.4.3** "Simpan" (bookmark Jagoan)
 
 ## 5.3 Discussion Detail Screen
 
@@ -3608,7 +3775,7 @@ Kita tidak butuh miliaran Dolar dari investor asing untuk membuat sistem ini ber
 - **6.1.2.1** Match Splash: "Sikat!" full-screen animation if auto-matched instantly
 - **6.1.2.2** Enrollment Queue: Real-time progress bar of the 15-minute selection window
 - **6.1.2.3** Next Card Trigger: Auto-sliding the next demand card into view after a swipe
-- **6.1.2.4** Description: Seamless transition that keeps the worker in the "flow state" of finding work
+- **6.1.2.4** Description: Seamless transition that keeps the Jagoan in the "flow state" of finding work
 
 ## 6.2 Applicant Management (Poster Perspective)
 
@@ -3681,7 +3848,7 @@ Kita tidak butuh miliaran Dolar dari investor asing untuk membuat sistem ini ber
 - **7.2.1.3** Chat button
 
 ### 7.2.2 Progress View
-- **7.2.2.1** Photo updates from worker
+- **7.2.2.1** Photo updates from Jagoan
 - **7.2.2.2** Status timeline
 
 ### 7.2.3 Completion Confirmation
@@ -3858,7 +4025,7 @@ Kita tidak butuh miliaran Dolar dari investor asing untuk membuat sistem ini ber
 - **10.1.1.7** Escrow freeze warning
 - **10.1.1.8** "Ajukan Sengketa" confirmation
 
-## 10.2 Jury Duty (For Verified Users)
+## 10.2 Jury Duty (For Verified Jagoan)
 
 ### 10.2.1 Jury Summons
 - **10.2.1.1** Notification: "Anda Dipilih sebagai Juri"
@@ -3977,7 +4144,7 @@ Kita tidak butuh miliaran Dolar dari investor asing untuk membuat sistem ini ber
 
 ### 12.1.2 Stats Row
 - **12.1.2.1** Jobs posted (as customer)
-- **12.1.2.2** Jobs completed (as worker)
+- **12.1.2.2** Jobs completed (as Jagoan)
 - **12.1.2.3** Pamor score
 - **12.1.2.4** Member since
 
@@ -3986,7 +4153,7 @@ Kita tidak butuh miliaran Dolar dari investor asing untuk membuat sistem ini ber
 - **12.1.3.2** Butuh Bantuan (their job posts)
 - **12.1.3.3** Bisa Bantu (their service offers)
 - **12.1.3.4** Diskusi (community posts)
-- **12.1.3.5** Reviews (received, as customer + worker)
+- **12.1.3.5** Reviews (received, as customer + Jagoan)
 
 ### 12.1.4 Action Buttons (Context-Aware)
 - **If self:** Edit Profile
@@ -4106,6 +4273,14 @@ Kita tidak butuh miliaran Dolar dari investor asing untuk membuat sistem ini ber
 - **14.1.2.4** Dividend history
 
 ## 14.2 KOPERASI HUB (The Ownership Experience)
+
+### 14.2.0 SiapAja Creator Dashboard (Bounty Hunters)
+*Dashboard khusus bagi Jagoan yang juga berprofesi sebagai Content Creator.*
+- **14.2.0.1** **Generator Deep-Link:** Buat link khusus (contoh: `siapaja.id/c/SobatCleaning`).
+- **14.2.0.2** **Live Tracking Matriks:** Jumlah klik link, jumlah user yang download, dan jumlah Job yang berhasil diposting dari link tersebut.
+- **14.2.0.3** **Bounty Wallet:** Saldo Rupiah khusus dari hasil konversi konten yang bisa ditarik kapan saja (Didanai dari 30% Kas Koperasi).
+- **14.2.0.4** **Creator Leaderboard:** Peringkat Jagoan-Kreator paling berpengaruh di kota tersebut (Reward: Pamor Boost + Badge Kreator).
+
 ### 14.2.1 Dashboard Anggota
 - **14.2.1.1** Status Anggota & Porsi Pamor Shares.
 - **14.2.1.2** Open Ledger: Transparansi kas koperasi (Yield & Fee).
@@ -4128,7 +4303,15 @@ Kita tidak butuh miliaran Dolar dari investor asing untuk membuat sistem ini ber
 ### 14.2.4 Solidarity & Social (Bela Beli Teman)
 - **14.2.4.1** List Klaim Bantuan: Daftar anggota yang butuh dana bantuan (sakit/kecelakaan)
 - **14.2.4.2** Verifikasi Komunitas: Tombol bagi anggota terdekat buat verifikasi kondisi teman
-- **14.2.4.3** "Beli Jasa Teman": Filter khusus buat prioritasin panggil worker yang lagi butuh bantuan dana
+- **14.2.4.3** "Beli Jasa Teman": Filter khusus buat prioritasin panggil Jagoan yang lagi butuh bantuan dana
+
+### 14.2.5 Ruang RAK (Demokrasi Arus Bawah)
+- **14.2.5.1** Group Selector: Pilihan RAK Wilayah (Kecamatan) atau RAK Profesi.
+- **14.2.5.2** Discussion Thread: Forum diskusi khusus usulan kebijakan (Markdown supported).
+- **14.2.5.3** Poll Builder: Anggota kelompok membuat poll internal sebelum dibawa ke nasional.
+- **14.2.5.4** Delegate Election: Interface memilih Utusan kelompok dengan display skor Pamor.
+- **14.2.5.5** Mandate Tracker: Visualisasi status suara Utusan di RAT Nasional (Real-time).
+- **14.2.5.6** "Tarik Suara": Tombol darurat anggota untuk membatalkan dukungan pada utusan jika tidak sesuai kesepakatan.
 
 ## 14.3 Verification Gates (Soft Prompts)
 
@@ -4203,6 +4386,18 @@ Kita tidak butuh miliaran Dolar dari investor asing untuk membuat sistem ini ber
 - **15.3.3.2** "Job Dibatalkan" (cancelled by poster)
 - **15.3.3.3** "Job Kedaluwarsa" (expired)
 - **15.3.3.4** Similar jobs suggestion
+
+## 15.4 Account States Errors (Deactivation)
+
+### 15.4.1 Account Frozen Screen
+- **15.4.1.1** "Akun Dibekukan" Illustration.
+- **15.4.1.2** Reason Display: (e.g., "Pamor Negatif", "Deteksi Fraud").
+- **15.4.1.3** Redemption Path: Instruksi cara memulihkan Pamor (Jury duty khusus atau banding).
+- **15.4.1.4** "Hubungi Pengurus" (Support link).
+
+### 15.4.2 Inactivity Notice
+- **15.4.2.1** Pop-up: "Pamor kamu hampir habis karena jarang mampir."
+- **15.4.2.2** CTA: "Selesaikan 1 Job hari ini untuk stop penyusutan."
 
 ---
 
@@ -4324,15 +4519,27 @@ Jury Review → Voting → Result → Fund Release
 | 2.0 | 2026-03-10 | Reddit-style universal actions |
 | 3.0 | 2026-03-15 | Final: Fast-bid matching, anti-senior bias, transparency features |
 | 3.1 | 2026-03-16 | Markdown-first paradigm: AI extraction, Universal Post Card, ChatGPT-style composer |
-| 3.2 | 2026-03-16 | Swipe-engine matching: Tinder-style card stack for worker discovery |
+| 3.2 | 2026-03-16 | Swipe-engine matching: Tinder-style card stack for Jagoan discovery |
 | 3.3 | 2026-03-16 | Downvote accountability: Reason Picker modal, Net Score display |
 | 3.4 | 2026-03-16 | Immutable Ledger UI: Transaction hash display, Ledger Browser, Pamor Audit Trail with verification |
 | 3.5 | 2026-03-16 | Hyper-Local Ads: Iklan Warga (Contextual Ad Card, Creation Flow, Ads Manager Dashboard) |
+| 3.6 | 2026-03-19 | Terminology alignment: Removed "Kopi" terminology, replaced with "Koperasi". Removed rigid 60/40 fee percentages in favor of SA-TEV model. |
 
 ---
 
-**Document Status**: 3.5 - Hyper-Local Ads Integration
+**Document Status**: 3.6 - Terminology Alignment & Business Model Sync
 **Next Review**: Pre-MVP Launch
 **Owner**: Product & Design Team
 ```
+
+---
+
+**Dokumentasi Terkait:**
+- [README.md](./README.md) - Quick Start & Manifesto
+- [WHITEPAPER.md](./WHITEPAPER.md) - Model Bisnis & Visi
+- [TECHNICAL.md](./TECHNICAL.md) - Arsitektur Teknis
+- [docs/ECONOMICS.md](./docs/ECONOMICS.md) - Model Ekonomi & Fee
+- [docs/GOVERNANCE.md](./docs/GOVERNANCE.md) - Sistem Keadilan & Voting
+- [docs/PAMOR-SYSTEM.md](./docs/PAMOR-SYSTEM.md) - Aturan Reputasi
+- [docs/AI-SPECS.md](./docs/AI-SPECS.md) - Spesifikasi LLM & AI
 ````

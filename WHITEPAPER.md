@@ -80,15 +80,9 @@ Kami menggunakan SpacetimeDB untuk menghapus latency antara worker dan customer.
 ---
 
 ## BAB 4: Kecerdasan Buatan sebagai Pelindung Keselamatan (K3)
+Kami menggunakan kecerdasan buatan untuk menjamin standar keselamatan kerja (K3) dan keadilan harga. AI secara otomatis mengekstraksi parameter pekerjaan untuk mencegah eksploitasi fisik dan finansial.
 
-> **📋 Source of Truth:** Untuk detail lengkap AI pipeline, LLM models, dan JSON schemas, lihat [AI-SPECS.md](./docs/AI-SPECS.md)
-
-Kami menolak keras sistem lelang buta yang membuat pekerja saling banting harga hingga upah tidak manusiawi. Di sinilah **AI Man-Power Estimator** bekerja melalui **OpenRouter API** (Claude 3 Haiku, GPT-3.5) - text-only LLM untuk ekstraksi data terstruktur dari teks tidak terstruktur.
-
-1.  **Text-to-Structured Extraction:** Saat *customer* memposting "Bantu angkut lemari 3 pintu ke lantai 4", LLM mengekstrak: budget, lokasi, estimasi difficulty.
-2.  **Risk & Effort Calculation:** AI menghitung estimasi kalori, risiko cedera, dan harga pasar di wilayah tersebut berdasarkan teks saja.
-3.  **Price Floor Enforcement:** AI akan mengunci **Harga Bawah**. *Pembuat Job* tidak bisa memposting tawaran di bawah harga minimum yang layak.
-4.  **Squad Formation:** Jika beban melampaui kapasitas 1 manusia (>50kg) berdasarkan teks deskripsi, AI secara otomatis memecah job menjadi *Multi-Jagoan Job* (misal: butuh 3 orang).
+> **📋 Source of Truth:** Spesifikasi teknis AI dan parameter ekstraksi data tersedia di [docs/AI-SPECS.md](./docs/AI-SPECS.md).
 
 ---
 
@@ -193,6 +187,17 @@ Monopoli *gig economy* saat ini bukan didasarkan pada teknologi yang mustahil di
 Kita tidak butuh miliaran Dolar dari investor asing untuk membuat sistem ini berjalan. Kita hanya butuh kompilasi kode yang bersih, konsensus algoritma yang adil, dan semangat gotong royong digital yang nyata.
 
 **Pilih senjata kalian. Buka Pull Request. Mari kita ambil alih ekonomi ini.** 
+---
+
+*(Dokumen ini merupakan properti intelektual komunitas terbuka SiapAja.id. Silakan ajukan Issue di GitHub untuk mengusulkan amendemen).*
 
 ---
-*(Dokumen ini merupakan properti intelektual komunitas terbuka SiapAja.id. Silakan ajukan Issue di GitHub untuk mengusulkan amendemen).*
+
+**Dokumentasi Terkait:**
+- [README.md](./README.md) - Quick Start & Manifesto
+- [TECHNICAL.md](./TECHNICAL.md) - Arsitektur Teknis
+- [SCREEN-LIST.md](./SCREEN-LIST.md) - Spesifikasi UI/UX
+- [docs/ECONOMICS.md](./docs/ECONOMICS.md) - Model Ekonomi & Fee
+- [docs/GOVERNANCE.md](./docs/GOVERNANCE.md) - Sistem Keadilan & Voting
+- [docs/PAMOR-SYSTEM.md](./docs/PAMOR-SYSTEM.md) - Aturan Reputasi
+- [docs/AI-SPECS.md](./docs/AI-SPECS.md) - Spesifikasi LLM & AI

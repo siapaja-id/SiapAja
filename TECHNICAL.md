@@ -711,7 +711,7 @@ CREATE TABLE users (
     ktp_hash VARCHAR(64),
     can_work_as_worker BOOLEAN DEFAULT FALSE,
     can_post_as_customer BOOLEAN DEFAULT TRUE,
-    pamor_score INTEGER DEFAULT 100, -- Default Pamor
+    pamor_score INTEGER DEFAULT 100, 
     -- voting_power dihitung dinamis dari pamor_score: 100 Pamor = 1 Suara (Max 10)
     blue_check_verified BOOLEAN DEFAULT FALSE,
     is_frozen BOOLEAN DEFAULT FALSE,
@@ -720,6 +720,9 @@ CREATE TABLE users (
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Note: Logika Tiering, Voting Power, dan Pamor Metrics dikelola oleh Pamor Engine.
+-- 📋 Source of Truth: [docs/PAMOR-SYSTEM.md](./docs/PAMOR-SYSTEM.md)
 
 -- Jobs (demand feed)
 CREATE TABLE jobs (
@@ -736,9 +739,9 @@ CREATE TABLE jobs (
     status job_status DEFAULT 'POSTED',
     escrow_id VARCHAR(255),
     escrow_status escrow_status,
-    is_solidarity_pool_active BOOLEAN DEFAULT FALSE, -- Penambahan flag asuransi
-    ai_price_floor INTEGER, -- minimum harga dari AI
-    ai_workers_required INTEGER DEFAULT 1,
+    is_solidarity_pool_active BOOLEAN DEFAULT FALSE, -- SSoT: Lihat ECONOMICS.md Bab 4 untuk Mekanisme Pool
+    ai_price_floor INTEGER, -- SSoT: Lihat AI-SPECS.md Bab 3.1 untuk Price Floor logic
+    ai_workers_required INTEGER DEFAULT 1, -- SSoT: Lihat AI-SPECS.md Bab 3.2 untuk Squad Formation
     ai_risk_level risk_level,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     claimed_at TIMESTAMPTZ,
@@ -1531,3 +1534,14 @@ pub struct FeedPersonalization {
 ---
 
 *End of Document*
+
+---
+
+**Related Documents:**
+- [README.md](../README.md) - Quick Start & Manifesto
+- [WHITEPAPER.md](../WHITEPAPER.md) - Business Logic
+- [SCREEN-LIST.md](../SCREEN-LIST.md) - UI/UX Specifications
+- [docs/ECONOMICS.md](./docs/ECONOMICS.md) - Model Bisnis & Fee
+- [docs/GOVERNANCE.md](./docs/GOVERNANCE.md) - Sistem Keadilan & Voting
+- [docs/PAMOR-SYSTEM.md](./docs/PAMOR-SYSTEM.md) - Aturan Reputasi
+- [docs/AI-SPECS.md](./docs/AI-SPECS.md) - Spesifikasi LLM & AI

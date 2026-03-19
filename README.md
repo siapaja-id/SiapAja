@@ -40,24 +40,9 @@ Platform sebelah isinya katalog jasa. Tukang AC, *driver*, dan *cleaner* harus b
 SiapAja.id membalik logika itu. Kita pakai sistem **Demand-Only Feed** yang bentuknya persis kayak timeline X/Threads. Isinya bukan orang pamer liburan, tapi kumpulan orang di radius 5km yang teriak: *"Genset mati nih, siapa bisa benerin sekarang? Budget Rp200.000!"* Jagoan tinggal *scroll*, nemu yang cocok, klik "Terima", dan langsung berangkat.
 
 ### 1.3. Zero-Commission & Tiered Scalability
+Platform tetap gratis buat rakyat kecil (transaksi < Rp500rb). Model ekonomi kita berbasis kontribusi progresif yang mendanai infrastruktur tanpa iuran anggota.
 
-> **📋 Source of Truth:** Untuk detail lengkap fee structure, distribution, dan escrow system, lihat [ECONOMICS.md](./docs/ECONOMICS.md)
-
-Platform tetap gratis buat rakyat kecil. Tapi untuk menjaga keberlanjutan infrastruktur, kita menerapkan **Tiered Fee** hanya untuk transaksi kelas menengah ke atas:
-
-| Budget Pekerjaan | Fee Platform | Beban Biaya (Pembuat Job : Jagoan)
-|------------------|--------------|--------------------------------
-| Dibawah Rp500.000 | **3%** | 100% Pembuat Job (Jagoan 0% Fee)
-| Rp500rb - Rp2jt | **5%** | 50% Pembuat Job : 50% Jagoan
-| Rp2jt - Rp10jt | **7.5%** | 50% Pembuat Job : 50% Jagoan
-| Diatas Rp10jt | **10%** | 50% Pembuat Job : 50% Jagoan
-
-**Alokasi Fee Platform (The Distribution):**
-* **Community Treasury (Koperasi):** Menerima 100% surplus Platform Fee untuk SHU Anggota.
-* **Technology Service (Solidarity-ID):** Dibayar berdasarkan penggunaan (SA-TEV) dan Lisensi IP tahunan.
-
-**Untuk transaksi di bawah Rp500.000, Jagoan tetap terima 100% UTUH.**
-Fee untuk transaksi besar dibebankan secara *adil* ke kedua belah pihak (split fee), bukan cuma memeras Jagoan.
+> **📋 Source of Truth:** Untuk detail lengkap fee structure, revenue model, dan distribusi surplus (SHU), lihat [docs/ECONOMICS.md](./docs/ECONOMICS.md).
 
 ### 1.4. Anti-Bakar Duit (The Creator-Led Growth)
 Kita nggak punya VC yang ngasih triliunan buat bakar duit iklan di Facebook/Google Ads. Dan kita memang nggak mau. Daripada bayar Mark Zuckerberg, **kita membayar Jagoan kita sendiri.**
@@ -75,20 +60,10 @@ Mau bikin postingan butuh bantuan? **Duitnya harus di-lock di depan.** Kalau bud
 ### 2.2. Ultra-Fast State Sync
 Data sinkron instan, tanpa loading, secepat aplikasi chat. User cuma lihat saldo "Rupiah", tapi di belakang layar sistem mengelola Virtual Ledger dengan latensi milidetik. Semua perubahan langsung terpropagasi ke semua client tanpa polling. *Magic!*
 
-### 2.3. AI Man-Power Estimator (Perlindungan K3)
+### 2.3. AI Safety & Squad Formation
+AI bertindak sebagai "Bodyguard" Jagoan dengan menentukan **Price Floor** (Harga Bawah) dan mendeteksi risiko fisik (berat >50kg) untuk memicu pembentukan tim otomatis (**Squad Lobby**).
 
-> **📋 Source of Truth:** Untuk detail lengkap AI pipeline, LLM models, dan JSON schemas, lihat [AI-SPECS.md](./docs/AI-SPECS.md)
-
-Sering terjadi: Pembuat Job pelit minta pindahan kosan 3 lantai, barangnya ada kulkas 2 pintu, tapi bayarnya cuma buat 1 orang.
-Di SiapAja.id, **text-only LLM** (via OpenRouter API) membaca postingan untuk ekstraksi terstruktur.
-*   **Output AI:** *"Deteksi beban >50kg + Tangga. Risiko cedera tinggi. Pekerjaan ini wajib dikerjakan minimal 2 Jagoan. Harga dasar dikunci di Rp250.000."*
-*   Sistem menolak postingan jika Pembuat Job memaksa menawar di bawah *Price Floor* (Harga Bawah) yang sudah dihitung AI. Kita jaga tulang punggung Jagoan!
-
-### 2.4. Pembentukan Tim Otomatis (Squad Formation)
-
-> **📋 Source of Truth:** Untuk detail lengkap squad formation logic dan threshold, lihat [AI-SPECS.md](./docs/AI-SPECS.md)
-
-Kalau AI mendeteksi butuh 3 orang untuk angkat lemari raksasa, sistem nggak akan nge-lempar kerjaan ini ke 1 orang. Sistem otomatis bikin "Lobby" pencarian 3 Jagoan terdekat. Begitu 3 orang kumpul, mereka jalan bareng. Setelah kerjaan selesai, Virtual Ledger otomatis memecah pembayaran ke 3 akun Jagoan tersebut secara adil dalam waktu milidetik. Nggak ada lagi rebutan jatah di lapangan.
+> **📋 Source of Truth:** Untuk detail AI Pipeline, LLM Prompts, dan logika Squad Formation, lihat [docs/AI-SPECS.md](./docs/AI-SPECS.md).
 
 ---
 
@@ -491,3 +466,14 @@ Punya ide sinting? Nemu *bug* di sistem AI kita? Atau BUMN yang mau beli lisensi
 **Built with 🦀, 💙, and Anger in Indonesia. LFG!**
 
 </div>
+
+---
+
+**Dokumentasi Terkait:**
+- [WHITEPAPER.md](./WHITEPAPER.md) - Model Bisnis & Visi
+- [TECHNICAL.md](./TECHNICAL.md) - Arsitektur Teknis
+- [SCREEN-LIST.md](./SCREEN-LIST.md) - Spesifikasi UI/UX
+- [docs/ECONOMICS.md](./docs/ECONOMICS.md) - Model Ekonomi & Fee
+- [docs/GOVERNANCE.md](./docs/GOVERNANCE.md) - Sistem Keadilan & Voting
+- [docs/PAMOR-SYSTEM.md](./docs/PAMOR-SYSTEM.md) - Aturan Reputasi
+- [docs/AI-SPECS.md](./docs/AI-SPECS.md) - Spesifikasi LLM & AI

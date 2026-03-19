@@ -10,65 +10,25 @@
 
 | Teknis (Backend) | Publik (UI) | Deskripsi |
 |------------------|-------------|-----------|
+| `tasker` / `customer` | **Pembuat Job** | User yang posting kebutuhan & bayar escrow. |
+| `taskee` / `worker` | **Jagoan** | User yang ambil job & ngerjain tugas. |
 | `pamor_score` | **Pamor** | Skor reputasi user di komunitas. |
-| `pamor_score` | **Pamor** | Alias untuk backward compatibility. |
+| `platform_fee` | **Kontribusi Koperasi** | Kontribusi transaksi untuk dana bersama. |
 | `downvote` | **Downvote** | Sinyal bahwa konten/行为 violate norma komunitas. |
 
 ---
 
 ## 2. Sistem Pamor
 
-> **📋 Source of Truth:** Untuk aturan detail metrik, tier, sanksi, dan mekanisme deaktivasi, lihat [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md)
+> **📋 Source of Truth Reputasi:** Seluruh algoritma skor, tiering, dan sistem sanksi diatur secara hukum dalam [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md). Dokumen ini (GOVERNANCE.md) hanya mengatur prosedur pemilihan juri dan alur sengketa.
 
 Pamor adalah **Modal Sosial** sekaligus bukti keanggotaan aktif. Di SiapAja, Anda tidak "membeli" hak suara dengan uang simpanan, Anda "menanam" hak suara melalui kualitas kerja.
 
-### 2.1 Metrik Pamor
-
-**Pamor Naik (+):**
-- Tepat waktu sampai lokasi
-- Rating bintang 5 dari Pembuat Job (dinilai dari kualitas kerja)
-- Rajin jadi Juri sengketa yang adil
-- Kontribusi kode (GitHub PR merge)
-
-**Pamor Turun (-):**
-- Batalin orderan sepihak setelah setuju (Cancel)
-- Telat parah tanpa alasan
-- Terbukti curang dalam sengketa
-- Membuang sampah sembarangan di lokasi Pembuat Job
-
-### 2.2 Pamor Decay (Penyusutan Otomatis)
-
-Kami percaya pada **Penebusan Dosa Digital**:
-
-- **Rate:** Setiap 30 hari, poin Pamor negatif akan otomatis mengalami "Decay" (menyusut) sebesar **15%** jika Jagoan terus berkelakuan baik
-- **Mekanisme:** CRON Job di server Rust secara efisien mengkalkulasi jutaan data setiap akhir bulan
-- **Filosofi:** Jagoan tidak dihukum seumur hidup. Mereka bisa redemption.
+> **📋 Detail lengkap metrik Pamor (angka pasti):** Lihat [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md) Bab 2-5
 
 ---
 
-## 3. Pamor Tier System
-
-| Tier | Pamor Range | Benefits |
-|------|-------------|----------|
-| **Bronze** | 0-99 | Basic access |
-| **Silver** | 100-499 | Priority feed, higher rate limits |
-| **Gold** | 500-999 | Priority matching, voting power |
-| **Platinum** | 1000+ | Premium jobs, maximum voting, priority support |
-| **Inactive** | < 0 | **Deactivated.** Restricted access, No SHU, No Bidding. |
-
----
-
-## 2.4 Deaktivasi & Pembekuan Otomatis (Automatic Deactivation)
-
-Keanggotaan dianggap non-aktif atau "Mati" secara sistem jika memenuhi salah satu kriteria berikut:
-
-1.  **Pamor Defisit (Negative Balance):** Jika Pamor jatuh di bawah 0 akibat sanksi sengketa atau pembatalan berulang. User masuk ke status `FROZEN`.
-2.  **Inaktivitas Total:** Jika dalam 180 hari tidak ada aktivitas transaksi ATAU partisipasi juri, Pamor akan menyusut via *Decay* hingga menyentuh angka 0, yang otomatis mencabut hak suara dan dividen.
-3.  **Pelanggaran Konstitusi:** Deteksi bot atau *fraud* oleh middleware keamanan akan membekukan akun secara instan untuk ditinjau oleh Juri Netizen.
-
----
-
-## 4. Immutable Pamor Audit
+## 3. Immutable Pamor Audit
 Pamor bukan sekadar angka di profil, tapi deretan event yang di-hash.
 
 - **Event Sourcing**: Pamor dihitung ulang dari nol setiap ada audit, atau pake snapshot yang di-verify hash-nya.
@@ -78,7 +38,7 @@ Pamor bukan sekadar angka di profil, tapi deretan event yang di-hash.
 
 ---
 
-## 5. Voting Power (Hak Suara)
+## 4. Voting Power (Hak Suara)
 
 Pamor menggantikan fungsi Simpanan Wajib sebagai syarat hak suara:
 
@@ -89,7 +49,7 @@ Pamor menggantikan fungsi Simpanan Wajib sebagai syarat hak suara:
   - Mau uang denda di Treasury dipakai buat bagi-bagi sembako atau asuransi kecelakaan? Voting!
   - Pemilihan pengurus wilayah
 
-### 5.1 Struktur Demokrasi Digital (RAK ke RAT)
+### 4.1 Struktur Demokrasi Digital (RAK ke RAT)
 
 Untuk menghindari "Formalitas Klik Setuju", SiapAja.id menggunakan sistem **Rapat Anggota Kelompok (RAK)** sebelum menuju RAT Nasional:
 
@@ -197,3 +157,11 @@ Sebelum masuk ke status `Verified`, user wajib menyetujui **Pakta Jagoan Mandiri
 ---
 
 *Dokumen ini adalah Source of Truth. Untuk detail implementasi teknis, rujuk ke TECHNICAL.md. Untuk detail economics, rujuk ke ECONOMICS.md.*
+
+---
+
+**Related Documents:**
+- [TECHNICAL.md](../TECHNICAL.md) - Arsitektur Teknis
+- [ECONOMICS.md](./ECONOMICS.md) - Model Bisnis & Fee
+- [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md) - Aturan Reputasi
+- [AI-SPECS.md](./AI-SPECS.md) - Spesifikasi LLM & AI

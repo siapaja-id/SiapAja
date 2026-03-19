@@ -6,7 +6,7 @@
 
 ---
 
-## 1. Terminologi Data vs UI
+## 1. Terminologi
 
 | Teknis (Backend) | Publik (UI) | Deskripsi |
 |------------------|-------------|-----------|
@@ -173,3 +173,11 @@ Ini bukan monopoli harga. Ini **Social Correction** - komunitas punya suara buat
 ---
 
 *Dokumen ini adalah Source of Truth. Untuk detail implementasi teknis, rujuk ke TECHNICAL.md.*
+
+---
+
+**Related Documents:**
+- [TECHNICAL.md](../TECHNICAL.md) - Arsitektur Teknis
+- [GOVERNANCE.md](./GOVERNANCE.md) - Sistem Keadilan & Voting
+- [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md) - Aturan Reputasi
+- [AI-SPECS.md](./AI-SPECS.md) - Spesifikasi LLM & AI

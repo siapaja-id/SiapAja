@@ -84,13 +84,7 @@ Return JSON: {
 }
 ```
 
-**Threshold:** >50kg beban → wajib minimal 2 Jagoan (Squad Formation)
-
-**Squad Formation Logic:**
-- Jika AI mendeteksi butuh 3 orang untuk angkat lemari raksasa
-- Sistem otomatis bikin "Lobby" pencarian 3 Jagoan terdekat
-- Begitu 3 orang kumpulkan, mereka jalan bareng
-- Setelah kerjaan selesai, Virtual Ledger otomatis pecah pembayaran ke 3 akun Jagoan secara adil
+**Threshold:** (SSoT) Berat >50kg atau Deskripsi mengandung kata 'Tangga/Lantai 2+' memicu Squad Formation otomatis.
 
 ---
 
@@ -208,3 +202,11 @@ Return JSON: {
 ---
 
 *Dokumen ini adalah Source of Truth. Untuk detail implementasi teknis, rujuk ke TECHNICAL.md.*
+
+---
+
+**Related Documents:**
+- [TECHNICAL.md](../TECHNICAL.md) - Arsitektur Teknis
+- [ECONOMICS.md](./ECONOMICS.md) - Model Bisnis & Fee
+- [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md) - Aturan Reputasi
+- [GOVERNANCE.md](./GOVERNANCE.md) - Sistem Keadilan & Voting

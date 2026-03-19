@@ -9,21 +9,15 @@
 # 0. PRINCIPLES & CONSTRAINTS
 
 ## 0.1 Core UX Philosophy
-- **Markdown-First**: Everything is a Post, and a Post is just Markdown
-- **AI Extraction**: OpenRouter API (Claude 3 Haiku, GPT-3.5) auto-extracts budget, location, category from text
-- **No Mode Switching**: Every user can perform any action anytime (Reddit-style)
-- **Pay-to-Post**: Job visible only after escrow funded (anti-spam)
-- **Fast-Bid Matching**: 15-minute enrollment window, customer selects or auto-match
-- **Anti-Senior Bias**: New workers have equal visibility + pamor boost
-- **Transparent Algorithms**: All scoring factors visible to users
+Aplikasi ini menggunakan paradigma **Markdown-First** dan **Unified Feed**. Tidak ada perpindahan mode "User vs Worker" secara kaku; semua aksi tersedia berdasarkan status verifikasi.
 
-## 0.2 User States (Not Roles)
-| State | Description | Unlocks |
-|-------|-------------|---------|
-| Unverified | Phone only | Browse Only (Read-Only) |
-| Verified | KTP Verified | Post Job, Claim Job, Chat, Wallet |
-| Active | Completed 1+ job | Full platform access |
-| Boosted | First 10 jobs | Pamor display boost, "New Jagoan" badge |
+> **📋 Source of Truth Logic:**
+> - Aturan Pamor & Tiering: [docs/PAMOR-SYSTEM.md](./docs/PAMOR-SYSTEM.md)
+> - Struktur Fee & Escrow: [docs/ECONOMICS.md](./docs/ECONOMICS.md)
+> - Mekanisme AI & Ekstraksi: [docs/AI-SPECS.md](./docs/AI-SPECS.md)
+
+## 0.2 User States (System Logic)
+Status user menentukan akses fitur (Unverified, Verified, Active, Boosted). Detail teknis transisi state ini mengikuti [docs/GOVERNANCE.md](./docs/GOVERNANCE.md).
 
 ---
 
@@ -1162,10 +1156,22 @@ Jury Review → Voting → Result → Fund Release
 | 3.4 | 2026-03-16 | Immutable Ledger UI: Transaction hash display, Ledger Browser, Pamor Audit Trail with verification |
 | 3.5 | 2026-03-16 | Hyper-Local Ads: Iklan Warga (Contextual Ad Card, Creation Flow, Ads Manager Dashboard) |
 | 3.6 | 2026-03-19 | Terminology alignment: Removed "Kopi" terminology, replaced with "Koperasi". Removed rigid 60/40 fee percentages in favor of SA-TEV model. |
+| 3.7 | 2026-03-19 | DRY refactoring: Consolidated duplicated logic into SSoT docs, replaced inline blocks with reference callouts. |
 
 ---
 
-**Document Status**: 3.6 - Terminology Alignment & Business Model Sync
+**Document Status**: 3.7 - DRY Refactoring (Source of Truth Consolidation)
 **Next Review**: Pre-MVP Launch
 **Owner**: Product & Design Team
 ```
+
+---
+
+**Dokumentasi Terkait:**
+- [README.md](./README.md) - Quick Start & Manifesto
+- [WHITEPAPER.md](./WHITEPAPER.md) - Model Bisnis & Visi
+- [TECHNICAL.md](./TECHNICAL.md) - Arsitektur Teknis
+- [docs/ECONOMICS.md](./docs/ECONOMICS.md) - Model Ekonomi & Fee
+- [docs/GOVERNANCE.md](./docs/GOVERNANCE.md) - Sistem Keadilan & Voting
+- [docs/PAMOR-SYSTEM.md](./docs/PAMOR-SYSTEM.md) - Aturan Reputasi
+- [docs/AI-SPECS.md](./docs/AI-SPECS.md) - Spesifikasi LLM & AI
