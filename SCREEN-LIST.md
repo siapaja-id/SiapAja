@@ -233,7 +233,7 @@
 
 ### 3.4.2 Contextual Targeting Logic
 - **3.4.2.1** Job-Based Targeting: Kalau Jagoan lagi liat job "Benerin Atap", iklan yang muncul adalah "Toko Genteng Terdekat"
-- **3.4.2.2** Service-Based Targeting: Kalau Tasker lagi cari "Cleaning Service", iklan yang muncul adalah "Layanan Laundry Sat-Set"
+- **3.4.2.2** Service-Based Targeting: Kalau Pembuat Job lagi cari "Cleaning Service", iklan yang muncul adalah "Layanan Laundry Sat-Set"
 - **3.4.2.3** Location-Based: Prioritas radius 1km > 2km > 5km
 - **3.4.2.4** Category Match: Ads diselaraskan dengan kategori skill/service yang lagi aktif di feed
 
@@ -257,7 +257,7 @@
 ## 4.2 Iklan Warga Creation Flow (Simple & Fast)
 
 ### 4.2.1 Drafting Markdown
-- **4.2.1.1** Text input: Sama kayak post job, cukup tulis: *"Toko Berkah sedia kopi & gorengan buat Jagoan yang lagi nunggu job. Depan Alfamart Margonda."*
+- **4.2.1.1** Text input: Sama kayak post job, cukup tulis: *"Toko Berkah sedia koperasi & gorengan buat Jagoan yang lagi nunggu job. Depan Alfamart Margonda."*
 - **4.2.1.2** Photo upload: Satu foto produk/jasa (1:1 atau 4:5 ratio)
 - **4.2.1.3** Business info: Nama usaha otomatis dari profil
 
@@ -319,7 +319,7 @@
 
 ### 5.1.6 Enrollment Status (Dynamic)
 - **5.1.6.1** Time remaining ("12 menit lagi")
-- **5.1.6.2** Applicants count ("3 worker melamar")
+- **5.1.6.2** Applicants count ("3 Jagoan melamar")
 - **5.1.6.3** Applicants preview (avatars list)
 - **5.1.6.4** "Lihat Semua Pelamar" (if poster)
 
@@ -370,12 +370,12 @@
 - **5.2.3.1** Jobs completed
 - **5.2.3.2** Completion rate
 - **5.2.3.3** Average rating (stars)
-- **5.2.3.4** Review list (as worker)
+- **5.2.3.4** Review list (as Jagoan)
 
 ### 5.2.4 Action Bar
 - **5.2.4.1** "Invite ke Job Saya" (if user has open job)
 - **5.2.4.2** "Chat" (start conversation)
-- **5.2.4.3** "Simpan" (bookmark worker)
+- **5.2.4.3** "Simpan" (bookmark Jagoan)
 
 ## 5.3 Discussion Detail Screen
 
@@ -413,7 +413,7 @@
 - **6.1.2.1** Match Splash: "Sikat!" full-screen animation if auto-matched instantly
 - **6.1.2.2** Enrollment Queue: Real-time progress bar of the 15-minute selection window
 - **6.1.2.3** Next Card Trigger: Auto-sliding the next demand card into view after a swipe
-- **6.1.2.4** Description: Seamless transition that keeps the worker in the "flow state" of finding work
+- **6.1.2.4** Description: Seamless transition that keeps the Jagoan in the "flow state" of finding work
 
 ## 6.2 Applicant Management (Poster Perspective)
 
@@ -486,7 +486,7 @@
 - **7.2.1.3** Chat button
 
 ### 7.2.2 Progress View
-- **7.2.2.1** Photo updates from worker
+- **7.2.2.1** Photo updates from Jagoan
 - **7.2.2.2** Status timeline
 
 ### 7.2.3 Completion Confirmation
@@ -663,7 +663,7 @@
 - **10.1.1.7** Escrow freeze warning
 - **10.1.1.8** "Ajukan Sengketa" confirmation
 
-## 10.2 Jury Duty (For Verified Users)
+## 10.2 Jury Duty (For Verified Jagoan)
 
 ### 10.2.1 Jury Summons
 - **10.2.1.1** Notification: "Anda Dipilih sebagai Juri"
@@ -782,7 +782,7 @@
 
 ### 12.1.2 Stats Row
 - **12.1.2.1** Jobs posted (as customer)
-- **12.1.2.2** Jobs completed (as worker)
+- **12.1.2.2** Jobs completed (as Jagoan)
 - **12.1.2.3** Pamor score
 - **12.1.2.4** Member since
 
@@ -791,7 +791,7 @@
 - **12.1.3.2** Butuh Bantuan (their job posts)
 - **12.1.3.3** Bisa Bantu (their service offers)
 - **12.1.3.4** Diskusi (community posts)
-- **12.1.3.5** Reviews (received, as customer + worker)
+- **12.1.3.5** Reviews (received, as customer + Jagoan)
 
 ### 12.1.4 Action Buttons (Context-Aware)
 - **If self:** Edit Profile
@@ -893,7 +893,7 @@
 
 ## 14.0 MANAGEMENT & SOLIDARITY-ID HUB (Technology Service View)
 ### 14.0.1 Global Revenue Stream
-- **14.0.1.1** Real-time Fee Tracker: Pantau jatah 40% dari transaksi harian.
+- **14.0.1.1** Real-time Fee Tracker: Pantau jatah Solidarity-ID Service Fee dari transaksi harian.
 - **14.0.1.2** Technology Service Wallet: Tombol withdraw untuk jatak Solidarity-ID (Server + R&D).
 
 ## 14.1 Contributor Zone (Developer)
@@ -911,18 +911,26 @@
 - **14.1.2.4** Dividend history
 
 ## 14.2 KOPERASI HUB (The Ownership Experience)
+
+### 14.2.0 SiapAja Creator Dashboard (Bounty Hunters)
+*Dashboard khusus bagi Jagoan yang juga berprofesi sebagai Content Creator.*
+- **14.2.0.1** **Generator Deep-Link:** Buat link khusus (contoh: `siapaja.id/c/SobatCleaning`).
+- **14.2.0.2** **Live Tracking Matriks:** Jumlah klik link, jumlah user yang download, dan jumlah Job yang berhasil diposting dari link tersebut.
+- **14.2.0.3** **Bounty Wallet:** Saldo Rupiah khusus dari hasil konversi konten yang bisa ditarik kapan saja (Didanai dari 30% Kas Koperasi).
+- **14.2.0.4** **Creator Leaderboard:** Peringkat Jagoan-Kreator paling berpengaruh di kota tersebut (Reward: Pamor Boost + Badge Kreator).
+
 ### 14.2.1 Dashboard Anggota
 - **14.2.1.1** Status Anggota & Porsi Pamor Shares.
-- **14.2.1.2** Open Ledger: Transparansi kas kopi (Yield & Fee).
+- **14.2.1.2** Open Ledger: Transparansi kas koperasi (Yield & Fee).
 - **14.2.1.3** Governance: Voting amandemen AD/ART.
 
 ### 14.2.2 Open Ledger (Transparansi Radikal)
 - **14.2.2.1** Real-time Treasury Clock: Counter duit yang masuk ke kas koperasi per detik
-- **14.2.2.2** Allocation Chart: Visualisasi kemana duit fee & yield pergi (60% Koperasi vs 40% Teknologi).
-- **14.2.2.3** **Technology Breakdown (Solidarity View):** Klik pada bagian 40% untuk melihat detail penggunaan (Server vs R&D vs Legal).
+- **14.2.2.2** Allocation Chart: Visualisasi kemana duit fee & yield pergi (Koperasi vs Solidarity-ID Service Fee).
+- **14.2.2.3** **Technology Breakdown (Solidarity View):** Klik pada bagian Solidarity-ID Service Fee untuk melihat detail penggunaan (Server vs R&D vs Legal).
 - **14.2.2.4** Public Log: Daftar transaksi treasury (anonymized) yang bisa di-scroll siapa aja
 - **14.2.2.5** Solidarity Pool Balance: Total dana asuransi yang siap pake
-- **14.2.2.6** **R&D Progress Link:** Link langsung ke GitHub Pull Requests yang didanai oleh alokasi 40% tersebut (Build in Public).
+- **14.2.2.6** **R&D Progress Link:** Link langsung ke GitHub Pull Requests yang didanai oleh alokasi Solidarity-ID Service Fee tersebut (Build in Public).
 
 ### 14.2.3 Governance & Voting (Satu Orang Satu Suara)
 - **14.2.3.1** Proposal Policy: List usulan perubahan sistem (misal: "Naikin tarif min di Depok")
@@ -933,7 +941,15 @@
 ### 14.2.4 Solidarity & Social (Bela Beli Teman)
 - **14.2.4.1** List Klaim Bantuan: Daftar anggota yang butuh dana bantuan (sakit/kecelakaan)
 - **14.2.4.2** Verifikasi Komunitas: Tombol bagi anggota terdekat buat verifikasi kondisi teman
-- **14.2.4.3** "Beli Jasa Teman": Filter khusus buat prioritasin panggil worker yang lagi butuh bantuan dana
+- **14.2.4.3** "Beli Jasa Teman": Filter khusus buat prioritasin panggil Jagoan yang lagi butuh bantuan dana
+
+### 14.2.5 Ruang RAK (Demokrasi Arus Bawah)
+- **14.2.5.1** Group Selector: Pilihan RAK Wilayah (Kecamatan) atau RAK Profesi.
+- **14.2.5.2** Discussion Thread: Forum diskusi khusus usulan kebijakan (Markdown supported).
+- **14.2.5.3** Poll Builder: Anggota kelompok membuat poll internal sebelum dibawa ke nasional.
+- **14.2.5.4** Delegate Election: Interface memilih Utusan kelompok dengan display skor Pamor.
+- **14.2.5.5** Mandate Tracker: Visualisasi status suara Utusan di RAT Nasional (Real-time).
+- **14.2.5.6** "Tarik Suara": Tombol darurat anggota untuk membatalkan dukungan pada utusan jika tidak sesuai kesepakatan.
 
 ## 14.3 Verification Gates (Soft Prompts)
 
@@ -1008,6 +1024,18 @@
 - **15.3.3.2** "Job Dibatalkan" (cancelled by poster)
 - **15.3.3.3** "Job Kedaluwarsa" (expired)
 - **15.3.3.4** Similar jobs suggestion
+
+## 15.4 Account States Errors (Deactivation)
+
+### 15.4.1 Account Frozen Screen
+- **15.4.1.1** "Akun Dibekukan" Illustration.
+- **15.4.1.2** Reason Display: (e.g., "Pamor Negatif", "Deteksi Fraud").
+- **15.4.1.3** Redemption Path: Instruksi cara memulihkan Pamor (Jury duty khusus atau banding).
+- **15.4.1.4** "Hubungi Pengurus" (Support link).
+
+### 15.4.2 Inactivity Notice
+- **15.4.2.1** Pop-up: "Pamor kamu hampir habis karena jarang mampir."
+- **15.4.2.2** CTA: "Selesaikan 1 Job hari ini untuk stop penyusutan."
 
 ---
 
@@ -1129,14 +1157,15 @@ Jury Review → Voting → Result → Fund Release
 | 2.0 | 2026-03-10 | Reddit-style universal actions |
 | 3.0 | 2026-03-15 | Final: Fast-bid matching, anti-senior bias, transparency features |
 | 3.1 | 2026-03-16 | Markdown-first paradigm: AI extraction, Universal Post Card, ChatGPT-style composer |
-| 3.2 | 2026-03-16 | Swipe-engine matching: Tinder-style card stack for worker discovery |
+| 3.2 | 2026-03-16 | Swipe-engine matching: Tinder-style card stack for Jagoan discovery |
 | 3.3 | 2026-03-16 | Downvote accountability: Reason Picker modal, Net Score display |
 | 3.4 | 2026-03-16 | Immutable Ledger UI: Transaction hash display, Ledger Browser, Pamor Audit Trail with verification |
 | 3.5 | 2026-03-16 | Hyper-Local Ads: Iklan Warga (Contextual Ad Card, Creation Flow, Ads Manager Dashboard) |
+| 3.6 | 2026-03-19 | Terminology alignment: Removed "Kopi" terminology, replaced with "Koperasi". Removed rigid 60/40 fee percentages in favor of SA-TEV model. |
 
 ---
 
-**Document Status**: 3.5 - Hyper-Local Ads Integration
+**Document Status**: 3.6 - Terminology Alignment & Business Model Sync
 **Next Review**: Pre-MVP Launch
 **Owner**: Product & Design Team
 ```

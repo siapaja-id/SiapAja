@@ -36,10 +36,10 @@ Koperasi tidak menarik iuran anggota. Sebagai gantinya, dana bersama (Treasury) 
 
 ## 3. Revenue & Technology Service Model
 
-Seluruh porsi **Platform Fee** (100%) masuk ke dalam **Community Treasury (Kas Kopi)**. Kopi kemudian membayar biaya operasional teknologi kepada **Solidarity-ID** sebagai vendor infrastruktur eksklusif.
+Seluruh porsi **Platform Fee** (100%) masuk ke dalam **Community Treasury (Kas Koperasi)**. Koperasi kemudian membayar biaya operasional teknologi kepada **Solidarity-ID** sebagai vendor infrastruktur eksklusif.
 
 ### 3.1 Komponen Biaya Teknologi (Triple-Tax Logic)
-Solidarity-ID menagih Kopi berdasarkan penggunaan nyata di server lokal (Self-Hosted):
+Solidarity-ID menagih Koperasi berdasarkan penggunaan nyata di server lokal (Self-Hosted):
 
 1. **SA-TEV (SiapAja Total Execution Value):** Biaya per unit komputasi (CPU/RAM/IO) pada setiap interaksi aplikasi. Solidarity-ID berhak mengatur harga unit SA-TEV secara mandiri.
 2. **Success Transaction Fee:** Biaya tetap (Fixed Fee) per transaksi sukses untuk pemeliharaan ledger.
@@ -48,22 +48,28 @@ Solidarity-ID menagih Kopi berdasarkan penggunaan nyata di server lokal (Self-Ho
 ### 3.2 Prinsip Surplus Optimasi (Non-Audit)
 Solidarity-ID memiliki hak penuh atas efisiensi kode Rust yang dikembangkan. 
 - Jika pengembang Solidarity-ID berhasil mengoptimasi kode sehingga penggunaan **SA-TEV** menjadi rendah (murah), margin keuntungan tetap milik Solidarity-ID sebagai insentif inovasi.
-- Kopi tidak berhak meminta pengembalian atau audit atas margin efisiensi teknis Solidarity-ID.
+- Koperasi tidak berhak meminta pengembalian atau audit atas margin efisiensi teknis Solidarity-ID.
 
 ### 3.3 Aliran Dana (The Flow)
-1. **Platform Fee** ditarik dari transaksi besar → Masuk **100%** ke Kas Kopi.
+1. **Platform Fee** ditarik dari transaksi besar + **Ads Revenue** → Masuk **100%** ke Kas Koperasi.
 2. **SA-TEV Tracker** mencatat beban kerja server per request/action.
-3. **Invoice Bulanan:** Solidarity-ID menagih Kopi berdasarkan akumulasi SA-TEV + Transaction Fee.
-4. **Settlement:** Kopi membayar tagihan dari Kas Treasury. Sisa saldo Treasury sepenuhnya milik Kopi untuk SHU dan asuransi.
+3. **Invoice Bulanan:** Solidarity-ID menagih Koperasi berdasarkan akumulasi SA-TEV + Transaction Fee.
+4. **Settlement & Alokasi Kas Koperasi (Treasury):** 
+   Setelah dikurangi biaya infrastruktur (Solidarity-ID), sisa saldo dialokasikan secara *smart-contract* oleh Virtual Ledger:
+   - **40% untuk SHU/Dividen:** Dibagikan ke anggota ber-Pamor tinggi.
+   - **30% untuk Creator & Growth Bounty:** Dana segar untuk membayar Jagoan-Kreator yang mendatangi *Pembuat Job* baru (Affiliate/Proof-of-Content).
+   - **30% untuk Solidarity Pool:** Dana cadangan asuransi komunitas.
 
 ---
 
-## 4. Solidarity Pool (Dana Solidaritas)
+## 4. Solidarity Pool & Emergency Crowdfunding
 
-- **Rate:** Opsional 1% (Checkbox pilihan Pembuat Job/Jagoan)
-- **Tujuan:** Asuransi komunitas untuk kecelakaan kerja
+- **Rate:** Opsional 1% (Checkbox)
+- **Asas Ketersediaan:** Perlindungan kecelakaan hanya berlaku jika saldo Pool mencukupi. 
 - **Mekanisme:** Jika checkbox dipilih, potong 1%, masuk ke Solidarity Pool di Virtual Ledger
-- **Klaim:** Jagoan kecelakaan saat narik barang → klaim diambil dari pool ini lewat persetujuan pengurus Koperasi
+- **Klaim:** Jagoan kecelakaan saat narik barang → klaim diambil dari pool ini lewat persetujuan pengurus Koperasi melalui voting juri.
+- **Mekanisme Darurat (Fase Rintisan):** Jika terjadi kecelakaan parah saat kas Pool kosong/minim, sistem secara otomatis akan memicu **"Post Solidaritas Darurat"** di Feed lokal.
+- **Micro-Donation:** Anggota lain di radius 5km dapat menyumbangkan Pamor atau Saldo (Rp1.000 - Rp5.000) secara sukarela untuk membantu korban. Koperasi bertindak sebagai fasilitator penyaluran, bukan penanggung dana (underwriter).
 
 ---
 
@@ -72,7 +78,7 @@ Semua mutasi Rupiah (IDR) wajib masuk ke tabel `ledger_entries` yang bersifat *a
 
 - **Hash Chain**: Tiap transaksi punya `previous_hash`.
 - **Integrity**: Perubahan saldo tanpa entry di ledger dianggap invalid oleh logic Rust.
-- **Transparency**: Tasker & Jagoan bisa nge-cek "Hash Bukti Transaksi" via dashboard.
+- **Transparency**: Pembuat Job & Jagoan bisa nge-cek "Hash Bukti Transaksi" via dashboard.
 - **Audit Trail**: Setiap entry mengandung SHA-256 hash yang bisa diverifikasi publik.
 
 ---
@@ -107,10 +113,14 @@ User bisa beli verifikasi centang biru. **PENTING:** Ini murni signal, BUKAN gar
 Warung, laundry, toko bangunan di radius 2km bisa pasang iklan kontekstual di Feed. Iklan muncul pas user scroll nyari jasa relevan.
 
 ### 5.4 Revenue Surplus: Partisipasi sebagai Modal
-Karena tidak ada Simpanan Pokok, modal koperasi berasal dari akumulasi surplus transaksi. Anggota yang aktif bertransaksi secara otomatis meningkatkan "Penyertaan Modal" mereka yang tercatat di sistem sebagai SMD (Sertifikat Modal Digital) berbasis partisipasi.
+Karena tidak ada Simpanan Pokok, modal koperasi berasal dari akumulasi surplus transaksi. Anggota yang aktif bertransaksi secara otomatis meningkatkan "Penyertaan Modal" mereka (SMD).
+
+**Syarat Dividen (SHU):**
+- Akun harus dalam status `ACTIVE` (Pamor > 0).
+- Akun `FROZEN` atau `DEACTIVATED` (Pamor ≤ 0) kehilangan hak atas dividen periode berjalan. Dividen yang tidak terserap akan dikembalikan ke *Community Treasury*.
 
 ### 5.5 B2B API Integration
-Mall atau Apartemen yang mau pakai worker kita secara borongan wajib langganan API (Enterprise Tier).
+Mall atau Apartemen yang mau pakai Jagoan kita secara borongan wajib langganan API (Enterprise Tier).
 
 ---
 
@@ -134,7 +144,7 @@ Di feed **Demand**, Jagoan bisa downvote postingan Pembuat Job yang naruh harga 
 - **AI Price Floor:** Sistem AI bakal rekomendasikan harga fair berdasarkan histori pekerjaan sejenis di radius yang sama
 
 ### 7.2 Filosofi
-Ini bukan monopoli harga. Ini **Social Correction** - komunitas punya suara buat ngasih tau kalau harga terlalu rendah (yang bisa menyebabkan worker melayani dengan kualitas rendah) atau terlalu tinggi (yang bisa tanda scam).
+Ini bukan monopoli harga. Ini **Social Correction** - komunitas punya suara buat ngasih tau kalau harga terlalu rendah (yang bisa menyebabkan Jagoan melayani dengan kualitas rendah) atau terlalu tinggi (yang bisa tanda scam).
 
 ---
 
@@ -158,6 +168,7 @@ Ini bukan monopoli harga. Ini **Social Correction** - komunitas punya suara buat
 | 1.1 | 2026-03-16 | Added Bab 7: Downvote sebagai Social Price Controller (Anti-Price Gouging via Community Voting) |
 | 1.2 | 2026-03-16 | Terminology update: Worker → Jagoan, Customer → Pembuat Job. Added UI vs Technical terminology tables. |
 | 1.3 | 2026-03-16 | Added Immutable Financial Ledger section with hash chain architecture for audit trail |
+| 1.4 | 2026-03-19 | Terminology update: Removed "Kopi" terminology, replaced with "Koperasi". Added voting juri for solidarity pool claims. |
 
 ---
 

@@ -110,13 +110,15 @@ Platform bukan hanya infrastruktur, tapi mesin ekonomi bagi para *Founder* dan A
 
 Koperasi SiapAja adalah pemilik ekosistem massa. Untuk menjalankan operasionalnya, Koperasi mengikat perjanjian dengan **Solidarity-ID** melalui *Technology Service Agreement*.
 *   **Kedaulatan Massa (100% Platform Fee):** Seluruh pendapatan dari fee transaksi dikuasai oleh Koperasi untuk kesejahteraan anggota (SHU).
-*   **Layanan Infrastruktur (SA-TEV):** Koperasi membayar Solidarity-ID berdasarkan biaya penggunaan komputasi (Execution Value) dan lisensi tahunan. 
+*   **Layanan Infrastruktur (SA-TEV):** Koperasi membayar Solidarity-ID berdasarkan biaya penggunaan komputasi (SA-TEV Execution Value) dan lisensi tahunan. 
 
 ### 5.2.1 Insentif Optimasi
-Solidarity-ID didorong untuk menciptakan kode Rust paling efisien di dunia. Semakin efisien kodenya, semakin kecil biaya SA-TEV yang harus dibayar Koperasi, dan semakin besar margin profit yang bisa dipertahankan Solidarity-ID untuk mendanai riset masa depan tanpa bergantung pada pendanaan eksternal (VC).
+Solidarity-ID didorong untuk menciptakan kode Rust paling efisien. Semakin efisien kodenya, semakin kecil biaya SA-TEV yang harus dibayar Koperasi, dan margin efisiensi tetap milik Solidarity-ID sebagai insentif inovasi.
 
-### 5.3. Wealth Distribution & Open Ledger
-Dengan porsi 60% di tangan Koperasi, anggota memiliki kontrol penuh atas arah kebijakan finansial melalui RAT (Rapat Anggota Tahunan) yang terintegrasi di dalam aplikasi.
+### 5.3. Demokrasi Digital Substantif (RAK-RAT)
+SiapAja.id menolak demokrasi dangkal. Kami menerapkan **Rapat Anggota Kelompok (RAK)** sebagai filter substantif. 
+
+Aspirasi tidak langsung dilempar ke jutaan orang, melainkan digodok di tingkat komunitas (Kecamatan/Profesi) untuk memastikan setiap suara didengar. Delegasi yang dikirim ke RAT Nasional adalah mereka yang memiliki **Pamor tinggi** dan **integritas teruji**, menjamin bahwa keputusan besar platform adalah hasil dialektika, bukan sekadar algoritma populer.
 
 ### 5.4. Manajemen Likuiditas & Open Ledger (Transparansi Radikal)
 Dana IDR yang tersimpan di *Escrow* menghasilkan *Float* (dana mengendap) yang dikelola secara kolektif.
@@ -155,10 +157,11 @@ Di SiapAja.id, kami memperkenalkan konsep **PAMOR** sebagai alternatif dari sist
 
 ## BAB 8: Kerangka Hukum & Platform Non-Liability
 
-### 8.1. Non-Liability Disclaimer (FFFI Principle)
-SiapAja.id bertindak **MURNI sebagai penyedia infrastruktur kode** (Software-as-a-Service).
+### 8.1. Kemitraan Mandiri & Batasan Tanggung Jawab (Fase Rintisan)
+SiapAja.id adalah infrastruktur digital milik Koperasi. Hubungan Jagoan dengan Koperasi adalah **Hubungan Keanggotaan Mandiri (Non-Employment)**.
 
-*   **Zero Responsibility:** Platform TIDAK bertanggung jawab atas kualitas kerja, penipuan antar user, kecelakaan kerja, atau kerugian finansial/fisik apapun.
+*   **Pekerja Mandiri (BPU):** Jagoan berstatus Pekerja Bukan Penerima Upah (BPU). Segala kewajiban jaminan sosial negara (BPJS) adalah pilihan dan tanggung jawab pribadi masing-masing anggota. Koperasi tidak bertindak sebagai pemberi kerja (majikan).
+*   **Welfare Best-Effort:** Sesuai UU No. 25/1992, Koperasi mengupayakan kesejahteraan melalui *Solidarity Pool*. Namun, di fase rintisan dengan modal nol, perlindungan bersifat **"Best-Effort"** (sebatas ketersediaan kas pool). Platform tidak memberikan jaminan kompensasi jika kas pool kosong.
 *   **Jury-Led Resolution:** Semua sengketa diselesaikan secara *peer-to-peer* melalui sistem Juri Netizen. Keputusan juri adalah final dan mengikat secara algoritma.
 *   **User Autonomy:** User setuju bahwa penggunaan aplikasi ini adalah **atas resiko sendiri** (*Use at your own risk*).
 

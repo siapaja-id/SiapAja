@@ -66,15 +66,15 @@ Return JSON: {
 
 ### 3.2 Manpower Estimation (Squad Formation)
 
-**Purpose:** Menentukan apakah pekerjaan butuh multiple workers
+**Purpose:** Menentukan apakah pekerjaan butuh multiple Jagoan
 
 **Input:**
 - Job description
-- Image URL (optional - worker upload foto, AI analyze)
+- Image URL (optional - Jagoan upload foto, AI analyze)
 
 **Prompt Template:**
 ```
-Analyze if this job needs multiple workers.
+Analyze if this job needs multiple Jagoan.
 Consider: weight, stairs, tools, complexity, hazard level.
 Return JSON: {
   "workers_needed": number (1-5),
@@ -84,13 +84,13 @@ Return JSON: {
 }
 ```
 
-**Threshold:** >50kg beban → wajib minimal 2 worker
+**Threshold:** >50kg beban → wajib minimal 2 Jagoan (Squad Formation)
 
 **Squad Formation Logic:**
 - Jika AI mendeteksi butuh 3 orang untuk angkat lemari raksasa
-- Sistem otomatis bikin "Lobby" pencarian 3 worker terdekat
+- Sistem otomatis bikin "Lobby" pencarian 3 Jagoan terdekat
 - Begitu 3 orang kumpulkan, mereka jalan bareng
-- Setelah kerjaan selesai, Virtual Ledger otomatis pecah pembayaran ke 3 akun worker secara adil
+- Setelah kerjaan selesai, Virtual Ledger otomatis pecah pembayaran ke 3 akun Jagoan secara adil
 
 ---
 

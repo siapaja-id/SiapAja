@@ -19,7 +19,7 @@ Kita bagi bucket berdasarkan **Urgency**, **Privacy**, dan **Access Pattern**:
 
 | Folder / Prefix | Isi | Access Level | Retention (Age) |
 |-----------------|-----|--------------|-----------------|
-| `/profiles` | Foto Profil Jagoan & Tasker | Public-Read | Selamanya (atau sampai akun didelete) |
+| `/profiles` | Foto Profil Jagoan & Pembuat Job | Public-Read | Selamanya (atau sampai akun didelete) |
 | `/jobs-evidence` | Foto Sebelum/Sesudah Kerja | Presigned-URL (15 min expiry) | **30 Hari** setelah job selesai |
 | `/disputes` | Bukti Sengketa (Sangat Sensitif) | Restricted/Private | **1 Tahun** (Setelah itu Hard Delete) |
 | `/kyc-vault` | Foto KTP & Selfie (Enkripsi!) | Super-Private (AES-256) | Sesuai regulasi / Cold Storage |
@@ -34,8 +34,8 @@ Kita bagi bucket berdasarkan **Urgency**, **Privacy**, dan **Access Pattern**:
 
 | Data Type | Standard Storage | Archival (Glacier) | Deletion Policy |
 |-----------|------------------|--------------------|-----------------|
-| Job Photos (`/jobs-evidence`) | 30 Days | N/A | Hard Delete |
-| Dispute Evidence (`/disputes`) | 1 Year | N/A | Hard Delete + Secure Wipe |
+| Job Photos (`/jobs-evidence`) | 30 Days | N/A | Hard Delete (unless linked to active Dispute) |
+| Dispute Evidence (`/disputes`) | 365 Days | N/A | Hard Delete + Secure Wipe |
 | Profile Photos (`/profiles`) | Indefinite | N/A | Delete on account deletion |
 | KYC Documents (`/kyc-vault`) | 1 Year | 7 Years (Compliance) | Secure Delete after 7 years |
 | Invoices (`/invoices`) | 1 Year | 6 Years (Glacier) | Delete after 7 years |

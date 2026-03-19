@@ -18,6 +18,8 @@
 
 ## 2. Sistem Pamor
 
+> **📋 Source of Truth:** Untuk aturan detail metrik, tier, sanksi, dan mekanisme deaktivasi, lihat [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md)
+
 Pamor adalah **Modal Sosial** sekaligus bukti keanggotaan aktif. Di SiapAja, Anda tidak "membeli" hak suara dengan uang simpanan, Anda "menanam" hak suara melalui kualitas kerja.
 
 ### 2.1 Metrik Pamor
@@ -52,6 +54,17 @@ Kami percaya pada **Penebusan Dosa Digital**:
 | **Silver** | 100-499 | Priority feed, higher rate limits |
 | **Gold** | 500-999 | Priority matching, voting power |
 | **Platinum** | 1000+ | Premium jobs, maximum voting, priority support |
+| **Inactive** | < 0 | **Deactivated.** Restricted access, No SHU, No Bidding. |
+
+---
+
+## 2.4 Deaktivasi & Pembekuan Otomatis (Automatic Deactivation)
+
+Keanggotaan dianggap non-aktif atau "Mati" secara sistem jika memenuhi salah satu kriteria berikut:
+
+1.  **Pamor Defisit (Negative Balance):** Jika Pamor jatuh di bawah 0 akibat sanksi sengketa atau pembatalan berulang. User masuk ke status `FROZEN`.
+2.  **Inaktivitas Total:** Jika dalam 180 hari tidak ada aktivitas transaksi ATAU partisipasi juri, Pamor akan menyusut via *Decay* hingga menyentuh angka 0, yang otomatis mencabut hak suara dan dividen.
+3.  **Pelanggaran Konstitusi:** Deteksi bot atau *fraud* oleh middleware keamanan akan membekukan akun secara instan untuk ditinjau oleh Juri Netizen.
 
 ---
 
@@ -75,6 +88,16 @@ Pamor menggantikan fungsi Simpanan Wajib sebagai syarat hak suara:
   - Mau naikin Price Floor (Harga Bawah) di kota Jakarta? Voting!
   - Mau uang denda di Treasury dipakai buat bagi-bagi sembako atau asuransi kecelakaan? Voting!
   - Pemilihan pengurus wilayah
+
+### 5.1 Struktur Demokrasi Digital (RAK ke RAT)
+
+Untuk menghindari "Formalitas Klik Setuju", SiapAja.id menggunakan sistem **Rapat Anggota Kelompok (RAK)** sebelum menuju RAT Nasional:
+
+1.  **Pembentukan Kelompok (RAK):** Anggota dikelompokkan otomatis berdasarkan **Wilayah (Kecamatan)** atau **Kategori Profesi (misal: Skuad Tukang AC)**.
+2.  **Diskusi Substantif (RAK):** Di dalam aplikasi, setiap kelompok memiliki forum diskusi khusus untuk membahas usulan kebijakan.
+3.  **Pemilihan Delegasi:** Setiap kelompok (misal 100 orang) memilih 1 **Utusan/Delegasi** (berdasarkan Pamor tertinggi dan hasil voting internal kelompok).
+4.  **Mandat Delegasi:** Utusan membawa aspirasi kelompok ke RAT Nasional. Utusan memiliki **Delegated Voting Power** yang merupakan akumulasi suara dari anggotanya.
+5.  **Transparansi Mandat:** Anggota bisa menarik mandatnya secara real-time jika utusan memberikan suara yang berlawanan dengan kesepakatan kelompok di RAK.
 
 ---
 
@@ -145,7 +168,13 @@ Koperasi tidak mempekerjakan developer secara internal. Hubungan bersifat kemitr
 
 ---
 
-## 8. User States (Not Roles)
+## 8. User States & Legal Acknowledgment
+
+Sebelum masuk ke status `Verified`, user wajib menyetujui **Pakta Jagoan Mandiri**:
+
+1.  **Pernyataan Mandiri:** Jagoan mengakui tidak memiliki hubungan ketenagakerjaan dengan Koperasi.
+2.  **BPJS Disclaimer:** Jagoan memahami bahwa Koperasi tidak memotong/membayar BPJS. Jagoan disarankan mendaftar BPJS BPU (Mandiri) secara pribadi.
+3.  **Risiko Rintisan:** Jagoan memahami bahwa di fase awal, dana *Solidarity Pool* mungkin belum mencukupi untuk klaim besar, dan bersedia menanggung risiko kerja secara mandiri atau melalui skema gotong-royong komunitas.
 
 | State | Description | Unlocks |
 |-------|-------------|---------|

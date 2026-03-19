@@ -141,12 +141,13 @@ siapaja-core/
 └── crates/                       # Workspace members
     ├── sa-schema/                # #1 Shared domain models & types
     ├── sa-domain/                # #2 Domain logic (entities, traits)
-    ├── sa-application/           # #3 Use cases & services
+    ├── sa-application/           # #3 Use cases & services (includes pamor_engine)
     ├── sa-infrastructure/        # #4 External implementations
     ├── sa-api/                   # #5 Axum HTTP handlers
     ├── sa-spacetimedb/           # #6 SpacetimeDB module
-    ├── sa-worker/                # #7 Background jobs
-    └── sa-cli/                   # #8 CLI tools & admin
+    ├── sa-pamor/                 # #7 Pamor calculation engine (Logic from PAMOR-SYSTEM.md)
+    ├── sa-worker/                # #8 Background jobs
+    └── sa-cli/                   # #9 CLI tools & admin
 ```
 
 ### 4.2 Crate Details
@@ -161,7 +162,7 @@ crates/sa-schema/
     ├── lib.rs
     ├── models/
     │   ├── mod.rs
-    │   ├── user.rs                 # User, UserRole, KarmaScore
+    │   ├── user.rs                 # User, UserRole, PamorScore
     │   ├── job.rs                  # Job, JobStatus, Category
     │   ├── escrow.rs               # Escrow, EscrowStatus (Xendit integration)
     │   ├── payment.rs              # Payment, Withdrawal, Deposit
@@ -215,7 +216,7 @@ crates/sa-domain/
     │   ├── mod.rs
     │   ├── pricing_engine.rs       # Price floor calculation
     │   ├── matching_engine.rs      # Job-worker matching logic
-    │   ├── karma_engine.rs         # Pamor decay & calculation
+    │   ├── pamor_engine.rs         # Pamor decay & calculation
     │   └── dispute_resolver.rs     # Jury selection & voting
     ├── errors/
     │   ├── mod.rs
@@ -392,7 +393,7 @@ crates/sa-spacetimedb/
 - **CPU Cycles Tracker:** Menghitung waktu eksekusi setiap `Reducer` (SpacetimeDB) dan `Handler` (Axum).
 - **I/O Metering:** Mencatat volume data yang ditulis/dibaca dari PostgreSQL dan SpacetimeDB.
 - **SA-TEV Integrator:** Mengonversi metrik teknis menjadi unit SA-TEV berdasarkan koefisien yang ditetapkan Solidarity-ID.
-- **Billing Ledger:** Mencatat tagihan harian ke tabel `solidarity_usage_logs` untuk transparansi audit Kopi.
+- **Billing Ledger:** Mencatat tagihan harian ke tabel `solidarity_usage_logs` untuk transparansi audit Koperasi.
 
 ```
 crates/sa-worker/
@@ -616,7 +617,7 @@ ios/                                # iOS native config
 1. Jagoan tap "Selesai"
 2. Pembuat Job tap "Konfirmasi"
 3. Backend call Xendit: `release_escrow(escrow_id, taskee_id, amount: 148500)`
-4. Xendit transfer ke rekening Jagoan (minus 1% solidarity pool ke rekening Kopi jika checkbox Solidarity Pool diaktifkan)
+4. Xendit transfer ke rekening Jagoan (minus 1% solidarity pool ke rekening Koperasi jika checkbox Solidarity Pool diaktifkan)
 5. Xendit webhook: release completed
 6. Backend update job: "COMPLETED"
 
@@ -704,15 +705,18 @@ Sort by score descending, limit 50
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     phone_number VARCHAR(20) UNIQUE NOT NULL,
-    phone_hash VARCHAR(64) NOT NULL, -- hashed untuk privacy
+    phone_hash VARCHAR(64) NOT NULL,
     email VARCHAR(255),
     full_name VARCHAR(255) NOT NULL,
-    ktp_hash VARCHAR(64), -- hash saja, bukan nomor asli
+    ktp_hash VARCHAR(64),
     can_work_as_worker BOOLEAN DEFAULT FALSE,
     can_post_as_customer BOOLEAN DEFAULT TRUE,
-    pamor_score INTEGER DEFAULT 100,
-    voting_power INTEGER DEFAULT 1,
+    pamor_score INTEGER DEFAULT 100, -- Default Pamor
+    -- voting_power dihitung dinamis dari pamor_score: 100 Pamor = 1 Suara (Max 10)
     blue_check_verified BOOLEAN DEFAULT FALSE,
+    is_frozen BOOLEAN DEFAULT FALSE,
+    frozen_reason TEXT,
+    last_activity_at TIMESTAMPTZ DEFAULT NOW(),
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -730,8 +734,9 @@ CREATE TABLE jobs (
     gps_lng DECIMAL(11, 8) NOT NULL,
     location_geog GEOGRAPHY(POINT), -- PostGIS untuk spatial queries
     status job_status DEFAULT 'POSTED',
-    escrow_id VARCHAR(255), -- Xendit escrow ID (external)
+    escrow_id VARCHAR(255),
     escrow_status escrow_status,
+    is_solidarity_pool_active BOOLEAN DEFAULT FALSE, -- Penambahan flag asuransi
     ai_price_floor INTEGER, -- minimum harga dari AI
     ai_workers_required INTEGER DEFAULT 1,
     ai_risk_level risk_level,
@@ -777,73 +782,30 @@ CREATE INDEX idx_ledger_entries_type ON ledger_entries(entry_type);
 CREATE INDEX idx_ledger_entries_created_at ON ledger_entries(created_at DESC);
 CREATE INDEX idx_ledger_entries_created_by ON ledger_entries(created_by);
 
--- Transactions (financial records, deprecated - use ledger_entries instead)
-CREATE TABLE transactions (
+-- Tabel Iklan Lokal (Supporting SCREEN-LIST.md 3.4)
+CREATE TABLE local_ads (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL REFERENCES users(id),
-    escrow_ref_id UUID REFERENCES escrow_refs(id),
-    type transaction_type NOT NULL,
-    amount_idr INTEGER NOT NULL, -- positive untuk credit, negative untuk debit
-    balance_after_idr INTEGER NOT NULL,
-    metadata JSONB,
-    xendit_reference VARCHAR(255), -- reference ID dari Xendit
+    owner_id UUID NOT NULL REFERENCES users(id),
+    title VARCHAR(100) NOT NULL,
+    markdown_content TEXT NOT NULL,
+    image_url TEXT,
+    target_radius_km INTEGER DEFAULT 2,
+    budget_total_idr INTEGER NOT NULL,
+    remaining_budget_idr INTEGER NOT NULL,
+    status VARCHAR(20) DEFAULT 'ACTIVE',
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Job Categories (untuk personalization)
-CREATE TABLE user_category_preferences (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL REFERENCES users(id),
-    category job_category NOT NULL,
-    preference_score INTEGER DEFAULT 0, -- naik tiap kali user claim job kategori ini
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    UNIQUE(user_id, category)
-);
-
--- Disputes
-CREATE TABLE disputes (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    job_id UUID UNIQUE NOT NULL REFERENCES jobs(id),
-    escrow_ref_id UUID NOT NULL REFERENCES escrow_refs(id),
-    initiator_id UUID NOT NULL REFERENCES users(id), -- yang buka dispute
-    reason TEXT NOT NULL,
-    evidence_urls TEXT[], -- array of S3 URLs
-    status dispute_status DEFAULT 'OPEN',
-    outcome dispute_outcome,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    resolved_at TIMESTAMPTZ,
-    expires_at TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '365 days')
-);
-
--- Jury Votes
-CREATE TABLE jury_votes (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    dispute_id UUID NOT NULL REFERENCES disputes(id),
-    juror_id UUID NOT NULL REFERENCES users(id),
-    vote dispute_outcome NOT NULL, -- CUSTOMER_WIN atau WORKER_WIN
-    voted_at TIMESTAMPTZ DEFAULT NOW(),
-    confidence INTEGER CHECK (confidence BETWEEN 1 AND 5),
-    UNIQUE(dispute_id, juror_id)
-);
-
--- Pamor History
-CREATE TABLE karma_history (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL REFERENCES users(id),
-    delta INTEGER NOT NULL,
-    reason karma_reason NOT NULL,
-    reference_type VARCHAR(50),
-    reference_id UUID,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
+-- Pamor History (Renamed from karma_history)
+-- Pamor Ledger is the source of truth; Postgres users table is a read-only cache.
 
 -- Koperasi Open Ledger (Transparency Table)
 CREATE TABLE community_treasury_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     entry_type VARCHAR(50) NOT NULL, 
     amount_idr BIGINT NOT NULL,
-    founder_cut_idr BIGINT NOT NULL, -- Jatah lu & tim inti
-    community_cut_idr BIGINT NOT NULL, -- Jatah kas koperasi
+    solidarity_id_cut_idr BIGINT NOT NULL, -- Jatah vendor teknologi (SA-TEV)
+    community_cut_idr BIGINT NOT NULL, -- Jatah kas koperasi (SHU)
     description TEXT,
     balance_snapshot BIGINT NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
@@ -1561,6 +1523,7 @@ pub struct FeedPersonalization {
 **Changelog:**
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.2 | 2026-03-19 | Schema updates: Removed deprecated transactions table, added local_ads table, renamed karma_history to pamor_history, added is_solidarity_pool_active flag. Terminology alignment: Replaced "Kopi" with "Koperasi". |
 | 2.1 | 2026-03-16 | Added Immutable Ledger implementation with Merkle-chained hash chain, audit API, and SpacetimeDB integration |
 | 2.0 | 2026-03-15 | Third-party escrow, OpenRouter AI, personalized feed, dual-role, workspace structure |
 | 1.0 | 2026-03-01 | Initial specification |

@@ -1,7 +1,7 @@
 <div align="center">
 
 # 🦀 SiapAja.id: The Ultra-Fast Real-time Gig Economy
-**"Scroll medsos dapet duit. 0% Komisi. Tanpa Iuran Anggota. 100% Keadilan."**
+**"Scroll medsos dapet duit. 0% Komisi Jagoan. Tanpa Iuran Anggota. 100% Keadilan."**
 
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](#)
 [![Rust](https://img.shields.io/badge/Rust-1.75%2B-orange.svg)](#)
@@ -59,9 +59,10 @@ Platform tetap gratis buat rakyat kecil. Tapi untuk menjaga keberlanjutan infras
 **Untuk transaksi di bawah Rp500.000, Jagoan tetap terima 100% UTUH.**
 Fee untuk transaksi besar dibebankan secara *adil* ke kedua belah pihak (split fee), bukan cuma memeras Jagoan.
 
-### 1.4. Anti-Bakar Duit (Guerrilla Bootstrapping)
-Kita nggak punya VC (*Venture Capitalist*) yang ngasih triliunan buat bakar duit ngasih promo diskon. Dan kita emang nggak butuh.
-Strategi kita adalah **Hyper-Local Density**. Kita nggak akan rilis se-Indonesia sekaligus. Kita kuasai satu kecamatan dulu, sampai semua ibu-ibu dan pemuda nongkrong di kecamatan itu pakai aplikasi ini. Kalau satu ekosistem lokal sudah nyala, dia akan membiayai pertumbuhannya sendiri.
+### 1.4. Anti-Bakar Duit (The Creator-Led Growth)
+Kita nggak punya VC yang ngasih triliunan buat bakar duit iklan di Facebook/Google Ads. Dan kita memang nggak mau. Daripada bayar Mark Zuckerberg, **kita membayar Jagoan kita sendiri.**
+
+Mengadaptasi fenomena *Ojol Vlogger* atau *Santo Suruh*, kita merangkul para Jagoan yang juga seorang *Content Creator*. Setiap Jagoan yang merekam hasil kerjanya, mempostingnya di TikTok/IG, dan berhasil mendatangkan *Pembuat Job* baru ke platform melalui *Deep-Link* mereka, akan dibayar tunai dari **Kas Koperasi (Treasury)**. Mereka adalah "Marketing Berjalan" kita. Konten nyata orang bekerja jauh lebih viral dan dipercaya daripada iklan baliho.
 
 ---
 
@@ -80,7 +81,7 @@ Data sinkron instan, tanpa loading, secepat aplikasi chat. User cuma lihat saldo
 
 Sering terjadi: Pembuat Job pelit minta pindahan kosan 3 lantai, barangnya ada kulkas 2 pintu, tapi bayarnya cuma buat 1 orang.
 Di SiapAja.id, **text-only LLM** (via OpenRouter API) membaca postingan untuk ekstraksi terstruktur.
-*   **Output AI:** *"Deteksi beban >70kg + Tangga. Risiko cedera tinggi. Pekerjaan ini wajib dikerjakan minimal 3 Jagoan. Harga dasar dikunci di Rp350.000."*
+*   **Output AI:** *"Deteksi beban >50kg + Tangga. Risiko cedera tinggi. Pekerjaan ini wajib dikerjakan minimal 2 Jagoan. Harga dasar dikunci di Rp250.000."*
 *   Sistem menolak postingan jika Pembuat Job memaksa menawar di bawah *Price Floor* (Harga Bawah) yang sudah dihitung AI. Kita jaga tulang punggung Jagoan!
 
 ### 2.4. Pembentukan Tim Otomatis (Squad Formation)
@@ -167,7 +168,7 @@ Kalau ada masalah, kita nggak pake CS yang jawabannya "Mohon maaf atas ketidakny
 
 ### 6.1. Alur Sengketa (Dispute Lifecycle)
 1. Pembuat Job klaim: "Kerjaan nggak beres!" -> Dana di Virtual Escrow otomatis **BEKU**.
-2. Juri Netizen voting (7 orang dipilih secara random dari pool Jagoan di kategori yang sama).
+2. Juri Netizen voting (7 orang dipilih berdasarkan keahlian dari pool Jagoan di kategori yang sama).
 3. Jagoan & Pembuat Job upload bukti foto/video.
 4. Juri voting secara *anonymous*. 
 5. Pemenang voting dapet dananya, Juri dapet komisi kecil sebagai imbalan kejujuran.
@@ -191,10 +192,10 @@ Banyak yang takut sistem Pamor kita bakal kayak "Skor Kredit Sosial" ala negara 
 *   **Pamor Naik (+):** Tepat waktu sampai lokasi, rating bintang 5 dari *Pembuat Job* (dinilai dari kualitas kerja), atau rajin jadi Juri sengketa yang adil.
 *   **Pamor Turun (-):** Batalin orderan sepihak setelah setuju (Cancel), telat parah tanpa alasan, atau terbukti curang dalam sengketa.
 
-### 7.2. Pamor Decay (Penyusutan Otomatis)
-Kita percaya pada **Penebusan Dosa Digital**. Kalau Jagoan pernah salah (Pamor anjlok), mereka nggak dihukum seumur hidup.
+### 7.2. Pamor Decay & Redemption
+Kita percaya pada **Penebusan Dosa Digital**. Kalau Jagoan pernah salah hingga akunnya non-aktif (Pamor ≤ 0), mereka tidak dihukum seumur hidup. Akun dapat diaktifkan kembali dengan memulihkan Pamor melalui kontribusi yang divalidasi komunitas.
 *   Setiap 30 hari, poin Pamor negatif akan otomatis mengalami "Decay" (menyusut) sebesar 15% jika Jagoan terus berkelakuan baik.
-*   Sistem ini diatur oleh *CRON Job* di server Rust yang secara efisien mengkalkulasi jutaan data setiap akhir bulan.
+*   Akun yang mencapai Pamor ≤ 0 akan masuk status `DEACTIVATED` dan kehilangan akses ke platform. Pemulihan dapat dilakukan melalui jalur *Redemption* (Jury duty khusus atau kontribusi terverifikasi).
 
 ### 7.3. Hak Suara (Voting Power)
 Pamor bukan cuma buat pamer. Semakin tinggi Pamor, semakin besar **Hak Suara (Voting Power)** user dalam menentukan arah platform.
