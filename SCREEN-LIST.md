@@ -916,6 +916,21 @@ Status user menentukan akses fitur (Unverified, Verified, Active, Boosted). Deta
 - **13.3.3.4** Open source licenses
 - **13.3.3.5** Build in Public link (GitHub)
 
+## 13.4 Subscription Management
+
+### 13.4.1 Subscription Center
+- **13.4.1.1** Visualisasi perbandingan fitur (Basic vs Pro/VIP)
+- **13.4.1.2** Status langganan saat ini & tanggal renewal
+- **13.4.1.3** Progress Bar "Anti-Zonk": Menampilkan jumlah jam online & bid bulan ini sebagai syarat klaim garansi
+
+### 13.4.2 Billing History
+- **13.4.2.1** Daftar invoice langganan bulanan
+- **13.4.2.2** Opsi aktivasi/deaktivasi Auto-Debit dari Saldo Rupiah
+
+### 13.4.3 Upgrade Success
+- **13.4.3.1** Animasi "Welcome to Pro/VIP"
+- **13.4.3.2** Badge "Pro" muncul otomatis di samping nama profil (Trust Signal)
+
 ---
 
 # 14. SPECIAL SCREENS
@@ -1192,6 +1207,7 @@ Jury Review → Voting → Result → Fund Release
 | 3.5 | 2026-03-16 | Hyper-Local Ads: Iklan Warga (Contextual Ad Card, Creation Flow, Ads Manager Dashboard) |
 | 3.6 | 2026-03-19 | Terminology alignment: Removed "Kopi" terminology, replaced with "Koperasi". Removed rigid 60/40 fee percentages in favor of SA-TEV model. |
 | 3.7 | 2026-03-19 | DRY refactoring: Consolidated duplicated logic into SSoT docs, replaced inline blocks with reference callouts. |
+| 3.8 | 2026-03-20 | Added section 13.4: Subscription Management screens - Subscription Center, Billing History, Upgrade Success with Pro Badge. |
 
 ---
 

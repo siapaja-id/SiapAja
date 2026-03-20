@@ -49,6 +49,17 @@ Pamor menggantikan fungsi Simpanan Wajib sebagai syarat hak suara:
   - Mau uang denda di Treasury dipakai buat bagi-bagi sembako atau asuransi kecelakaan? Voting!
   - Pemilihan pengurus wilayah
 
+### 4.2 Bobot Hak Suara (Voting Weight)
+
+Hak suara dalam RAK/RAT tidak hanya diambil dari Pamor Abadi, tapi kombinasi:
+
+| Komponen | Bobot | Filosofi |
+|----------|-------|----------|
+| **Pamor Abadi** | **50%** | Menghargai loyalitas jangka panjang. |
+| **Pamor Aktif** | **50%** | Menghargai kontribusi nyata saat ini. |
+
+*Artinya, seorang "Legenda" yang sudah tidak aktif selama 1 tahun akan kehilangan setengah kekuatan suaranya dibandingkan Jagoan yang sedang aktif di lapangan.*
+
 ### 4.1 Struktur Demokrasi Digital (Via Siap Coop)
 Setiap proses demokrasi dilakukan secara eksklusif melalui aplikasi **Siap Coop**:
 1. **RAK Digital:** Forum diskusi tingkat kecamatan untuk membahas usulan warga.
@@ -145,6 +156,7 @@ Sebelum masuk ke status `Verified`, user wajib menyetujui **Pakta Jagoan Mandiri
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 1.4 | 2026-03-20 | Added Bab 4.2: Bobot Hak Suara - 50% Pamor Abadi, 50% Pamor Aktif untuk mencegah monopoli suara oleh Legenda yang tidak aktif. |
 | 1.0 | 2026-03-16 | Initial creation - consolidated from readme.md, WHITEPAPER.md & SCREEN-LIST.md |
 | 1.1 | 2026-03-16 | Added Bab 3: Mekanisme Downvote & Sanksi Sosial (Anti-Brigading, Cost of Downvoting, Pamor Decay on Negative Feedback) |
 | 1.2 | 2026-03-16 | Terminology update: Pamor → Pamor, Worker → Jagoan, Customer → Pembuat Job. Added UI vs Technical terminology tables. |

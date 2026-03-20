@@ -35,6 +35,9 @@ Jagoan mengumpulkan Pamor untuk mendapatkan prioritas *feed* dan hak dividen Kop
 | Rating Bintang 5 | **+10** | Bonus kepuasan Pembuat Job. |
 | Tepat Waktu (GPS) | **+5** | Terdeteksi otomatis saat tiba di radius 50m. |
 | **Creator Conversion** | **+25** | Per 1 Pembuat Job baru yang posting job dari link konten TikTok/IG Jagoan. |
+| Perpanjang Langganan | **+25** | Loyalitas keanggotaan cooperativas. |
+| Klaim Garansi Valid | **0** | Tidak mengurangi Pamor karena bukan kesalahan Jagoan. |
+| Gagal Bayar Sub | **-10** | Jika menggunakan fitur auto-debit tapi saldo kosong berulang kali. |
 | Pembatalan Sepihak | **-20** | Membatalkan setelah klik "Terima" tanpa alasan valid. |
 | Kalah Sengketa | **-50** | Diputuskan oleh Juri Netizen sebagai pihak bersalah. |
 | Perilaku Buruk | **-10** | Laporan valid: Kasar, merusak barang, sampah. |
@@ -75,8 +78,10 @@ Integritas sistem dijaga oleh mereka yang meluangkan waktu untuk keadilan dan te
 
 ## 6. Struktur Tier & Akses (The Utility)
 
-| Tier | Range Pamor | Akses & Keuntungan |
-|------|-------------|--------------------|
+**Catatan:** Tier ditentukan oleh **Pamor Aktif** (90 hari terakhir), bukan Pamor Abadi.
+
+| Tier | Range Pamor Aktif | Akses & Keuntungan |
+|------|-------------------|--------------------|
 | **Platinum** | 1000+ | Prioritas Job Premium (>2jt), Voting Power 10x, Dividen Maksimal. |
 | **Gold** | 500 - 999 | Prioritas Job Menengah, Voting Power 5x, Dividen Menengah. |
 | **Silver** | 100 - 499 | Akses Standar, Voting Power 1x, Dividen Dasar. |
@@ -121,7 +126,30 @@ Setiap perubahan Pamor **WAJIB** dicatat dalam `ledger_entries` dengan skema:
 
 ---
 
-**Revision 1.0** - *Sistem ini dirancang untuk menciptakan keseimbangan antara ketegasan dan pengampunan.*
+## 10. Protokol "Anti-Monopoli Senioritas" (Pamor Decay)
+
+Agar Jagoan baru memiliki kesempatan yang sama di *Feed* dan Jagoan lama tidak "makan gaji buta" hanya dari reputasi masa lalu, Pamor dibagi menjadi dua kategori:
+
+| Kategori Pamor | Deskripsi | Kegunaan |
+|----------------|-----------|----------|
+| **Pamor Abadi** (Lifetime) | Akumulasi seluruh poin dari hari pertama. | Syarat Sertifikat Modal & Dividen (SHU). |
+| **Pamor Aktif** (Rolling) | Poin yang didapat dalam **90 hari terakhir**. | **Menentukan Tier (Pro/Gold/Platinum) & Prioritas Feed.** |
+
+### 10.1 Mekanisme Penyusutan Otomatis (The Decay)
+
+Setiap tanggal 1 pukul 00:00 WIB, sistem (sa-worker) akan melakukan penyusutan pada **Pamor Aktif**:
+
+| Tipe Decay | Syarat | Dampak |
+|------------|--------|---------|
+| **Idle Decay** | Jagoan tidak menyelesaikan minimal 1 job dalam 30 hari | Pamor Aktif menyusut **15%** secara otomatis |
+| **Freshness Reset** | Poin berusia lebih dari 90 hari | Kedaluwarsa dari hitungan "Tiering", namun tetap tercatat di "Pamor Abadi" |
+
+**Filosofi:**
+*"Keahlian Anda 5 tahun lalu tidak menjamin kualitas Anda hari ini. Anda harus tetap aktif untuk tetap berada di Tier Platinum."*
+
+---
+
+**Revision 2.0** - *Added Bab 10: Protokol Anti-Monopoli Senioritas (Pamor Decay) - Pamor Abadi vs Pamor Aktif, Idle Decay 15%, Freshness Reset 90 hari. Updated Bab 6: Tier ditentukan oleh Pamor Aktif.*
 
 ---
 

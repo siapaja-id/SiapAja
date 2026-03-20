@@ -161,6 +161,36 @@ Ini bukan monopoli harga. Ini **Social Correction** - komunitas punya suara buat
 
 ---
 
+## 10. Model Keanggotaan Berbayar (Subscriptions)
+
+Untuk menjaga stabilitas kas Koperasi dan memberikan nilai lebih bagi pengguna aktif, tersedia pilihan keanggotaan selain akun *Basic*.
+
+| Fitur | **Basic (Free)** | **Jagoan Pro (Sub)** | **Pembuat Job VIP (Sub)** |
+|-------|------------------|----------------------|---------------------------|
+| **Biaya Bulanan** | Rp 0 | Rp 50.000 / bln | Rp 75.000 / bln |
+| **Quota Claim Job** | 3 Job / hari | **Tanpa Batas** | N/A |
+| **Priority Feed** | Standar | **Prioritas Utama (5s awal)** | N/A |
+| **Platform Fee** | Sesuai Tier (Tier 2-4) | **Diskon 50% Fee** | **Diskon 50% Fee** |
+| **Job Quota (Post)** | 1 Active Post | N/A | **5 Active Posts** |
+| **Garansi Pendapatan** | Tidak Ada | **Anti-Zonk Guarantee** | N/A |
+
+### 10.1 Mekanisme "Garansi Anti-Zonk" (Jagoan)
+
+Koperasi menjamin bahwa Jagoan yang berlangganan Pro tidak akan rugi.
+
+**Syarat:**
+- Jagoan harus berstatus `Online` minimal 40 jam/minggu
+- Jagoan harus melakukan `Apply/Claim` pada minimal 10 job yang sesuai kualifikasi namun tidak mendapatkan satu pun job dalam sebulan
+
+**Kompensasi:**
+- Jika syarat terpenuhi dan pendapatan bulan tersebut Rp 0, biaya subscription bulan berikutnya **Gratis** atau **Refund 100%** ke Saldo Rupiah dalam bentuk modal kerja
+
+**Anti-Gaming:**
+- AI akan mendeteksi jika Jagoan sengaja menolak job yang sudah dipilihkan
+- AI akan mendeteksi jika Jagoan memberikan penawaran harga yang tidak masuk akal (di atas *Price Floor* secara ekstrem) untuk memicu garansi ini
+
+---
+
 ## Revision History
 
 | Version | Date | Changes |
@@ -170,6 +200,7 @@ Ini bukan monopoli harga. Ini **Social Correction** - komunitas punya suara buat
 | 1.2 | 2026-03-16 | Terminology update: Worker → Jagoan, Customer → Pembuat Job. Added UI vs Technical terminology tables. |
 | 1.3 | 2026-03-16 | Added Immutable Financial Ledger section with hash chain architecture for audit trail |
 | 1.4 | 2026-03-19 | Terminology update: Removed "Kopi" terminology, replaced with "Koperasi". Added voting juri for solidarity pool claims. |
+| 1.5 | 2026-03-20 | Added Bab 10: Model Keanggotaan Berbayar (Subscriptions) - Basic, Jagoan Pro, Pembuat Job VIP. Added Garansi Anti-Zonk mechanism with Anti-Gaming AI detection.
 
 ---
 

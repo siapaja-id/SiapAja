@@ -620,7 +620,7 @@ AI bertindak sebagai "Bodyguard" Jagoan dengan menentukan **Price Floor** (Harga
 
 ### 3.1. Filosofi Pemilihan Stack
 Kita punya satu prinsip: **"Performance of C++, Safety of Rust, Speed of SpacetimeDB, Modern Mobile with Flutter."**
-Kita nggak mau bakar duit puluhan juta tiap bulan cuma buat bayar server AWS kayak *startup* sebelah. Dengan tumpukan teknologi ini, kita bisa menampung transaksi satu negara hanya dengan biaya server setara harga kopi *specialty* sebulan.
+Kita nggak mau bakar duit puluhan juta tiap bulan cuma buat bayar server AWS kayak *startup* sebelah. Dengan tumpukan teknologi ini, kita bisa menampung transaksi satu negara hanya dengan biaya server setara harga kopi harian seorang eksekutif (estimasi $100/bulan).
 
 ### 3.2. Backend (Rust + Axum)
 API Gateway dan *Matching Engine* kita ditulis 100% menggunakan **Rust** dengan framework **Axum** (dibangun oleh tim Tokio). 
@@ -1244,6 +1244,173 @@ Return JSON: {
 - [GOVERNANCE.md](./GOVERNANCE.md) - Sistem Keadilan & Voting
 ````
 
+## File: docs/GOVERNANCE.md
+````markdown
+# GOVERNANCE.md
+
+## Pusat Informasi Sistem Pamor & Pemerintahan Komunitas SiapAja.id
+
+**Dokumen ini adalah "Source of Truth" untuk semua hal terkait reputasi, voting, dan sistem keadilan. Semua dokumen lain HARUS me-reference dokumen ini.**
+
+---
+
+## 1. Terminologi
+
+| Teknis (Backend) | Publik (UI) | Deskripsi |
+|------------------|-------------|-----------|
+| `tasker` / `customer` | **Pembuat Job** | User yang posting kebutuhan & bayar escrow. |
+| `taskee` / `worker` | **Jagoan** | User yang ambil job & ngerjain tugas. |
+| `pamor_score` | **Pamor** | Skor reputasi user di komunitas. |
+| `platform_fee` | **Kontribusi Koperasi** | Kontribusi transaksi untuk dana bersama. |
+| `downvote` | **Downvote** | Sinyal bahwa konten/行为 violate norma komunitas. |
+
+---
+
+## 2. Sistem Pamor
+
+> **📋 Source of Truth Reputasi:** Seluruh algoritma skor, tiering, dan sistem sanksi diatur secara hukum dalam [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md). Dokumen ini (GOVERNANCE.md) hanya mengatur prosedur pemilihan juri dan alur sengketa.
+
+Pamor adalah **Modal Sosial** sekaligus bukti keanggotaan aktif. Di SiapAja, Anda tidak "membeli" hak suara dengan uang simpanan, Anda "menanam" hak suara melalui kualitas kerja.
+
+> **📋 Detail lengkap metrik Pamor (angka pasti):** Lihat [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md) Bab 2-5
+
+---
+
+## 3. Immutable Pamor Audit
+Pamor bukan sekadar angka di profil, tapi deretan event yang di-hash.
+
+- **Event Sourcing**: Pamor dihitung ulang dari nol setiap ada audit, atau pake snapshot yang di-verify hash-nya.
+- **Audit Log**: "Pamor Lu naik +10 karena Job #123 (Hash: 0xabc...)"
+- **Anti-Manipulation**: Admin gak punya akses `UPDATE pamor_score`. Perubahan skor hanya bisa lewat `Reducer` di SpacetimeDB/Rust yang sudah terprogram.
+- **Public Verifiability**: Jagoan bisa export seluruh riwayat Pamor mereka dalam format JSON + hash chain untuk bukti portabilitas reputasi.
+
+---
+
+## 4. Voting Power (Hak Suara)
+
+Pamor menggantikan fungsi Simpanan Wajib sebagai syarat hak suara:
+
+- **Konversi:** 100 Pamor = 1 Suara
+- **Maksimal:** 10 Suara per orang (supaya Sultan Pamor tidak bisa memonopoli keputusan)
+- **Use Cases:**
+  - Mau naikin Price Floor (Harga Bawah) di kota Jakarta? Voting!
+  - Mau uang denda di Treasury dipakai buat bagi-bagi sembako atau asuransi kecelakaan? Voting!
+  - Pemilihan pengurus wilayah
+
+### 4.1 Struktur Demokrasi Digital (Via Siap Coop)
+Setiap proses demokrasi dilakukan secara eksklusif melalui aplikasi **Siap Coop**:
+1. **RAK Digital:** Forum diskusi tingkat kecamatan untuk membahas usulan warga.
+2. **Pemilihan Utusan:** Voting delegasi yang akan membawa mandat ke RAT Nasional.
+3. **Mandat Real-time:** Anggota dapat memantau bagaimana Utusan mereka memilih dan berhak menarik mandat melalui tombol "Tarik Suara" di Siap Coop.
+
+---
+
+## 5. Mekanisme Downvote & Sanksi Sosial
+
+### 5.1 Downvote sebagai Instrumen Akuntabilitas
+Downvote bukan sekadar tombol dislike, melainkan sinyal bahwa konten atau perilaku user melanggar norma komunitas.
+
+| Tipe Konten | Dampak Downvote | Syarat Pemberi Suara |
+|-------------|-----------------|----------------------|
+| **Discussion** | Mengurangi visibilitas (Ranking Drop) | Semua User |
+| **Flex/Portfolio** | Mengurangi akumulasi Pamor dari post tsb | Verified User |
+| **Demand (Job)** | Alert ke AI/Admin (Potensi Scam/Spam) | Verified User |
+
+### 5.2 Pencegahan Abuse (Anti-Brigading)
+
+1. **Pamor Weighting**: Satu downvote dari user Pamor 1000 lebih berasa dibanding dari user Pamor 100.
+2. **Rate Limiting**: User tidak bisa memberikan >5 downvote dalam 1 jam (mencegah botting).
+3. **Transparency**: User yang di-downvote bisa melihat "Alasan" (dipilih dari preset: Spam, Harga Gak Masuk Akal, Kasar, dll).
+4. **Anti-Spam**: Downvote berulang dari orang yang sama ke target yang sama dalam waktu singkat bakal di-*ignore* sama Rust backend.
+
+### 5.3 Cost of Downvoting
+- Memberikan downvote akan mengurangi **1 poin Pamor** dari pemberi suara
+- Ini memastikan downvote bukanlah tindakan ringan, melainkan pernyataan serius
+
+### 5.4 Pamor Decay on Negative Feedback
+Setiap **10 downvote bersih (net)** pada konten user akan otomatis mengurangi **1 poin Pamor permanen**, yang hanya bisa dipulihkan melalui mekanisme "Penebusan Dosa Digital" (Bagian 2.2).
+
+### 5.5 Appeal Mechanism
+Kalau user merasa jadi korban downvote massal tanpa alasan jelas, user bisa ajukan **Dispute** ke Juri (lihat Bagian 6).
+
+---
+
+## 6. Decentralized Justice (Pengadilan Netizen)
+
+Kami nggak pakai CS yang jawabannya "Mohon maaf atas ketidaknyamanannya". Kami pake hukum komunitas.
+
+### 6.1 Alur Sengketa (Dispute Lifecycle)
+
+1. **Trigger:** Pembuat Job klaim "Kerjaan nggak beres!" → Dana di Virtual Escrow otomatis **BEKU**
+2. **Jury Selection:** Sistem mencari 7 Juri dengan **expertise di bidang yang sama**
+3. **Evidence Upload:** Jagoan & Pembuat Job upload bukti foto/video
+4. **Blind Voting:** Juri voting secara anonymous. Juri nggak bisa lihat hasil voting juri lain sebelum submit
+5. **Resolution:** Pemenang voting dapet dananya, Juri dapet komisi kecil sebagai imbalan kejujuran
+
+### 6.2 Algoritma Pemilihan Juri (Expertise-Based)
+
+- **Kriteria:** Juri dipilih dari pool Jagoan yang punya **track record di kategori job yang sama**
+- **Contoh:** Sengketa job "Tukang AC" → Juri adalah Jagoan dengan rating tinggi di kategori "AC & Elektronik"
+- **Netralitas:** Juri **nggak saling kenal** dan **nggak satu radius** dengan pelaku sengketa
+- **Anti-Herd:** Juri nggak bisa lihat hasil voting juri lain sebelum dia sendiri submit (mencegah "Ikut-ikutan")
+
+### 6.3 Voting Rules
+
+- **Quorum:** Minimal 5 dari 7 juri harus voting
+- **Outcome:** Suara mayoritas (misal 4 vs 3) menjadi keputusan final
+- **Finality:** Keputusan juri adalah **FINAL** dan dieksekusi oleh Virtual Ledger secara otomatis
+
+---
+
+## 7. Contribution Logic: Technology vs Operations
+
+Sistem ini memisahkan kontribusi menjadi dua jalur:
+1. **Jalur Operasional (Koperasi):** Jagoan berkontribusi melalui kerja lapangan dan mendapatkan SHU dari surplus pendapatan Koperasi.
+2. **Jalur Riset (Solidarity-ID):** Solidarity-ID bertindak sebagai mitra vendor teknologi eksklusif yang dibayar melalui mekanisme **SA-TEV (Usage Billing)** dan biaya Lisensi IP.
+
+Koperasi tidak mempekerjakan developer secara internal. Hubungan bersifat kemitraan strategis di mana Solidarity-ID bertanggung jawab penuh atas ketersediaan sistem dan keamanan data (SLA) dengan skema bayar-sesuai-penggunaan (SA-TEV).
+
+---
+
+## 8. User States & Legal Acknowledgment
+
+Sebelum masuk ke status `Verified`, user wajib menyetujui **Pakta Jagoan Mandiri**:
+
+1.  **Pernyataan Mandiri:** Jagoan mengakui tidak memiliki hubungan ketenagakerjaan dengan Koperasi.
+2.  **BPJS Disclaimer:** Jagoan memahami bahwa Koperasi tidak memotong/membayar BPJS. Jagoan disarankan mendaftar BPJS BPU (Mandiri) secara pribadi.
+3.  **Risiko Rintisan:** Jagoan memahami bahwa di fase awal, dana *Solidarity Pool* mungkin belum mencukupi untuk klaim besar, dan bersedia menanggung risiko kerja secara mandiri atau melalui skema gotong-royong komunitas.
+
+| State | Description | Unlocks |
+|-------|-------------|---------|
+| Unverified | Phone only | Browse Only |
+| Verified | KTP Verified | Post Job, Claim Job, Chat, Wallet |
+| Active | Completed 1+ job | Full platform access |
+| Boosted | First 10 jobs | Pamor display boost, "New Jagoan" badge |
+
+---
+
+## Revision History
+
+| Version | Date | Changes |
+|---------|------|---------|
+| 1.0 | 2026-03-16 | Initial creation - consolidated from readme.md, WHITEPAPER.md & SCREEN-LIST.md |
+| 1.1 | 2026-03-16 | Added Bab 3: Mekanisme Downvote & Sanksi Sosial (Anti-Brigading, Cost of Downvoting, Pamor Decay on Negative Feedback) |
+| 1.2 | 2026-03-16 | Terminology update: Pamor → Pamor, Worker → Jagoan, Customer → Pembuat Job. Added UI vs Technical terminology tables. |
+| 1.3 | 2026-03-16 | Added Immutable Pamor Audit section with event sourcing and hash chain verification |
+
+---
+
+*Dokumen ini adalah Source of Truth. Untuk detail implementasi teknis, rujuk ke TECHNICAL.md. Untuk detail economics, rujuk ke ECONOMICS.md.*
+
+---
+
+**Related Documents:**
+- [TECHNICAL.md](../TECHNICAL.md) - Arsitektur Teknis
+- [ECONOMICS.md](./ECONOMICS.md) - Model Bisnis & Fee
+- [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md) - Aturan Reputasi
+- [AI-SPECS.md](./AI-SPECS.md) - Spesifikasi LLM & AI
+````
+
 ## File: docs/ECONOMICS.md
 ````markdown
 # ECONOMICS.md
@@ -1428,173 +1595,6 @@ Ini bukan monopoli harga. Ini **Social Correction** - komunitas punya suara buat
 **Related Documents:**
 - [TECHNICAL.md](../TECHNICAL.md) - Arsitektur Teknis
 - [GOVERNANCE.md](./GOVERNANCE.md) - Sistem Keadilan & Voting
-- [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md) - Aturan Reputasi
-- [AI-SPECS.md](./AI-SPECS.md) - Spesifikasi LLM & AI
-````
-
-## File: docs/GOVERNANCE.md
-````markdown
-# GOVERNANCE.md
-
-## Pusat Informasi Sistem Pamor & Pemerintahan Komunitas SiapAja.id
-
-**Dokumen ini adalah "Source of Truth" untuk semua hal terkait reputasi, voting, dan sistem keadilan. Semua dokumen lain HARUS me-reference dokumen ini.**
-
----
-
-## 1. Terminologi
-
-| Teknis (Backend) | Publik (UI) | Deskripsi |
-|------------------|-------------|-----------|
-| `tasker` / `customer` | **Pembuat Job** | User yang posting kebutuhan & bayar escrow. |
-| `taskee` / `worker` | **Jagoan** | User yang ambil job & ngerjain tugas. |
-| `pamor_score` | **Pamor** | Skor reputasi user di komunitas. |
-| `platform_fee` | **Kontribusi Koperasi** | Kontribusi transaksi untuk dana bersama. |
-| `downvote` | **Downvote** | Sinyal bahwa konten/行为 violate norma komunitas. |
-
----
-
-## 2. Sistem Pamor
-
-> **📋 Source of Truth Reputasi:** Seluruh algoritma skor, tiering, dan sistem sanksi diatur secara hukum dalam [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md). Dokumen ini (GOVERNANCE.md) hanya mengatur prosedur pemilihan juri dan alur sengketa.
-
-Pamor adalah **Modal Sosial** sekaligus bukti keanggotaan aktif. Di SiapAja, Anda tidak "membeli" hak suara dengan uang simpanan, Anda "menanam" hak suara melalui kualitas kerja.
-
-> **📋 Detail lengkap metrik Pamor (angka pasti):** Lihat [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md) Bab 2-5
-
----
-
-## 3. Immutable Pamor Audit
-Pamor bukan sekadar angka di profil, tapi deretan event yang di-hash.
-
-- **Event Sourcing**: Pamor dihitung ulang dari nol setiap ada audit, atau pake snapshot yang di-verify hash-nya.
-- **Audit Log**: "Pamor Lu naik +10 karena Job #123 (Hash: 0xabc...)"
-- **Anti-Manipulation**: Admin gak punya akses `UPDATE pamor_score`. Perubahan skor hanya bisa lewat `Reducer` di SpacetimeDB/Rust yang sudah terprogram.
-- **Public Verifiability**: Jagoan bisa export seluruh riwayat Pamor mereka dalam format JSON + hash chain untuk bukti portabilitas reputasi.
-
----
-
-## 4. Voting Power (Hak Suara)
-
-Pamor menggantikan fungsi Simpanan Wajib sebagai syarat hak suara:
-
-- **Konversi:** 100 Pamor = 1 Suara
-- **Maksimal:** 10 Suara per orang (supaya Sultan Pamor tidak bisa memonopoli keputusan)
-- **Use Cases:**
-  - Mau naikin Price Floor (Harga Bawah) di kota Jakarta? Voting!
-  - Mau uang denda di Treasury dipakai buat bagi-bagi sembako atau asuransi kecelakaan? Voting!
-  - Pemilihan pengurus wilayah
-
-### 4.1 Struktur Demokrasi Digital (Via Siap Coop)
-Setiap proses demokrasi dilakukan secara eksklusif melalui aplikasi **Siap Coop**:
-1. **RAK Digital:** Forum diskusi tingkat kecamatan untuk membahas usulan warga.
-2. **Pemilihan Utusan:** Voting delegasi yang akan membawa mandat ke RAT Nasional.
-3. **Mandat Real-time:** Anggota dapat memantau bagaimana Utusan mereka memilih dan berhak menarik mandat melalui tombol "Tarik Suara" di Siap Coop.
-
----
-
-## 5. Mekanisme Downvote & Sanksi Sosial
-
-### 5.1 Downvote sebagai Instrumen Akuntabilitas
-Downvote bukan sekadar tombol dislike, melainkan sinyal bahwa konten atau perilaku user melanggar norma komunitas.
-
-| Tipe Konten | Dampak Downvote | Syarat Pemberi Suara |
-|-------------|-----------------|----------------------|
-| **Discussion** | Mengurangi visibilitas (Ranking Drop) | Semua User |
-| **Flex/Portfolio** | Mengurangi akumulasi Pamor dari post tsb | Verified User |
-| **Demand (Job)** | Alert ke AI/Admin (Potensi Scam/Spam) | Verified User |
-
-### 5.2 Pencegahan Abuse (Anti-Brigading)
-
-1. **Pamor Weighting**: Satu downvote dari user Pamor 1000 lebih berasa dibanding dari user Pamor 100.
-2. **Rate Limiting**: User tidak bisa memberikan >5 downvote dalam 1 jam (mencegah botting).
-3. **Transparency**: User yang di-downvote bisa melihat "Alasan" (dipilih dari preset: Spam, Harga Gak Masuk Akal, Kasar, dll).
-4. **Anti-Spam**: Downvote berulang dari orang yang sama ke target yang sama dalam waktu singkat bakal di-*ignore* sama Rust backend.
-
-### 5.3 Cost of Downvoting
-- Memberikan downvote akan mengurangi **1 poin Pamor** dari pemberi suara
-- Ini memastikan downvote bukanlah tindakan ringan, melainkan pernyataan serius
-
-### 5.4 Pamor Decay on Negative Feedback
-Setiap **10 downvote bersih (net)** pada konten user akan otomatis mengurangi **1 poin Pamor permanen**, yang hanya bisa dipulihkan melalui mekanisme "Penebusan Dosa Digital" (Bagian 2.2).
-
-### 5.5 Appeal Mechanism
-Kalau user merasa jadi korban downvote massal tanpa alasan jelas, user bisa ajukan **Dispute** ke Juri (lihat Bagian 6).
-
----
-
-## 6. Decentralized Justice (Pengadilan Netizen)
-
-Kami nggak pakai CS yang jawabannya "Mohon maaf atas ketidaknyamanannya". Kami pake hukum komunitas.
-
-### 6.1 Alur Sengketa (Dispute Lifecycle)
-
-1. **Trigger:** Pembuat Job klaim "Kerjaan nggak beres!" → Dana di Virtual Escrow otomatis **BEKU**
-2. **Jury Selection:** Sistem mencari 7 Juri dengan **expertise di bidang yang sama**
-3. **Evidence Upload:** Jagoan & Pembuat Job upload bukti foto/video
-4. **Blind Voting:** Juri voting secara anonymous. Juri nggak bisa lihat hasil voting juri lain sebelum submit
-5. **Resolution:** Pemenang voting dapet dananya, Juri dapet komisi kecil sebagai imbalan kejujuran
-
-### 6.2 Algoritma Pemilihan Juri (Expertise-Based)
-
-- **Kriteria:** Juri dipilih dari pool Jagoan yang punya **track record di kategori job yang sama**
-- **Contoh:** Sengketa job "Tukang AC" → Juri adalah Jagoan dengan rating tinggi di kategori "AC & Elektronik"
-- **Netralitas:** Juri **nggak saling kenal** dan **nggak satu radius** dengan pelaku sengketa
-- **Anti-Herd:** Juri nggak bisa lihat hasil voting juri lain sebelum dia sendiri submit (mencegah "Ikut-ikutan")
-
-### 6.3 Voting Rules
-
-- **Quorum:** Minimal 5 dari 7 juri harus voting
-- **Outcome:** Suara mayoritas (misal 4 vs 3) menjadi keputusan final
-- **Finality:** Keputusan juri adalah **FINAL** dan dieksekusi oleh Virtual Ledger secara otomatis
-
----
-
-## 7. Contribution Logic: Technology vs Operations
-
-Sistem ini memisahkan kontribusi menjadi dua jalur:
-1. **Jalur Operasional (Koperasi):** Jagoan berkontribusi melalui kerja lapangan dan mendapatkan SHU dari surplus pendapatan Koperasi.
-2. **Jalur Riset (Solidarity-ID):** Solidarity-ID bertindak sebagai mitra vendor teknologi eksklusif yang dibayar melalui mekanisme **SA-TEV (Usage Billing)** dan biaya Lisensi IP.
-
-Koperasi tidak mempekerjakan developer secara internal. Hubungan bersifat kemitraan strategis di mana Solidarity-ID bertanggung jawab penuh atas ketersediaan sistem dan keamanan data (SLA) dengan skema bayar-sesuai-penggunaan (SA-TEV).
-
----
-
-## 8. User States & Legal Acknowledgment
-
-Sebelum masuk ke status `Verified`, user wajib menyetujui **Pakta Jagoan Mandiri**:
-
-1.  **Pernyataan Mandiri:** Jagoan mengakui tidak memiliki hubungan ketenagakerjaan dengan Koperasi.
-2.  **BPJS Disclaimer:** Jagoan memahami bahwa Koperasi tidak memotong/membayar BPJS. Jagoan disarankan mendaftar BPJS BPU (Mandiri) secara pribadi.
-3.  **Risiko Rintisan:** Jagoan memahami bahwa di fase awal, dana *Solidarity Pool* mungkin belum mencukupi untuk klaim besar, dan bersedia menanggung risiko kerja secara mandiri atau melalui skema gotong-royong komunitas.
-
-| State | Description | Unlocks |
-|-------|-------------|---------|
-| Unverified | Phone only | Browse Only |
-| Verified | KTP Verified | Post Job, Claim Job, Chat, Wallet |
-| Active | Completed 1+ job | Full platform access |
-| Boosted | First 10 jobs | Pamor display boost, "New Jagoan" badge |
-
----
-
-## Revision History
-
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0 | 2026-03-16 | Initial creation - consolidated from readme.md, WHITEPAPER.md & SCREEN-LIST.md |
-| 1.1 | 2026-03-16 | Added Bab 3: Mekanisme Downvote & Sanksi Sosial (Anti-Brigading, Cost of Downvoting, Pamor Decay on Negative Feedback) |
-| 1.2 | 2026-03-16 | Terminology update: Pamor → Pamor, Worker → Jagoan, Customer → Pembuat Job. Added UI vs Technical terminology tables. |
-| 1.3 | 2026-03-16 | Added Immutable Pamor Audit section with event sourcing and hash chain verification |
-
----
-
-*Dokumen ini adalah Source of Truth. Untuk detail implementasi teknis, rujuk ke TECHNICAL.md. Untuk detail economics, rujuk ke ECONOMICS.md.*
-
----
-
-**Related Documents:**
-- [TECHNICAL.md](../TECHNICAL.md) - Arsitektur Teknis
-- [ECONOMICS.md](./ECONOMICS.md) - Model Bisnis & Fee
 - [PAMOR-SYSTEM.md](./PAMOR-SYSTEM.md) - Aturan Reputasi
 - [AI-SPECS.md](./AI-SPECS.md) - Spesifikasi LLM & AI
 ````
@@ -3200,213 +3200,6 @@ Berdasarkan benchmark Rust + SpacetimeDB, satu unit server tunggal sanggup menan
 - [docs/AI-SPECS.md](./docs/AI-SPECS.md) - Spesifikasi LLM & AI
 ````
 
-## File: WHITEPAPER.md
-````markdown
-<div align="center">
-
-# 📜 WHITEPAPER v1.0: SiapAja.id
-### Model Koperasi Jasa Multi-Pihak Tanpa Iuran: Partisipasi sebagai Modal Masa Depan.
-
-**Penulis:** Core Developers & Komunitas SiapAja.id  
-**Tanggal:** [Bulan, Tahun]  
-**Status:** Draf Publik (Open for RFC - Request for Comments)
-
-</div>
-
----
-
-## 🛑 ABSTRAK
-Sistem *gig economy* (ekonomi serabutan) di Indonesia saat ini telah berevolusi menjadi bentuk baru feodalisme digital. Platform raksasa (aplikasi ojol/jasa) yang awalnya bertindak sebagai inovator penghubung, kini bertransformasi menjadi makelar monopolistik yang mengekstraksi hingga 30% dari nilai keringat pekerja, sambil berlindung di balik ilusi "Kemitraan". 
-
-**SiapAja.id** hadir sebagai **Ekosistem ERP Koperasi Multi-Aplikasi** yang bebas beban iuran. Kita tidak hanya membangun satu aplikasi, melainkan sebuah suite alat kerja digital (7 Apps) yang didukung oleh satu backend Rust Modular Monolith yang sangat efisien.
-
----
-
-## BAB 1: Latar Belakang & Masalah Struktural
-
-### 1.1. Anatomi Penindasan Makelar Digital
-Selama satu dekade terakhir, kita diajarkan bahwa untuk menghubungkan "Orang yang butuh jasa" dengan "Orang yang bisa kerja", harus ada perusahaan teknologi di tengahnya yang mengambil jatah 20% hingga 30%. 
-*   **Cost of Trust:** Komisi 30% ini pada dasarnya adalah "Biaya Kepercayaan" agar uang *customer* aman dan pekerja dibayar. 
-*   **Inefisiensi:** Seiring membesarnya platform, biaya tersebut tidak digunakan untuk menyejahterakan pekerja, melainkan untuk membayar gaji eksekutif, kampanye bakar uang (diskon), dan biaya operasional server (AWS/GCP) yang membengkak karena arsitektur *legacy* (Java/Node.js).
-
-### 1.2. Kematian Transparansi Harga
-Harga tidak lagi ditentukan oleh *Supply* dan *Demand* lokal, melainkan oleh algoritma kotak hitam (*black-box algorithm*) milik korporasi. Pekerja dipaksa menerima harga "Gacor" yang seringkali berada di bawah standar hidup layak, memicu fenomena perang harga yang tidak manusiawi.
-
----
-
-## BAB 2: Solusi Fundamental (The SiapAja Paradigm)
-
-### 2.1. Eliminasi Makelar melalui "Automated Virtual Ledger"
-Jika fungsi utama platform adalah memastikan keamanan uang, maka fungsi tersebut bisa digantikan oleh sistem **Virtual Ledger** otomatis.
-*   Uang *customer* dikunci di *Virtual Escrow* (Rekening Bersama otomatis).
-*   Uang cair 100% ke pekerja begitu tugas selesai secara konsensus.
-*   Tidak ada admin keuangan yang perlu menggaji dirinya sendiri dari proses persetujuan ini.
-
-### 2.2. Pembalikan Model UX: "Demand-Driven Feed"
-SiapAja.id membuang konsep "Katalog Jasa" (di mana pekerja memajang profil dan menunggu dipanggil). Kami menggunakan model **Hybrid Demand-Social Feed**.
-* **Core Transaction:** Postingan kebutuhan bantuan yang di-lock dengan escrow.
-* **Social Proof:** Mekanisme "Flex-to-Earn" di mana Jagoan memposting hasil kerja untuk menaikkan Pamor dan Trust.
-* **Community Intelligence:** Diskusi lokal non-finansial yang menjaga retensi user (DAU/MAU) tanpa harus membakar duit iklan.
-*   **Syarat:** Dana harus di-lock (Pay-to-Post) di awal. Feed terbebas dari *spam* dan order fiktif.
-*   Pekerja di radius terdekat tinggal melakukan *claim* (ambil job) secara *first-come-first-serve* atau *bidding* wajar.
-
----
-
-## BAB 3: Arsitektur Teknis (The "God Mode" Stack)
-
-Untuk menjalankan platform dengan 0% komisi, biaya operasional infrastruktur harus ditekan hingga mendekati angka nol (Zero Marginal Cost).
-
-### 3.1. Backend Modular Monolith (Rust + Axum) - National Efficiency
-Kami menggunakan pendekatan **Modular Monolith** yang mampu melayani **seluruh Indonesia (450.000 transaksi/hari)** hanya dari satu infrastruktur terpusat yang efisien.
-*   **Mengapa Rust:** Kami menolak bahasa pemrograman *garbage-collected* yang menyebabkan jeda sistem (freeze). Dengan Rust, latensi p99 tetap stabil di bawah 20ms bahkan saat beban puncak 125 order/detik.
-*   **Efisiensi Infrastruktur:** Biaya server untuk melayani satu negara setara dengan harga kopi harian seorang eksekutif (estimasi $100/bulan). Inilah kunci **0% Komisi** Jagoan: Infrastruktur yang tidak lagi menjadi beban biaya.
-*   **Crash-Proof:** Jaminan *Memory Safety* Rust memastikan server tidak akan mengalami *Null Pointer Exception* di tengah malam.
-
-### 3.2. Frontend Modern (Flutter + Riverpod + Dart)
-Kami menggunakan **Flutter 3+** dengan **Riverpod** untuk state management dan **Dart** sebagai bahasa pemrograman.
-*   **Native Mobile:** Aplikasi berjalan sebagai native app di Android/iOS dengan performa tinggi.
-*   **Dual Database Architecture:**
-  - **REST API (OpenAPI):** Untuk data persisten (PostgreSQL) - user profiles, transactions
-  - **SpacetimeDB Binary Protocol:** Untuk data real-time - job feed, GPS tracking, live notifications. Menggunakan community Dart SDK yang production-ready.
-*   **Type-Safe API:** Client Dart di-generate otomatis dari OpenAPI spec backend Rust.
-
-### 3.3. State-Sync Engine (Self-hosted SpacetimeDB)
-Kami menggunakan SpacetimeDB untuk menghapus latency antara worker dan customer.
-*   **In-Memory Speed:** Logika matching (jarak & rating) diproses di memori, bukan query database konvensional yang lambat.
-*   **ACID Persistence:** Meskipun kencang, data tetap aman tersimpan di disk.
-*   **Real-time Sync:** Perubahan data langsung terpropagasi ke semua client dalam milidetik tanpa polling.
-
-### 3.4. Jembatan Fiat (Xendit Escrow Integration)
-*   **In-App Display:** User hanya melihat saldo dalam bentuk Rupiah (IDR).
-*   **Escrow Reality:** Di belakang layar, **Xendit Escrow API** (berizin OJK sebagai payment gateway) menampung dana sementara. Saat penarikan (*withdraw*), proses langsung dieksekusi dalam hitungan detik.
-*   **Keuntungan:** SiapAja tidak perlu izin OJK karena dana tidak pernah menyentuh rekening perusahaan - Xendit sebagai第三方 escrow provider.
-
----
-
-## BAB 4: Kecerdasan Buatan sebagai Pelindung Keselamatan (K3)
-Kami menggunakan kecerdasan buatan untuk menjamin standar keselamatan kerja (K3) dan keadilan harga. AI secara otomatis mengekstraksi parameter pekerjaan untuk mencegah eksploitasi fisik dan finansial.
-
-> **📋 Source of Truth:** Spesifikasi teknis AI dan parameter ekstraksi data tersedia di [docs/AI-SPECS.md](./docs/AI-SPECS.md).
-
----
-
-## BAB 5: Model Ekonomi & Ekosistem Finansial
-
-> **📋 Source of Truth:** Untuk detail lengkap fee structure, revenue streams, dan tokenomics, lihat [ECONOMICS.md](./docs/ECONOMICS.md)
-
-Bagaimana *Founder*, Komunitas, dan Platform meraup keuntungan finansial jika komisi operasional adalah 0%? Ini adalah desain makroekonomi kita.
-
-### 5.1. Evolusi Permodalan: Partisipasi murni (Zero-Entry Fee)
-*   **Phase 1: Sertifikat Modal Digital (SMD)**
-    - Status hukum: Bukti partisipasi transaksi yang dikonversi menjadi unit penyertaan modal.
-*   **Phase 4: Global Tokenization ($SIAP)**
-    - Status hukum: Token tata kelola yang dirilis melalui *Offshore Foundation* untuk menarik modal global.
-    - Mekanisme: Pemegang SMD memiliki hak prioritas untuk konversi (swap) menjadi $SIAP Token saat infrastruktur *Dual-Entity* diaktifkan.
-
-### 5.2. Revenue Streams (Technology Service Model)
-Platform bukan hanya infrastruktur, tapi mesin ekonomi bagi para *Founder* dan Anggota.
-
-Koperasi SiapAja adalah pemilik ekosistem massa. Untuk menjalankan operasionalnya, Koperasi mengikat perjanjian dengan **Solidarity-ID** melalui *Technology Service Agreement*.
-*   **Kedaulatan Massa (100% Platform Fee):** Seluruh pendapatan dari fee transaksi dikuasai oleh Koperasi untuk kesejahteraan anggota (SHU).
-*   **Layanan Infrastruktur (SA-TEV):** Koperasi membayar Solidarity-ID berdasarkan biaya penggunaan komputasi (SA-TEV Execution Value) dan lisensi tahunan. 
-
-### 5.2.1 Insentif Optimasi
-Solidarity-ID didorong untuk menciptakan kode Rust paling efisien. Semakin efisien kodenya, semakin kecil biaya SA-TEV yang harus dibayar Koperasi, dan margin efisiensi tetap milik Solidarity-ID sebagai insentif inovasi.
-
-### 5.3. Demokrasi Digital Substantif (RAK-RAT)
-SiapAja.id menolak demokrasi dangkal. Kami menerapkan **Rapat Anggota Kelompok (RAK)** sebagai filter substantif. 
-
-Aspirasi tidak langsung dilempar ke jutaan orang, melainkan digodok di tingkat komunitas (Kecamatan/Profesi) untuk memastikan setiap suara didengar. Delegasi yang dikirim ke RAT Nasional adalah mereka yang memiliki **Pamor tinggi** dan **integritas teruji**, menjamin bahwa keputusan besar platform adalah hasil dialektika, bukan sekadar algoritma populer.
-
-### 5.4. Manajemen Likuiditas & Open Ledger (Transparansi Radikal)
-Dana IDR yang tersimpan di *Escrow* menghasilkan *Float* (dana mengendap) yang dikelola secara kolektif.
-*   **Auto-Yield Logic:** Dana diputar di instrumen berisiko rendah (SBN/Reksadana Pasar Uang). Hasilnya (Yield) 100% masuk ke kas Koperasi.
-*   **Open Ledger Policy:** Setiap Rupiah yang masuk ke kas (dari yield, fee makro, atau ads) bisa di-audit secara real-time oleh semua anggota via aplikasi. Tidak ada "biaya siluman".
-*   **Mekanisme SHU:** Sisa Hasil Usaha dibagikan secara otomatis via Virtual Ledger setiap akhir periode kepada anggota aktif (berdasarkan proporsi Pamor dan partisipasi), bukan cuma buat pemilik modal.
-
----
-
-## BAB 6: Desentralisasi Keadilan (Pengadilan Netizen)
-
-> **📋 Source of Truth:** Untuk detail lengkap dispute resolution dan jury selection, lihat [GOVERNANCE.md](./docs/GOVERNANCE.md)
-
-Pusat panggilan (Call Center) yang berisi CS robot adalah sumber frustrasi terbesar di era modern. SiapAja.id menggantinya dengan **Decentralized Justice Protocol**.
-
-1.  **Trigger Sengketa:** *Pembuat Job* merasa pekerjaan tidak sesuai, menekan tombol "Dispute". Dana otomatis terkunci (*Frozen*).
-2.  **Jury Selection (Expertise-Based):** Sistem memilih 7 juri dari pool Jagoan yang punya **track record di kategori job yang sama**. Contoh: Sengketa "Tukang AC" → Juri adalah Jagoan rating tinggi di kategori "AC & Elektronik".
-3.  **Blind Voting:** Juri diberikan waktu 24 jam untuk meninjau bukti foto *Sebelum/Sesudah* tanpa mengetahui identitas pelapor. 
-4.  **Resolusi & Insentif:** Suara mayoritas (misal 4 vs 3) menjadi keputusan final yang dieksekusi oleh Virtual Ledger. Platform tidak intervensi. Keputusan juri adalah **FINAL**.
-
----
-
-## BAB 7: Sistem Pamor (The Anti-Dystopian Social Credit)
-
-> **📋 Source of Truth:** Untuk detail lengkap Pamor calculation, voting power, dan tier system, lihat [GOVERNANCE.md](./docs/GOVERNANCE.md)
-
-Di SiapAja.id, kami memperkenalkan konsep **PAMOR** sebagai alternatif dari sistem Kredit Sosial yanghoror. Pamor bukan alat pengawasan negara, melainkan **sistem reputasi peer-to-peer** yang memberdayakan komunitas.
-
-### 7.1. Mekanisme Pamor
-*   **Akuisisi:** Pamor didapat dari penyelesaian tugas sukses, partisipasi juri, dan kontribusi kode (bagi *developer*).
-*   **Pengurangan:** Pembatalan mendadak, keterlambatan parah, atau membuang sampah sembarangan di lokasi *Pembuat Job*.
-*   **Decay Mechanism (Pengampunan):** Pamor buruk akan menyusut (hilang) dengan sendirinya sebesar 15% setiap bulan jika user kembali berkelakuan baik. Kami menghargai penebusan kesalahan, bukan menghukum seumur hidup.
-*   **Utilitas:** Pamor tinggi memberikan prioritas tayangan di *Feed*, hak suara (*Voting Power*) untuk menentukan regulasi harga di wilayahnya, dan syarat mutlak pembagian dividen *Treasury*.
-
----
-
-## BAB 8: Kerangka Hukum & Platform Non-Liability
-
-### 8.1. Kemitraan Mandiri & Batasan Tanggung Jawab (Fase Rintisan)
-SiapAja.id adalah infrastruktur digital milik Koperasi. Hubungan Jagoan dengan Koperasi adalah **Hubungan Keanggotaan Mandiri (Non-Employment)**.
-
-*   **Pekerja Mandiri (BPU):** Jagoan berstatus Pekerja Bukan Penerima Upah (BPU). Segala kewajiban jaminan sosial negara (BPJS) adalah pilihan dan tanggung jawab pribadi masing-masing anggota. Koperasi tidak bertindak sebagai pemberi kerja (majikan).
-*   **Welfare Best-Effort:** Sesuai UU No. 25/1992, Koperasi mengupayakan kesejahteraan melalui *Solidarity Pool*. Namun, di fase rintisan dengan modal nol, perlindungan bersifat **"Best-Effort"** (sebatas ketersediaan kas pool). Platform tidak memberikan jaminan kompensasi jika kas pool kosong.
-*   **Jury-Led Resolution:** Semua sengketa diselesaikan secara *peer-to-peer* melalui sistem Juri Netizen. Keputusan juri adalah final dan mengikat secara algoritma.
-*   **User Autonomy:** User setuju bahwa penggunaan aplikasi ini adalah **atas resiko sendiri** (*Use at your own risk*).
-
-### 8.2. Struktur Koperasi Jasa Multi-Pihak
-SiapAja.id menolak bentuk Perseroan Terbatas (PT) yang murni kapitalis. Platform akan didaftarkan sebagai **Koperasi Jasa Multi-Pihak**. Pekerja di lapangan, pengembang perangkat lunak, dan dewan pengawas memiliki porsi kepemilikan yang sah secara hukum negara, tanpa dibebani setoran modal di awal.
-
-### 8.3. Strategi Lisensi Ganda (AGPL + SSPL)
-Kode sumber kami adalah senjata komersial yang dilindungi secara hukum:
-1.  **Untuk Rakyat (GNU AGPL v3):** Siapa pun (Universitas, LSM, RT/RW) bebas *fork* kode ini dan menjalankannya secara mandiri (gratis), selama mereka juga mempublikasikan modifikasinya ke ranah *open source*.
-2.  **Untuk Korporasi Rakus (SSPL):** Jika sebuah BUMN, perusahaan raksasa multinasional, atau *startup unicorn* mencoba mengambil kode kami, mengganti logonya, dan menutup *source code*-nya untuk bisnis komersial pribadi... **Mereka secara hukum wajib membayar Lisensi Enterprise kepada pemegang Pamor Shares dengan nilai kontrak yang kami tentukan.** Ini adalah jalan raya menuju valuasi triliunan tanpa harus menjual jiwa komunitas.
-
----
-
-## BAB 9: Peta Jalan (Roadmap)
-
-*   **Fase 1: Asimilasi Kode (Q1 - Q2):** Penyelesaian inti Rust Axum, Flutter App, dan SpacetimeDB module. Uji coba integrasi Virtual Ledger.
-*   **Fase 2: Hyper-Local Beta (Q3):** Peluncuran *real-money* secara eksklusif di 1 Kecamatan di Jabodetabek. Menguji keandalan *Price Floor AI* dan stabilitas *Virtual Escrow*.
-*   **Fase 3: Kedaulatan Fiat & Ekspansi (Q4):** Integrasi BI-FAST untuk *bypass* biaya *Payment Gateway*. Ekspansi ke kota-kota lapis kedua.
-*   **Fase 4: Era Enterprise (Tahun ke-2):** Pembukaan API komersial untuk korporasi, pendirian Koperasi resmi berskala nasional, dan pembagian dividen *Treasury* pertama.
-
----
-
-## BAB 10: Kesimpulan (Panggilan Beraksi)
-
-Monopoli *gig economy* saat ini bukan didasarkan pada teknologi yang mustahil dikalahkan, melainkan pada keengganan kita untuk bersatu membangun infrastruktur tandingan. 
-
-**SiapAja.id** mengundang para *Rustaceans*, *Flutter Devs*, penggiat hukum, aktivis pekerja, dan siapa saja yang muak melihat tetangga mereka kelelahan di jalan raya hanya demi potongan 30% yang masuk ke gedung kaca di SCBD.
-
-Kita tidak butuh miliaran Dolar dari investor asing untuk membuat sistem ini berjalan. Kita hanya butuh kompilasi kode yang bersih, konsensus algoritma yang adil, dan semangat gotong royong digital yang nyata.
-
-**Pilih senjata kalian. Buka Pull Request. Mari kita ambil alih ekonomi ini.** 
----
-
-*(Dokumen ini merupakan properti intelektual komunitas terbuka SiapAja.id. Silakan ajukan Issue di GitHub untuk mengusulkan amendemen).*
-
----
-
-**Dokumentasi Terkait:**
-- [README.md](./README.md) - Quick Start & Manifesto
-- [TECHNICAL.md](./TECHNICAL.md) - Arsitektur Teknis
-- [SCREEN-LIST.md](./SCREEN-LIST.md) - Spesifikasi UI/UX
-- [docs/ECONOMICS.md](./docs/ECONOMICS.md) - Model Ekonomi & Fee
-- [docs/GOVERNANCE.md](./docs/GOVERNANCE.md) - Sistem Keadilan & Voting
-- [docs/PAMOR-SYSTEM.md](./docs/PAMOR-SYSTEM.md) - Aturan Reputasi
-- [docs/AI-SPECS.md](./docs/AI-SPECS.md) - Spesifikasi LLM & AI
-````
-
 ## File: SCREEN-LIST.md
 ````markdown
 # SCREEN-LIST.md
@@ -4617,6 +4410,213 @@ Jury Review → Voting → Result → Fund Release
 - [README.md](./README.md) - Quick Start & Manifesto
 - [WHITEPAPER.md](./WHITEPAPER.md) - Model Bisnis & Visi
 - [TECHNICAL.md](./TECHNICAL.md) - Arsitektur Teknis
+- [docs/ECONOMICS.md](./docs/ECONOMICS.md) - Model Ekonomi & Fee
+- [docs/GOVERNANCE.md](./docs/GOVERNANCE.md) - Sistem Keadilan & Voting
+- [docs/PAMOR-SYSTEM.md](./docs/PAMOR-SYSTEM.md) - Aturan Reputasi
+- [docs/AI-SPECS.md](./docs/AI-SPECS.md) - Spesifikasi LLM & AI
+````
+
+## File: WHITEPAPER.md
+````markdown
+<div align="center">
+
+# 📜 WHITEPAPER v1.0: SiapAja.id
+### Model Koperasi Jasa Multi-Pihak Tanpa Iuran: Partisipasi sebagai Modal Masa Depan.
+
+**Penulis:** Core Developers & Komunitas SiapAja.id  
+**Tanggal:** [Bulan, Tahun]  
+**Status:** Draf Publik (Open for RFC - Request for Comments)
+
+</div>
+
+---
+
+## 🛑 ABSTRAK
+Sistem *gig economy* (ekonomi serabutan) di Indonesia saat ini telah berevolusi menjadi bentuk baru feodalisme digital. Platform raksasa (aplikasi ojol/jasa) yang awalnya bertindak sebagai inovator penghubung, kini bertransformasi menjadi makelar monopolistik yang mengekstraksi hingga 30% dari nilai keringat pekerja, sambil berlindung di balik ilusi "Kemitraan". 
+
+**SiapAja.id** hadir sebagai **Ekosistem ERP Koperasi Multi-Aplikasi** yang bebas beban iuran. Kita tidak hanya membangun satu aplikasi, melainkan sebuah suite alat kerja digital (7 Apps) yang didukung oleh satu backend Rust Modular Monolith yang sangat efisien.
+
+---
+
+## BAB 1: Latar Belakang & Masalah Struktural
+
+### 1.1. Anatomi Penindasan Makelar Digital
+Selama satu dekade terakhir, kita diajarkan bahwa untuk menghubungkan "Orang yang butuh jasa" dengan "Orang yang bisa kerja", harus ada perusahaan teknologi di tengahnya yang mengambil jatah 20% hingga 30%. 
+*   **Cost of Trust:** Komisi 30% ini pada dasarnya adalah "Biaya Kepercayaan" agar uang *customer* aman dan pekerja dibayar. 
+*   **Inefisiensi:** Seiring membesarnya platform, biaya tersebut tidak digunakan untuk menyejahterakan pekerja, melainkan untuk membayar gaji eksekutif, kampanye bakar uang (diskon), dan biaya operasional server (AWS/GCP) yang membengkak karena arsitektur *legacy* (Java/Node.js).
+
+### 1.2. Kematian Transparansi Harga
+Harga tidak lagi ditentukan oleh *Supply* dan *Demand* lokal, melainkan oleh algoritma kotak hitam (*black-box algorithm*) milik korporasi. Pekerja dipaksa menerima harga "Gacor" yang seringkali berada di bawah standar hidup layak, memicu fenomena perang harga yang tidak manusiawi.
+
+---
+
+## BAB 2: Solusi Fundamental (The SiapAja Paradigm)
+
+### 2.1. Eliminasi Makelar melalui "Automated Virtual Ledger"
+Jika fungsi utama platform adalah memastikan keamanan uang, maka fungsi tersebut bisa digantikan oleh sistem **Virtual Ledger** otomatis.
+*   Uang *customer* dikunci di *Virtual Escrow* (Rekening Bersama otomatis).
+*   Uang cair 100% ke pekerja begitu tugas selesai secara konsensus.
+*   Tidak ada admin keuangan yang perlu menggaji dirinya sendiri dari proses persetujuan ini.
+
+### 2.2. Pembalikan Model UX: "Demand-Driven Feed"
+SiapAja.id membuang konsep "Katalog Jasa" (di mana pekerja memajang profil dan menunggu dipanggil). Kami menggunakan model **Hybrid Demand-Social Feed**.
+* **Core Transaction:** Postingan kebutuhan bantuan yang di-lock dengan escrow.
+* **Social Proof:** Mekanisme "Flex-to-Earn" di mana Jagoan memposting hasil kerja untuk menaikkan Pamor dan Trust.
+* **Community Intelligence:** Diskusi lokal non-finansial yang menjaga retensi user (DAU/MAU) tanpa harus membakar duit iklan.
+*   **Syarat:** Dana harus di-lock (Pay-to-Post) di awal. Feed terbebas dari *spam* dan order fiktif.
+*   Pekerja di radius terdekat tinggal melakukan *claim* (ambil job) secara *first-come-first-serve* atau *bidding* wajar.
+
+---
+
+## BAB 3: Arsitektur Teknis (The "God Mode" Stack)
+
+Untuk menjalankan platform dengan 0% komisi, biaya operasional infrastruktur harus ditekan hingga mendekati angka nol (Zero Marginal Cost).
+
+### 3.1. Backend Modular Monolith (Rust + Axum) - National Efficiency
+Kami menggunakan pendekatan **Modular Monolith** yang mampu melayani **seluruh Indonesia (450.000 transaksi/hari)** hanya dari satu infrastruktur terpusat yang efisien.
+*   **Mengapa Rust:** Kami menolak bahasa pemrograman *garbage-collected* yang menyebabkan jeda sistem (freeze). Dengan Rust, latensi p99 tetap stabil di bawah 20ms bahkan saat beban puncak 125 order/detik.
+*   **Efisiensi Infrastruktur:** Biaya server untuk melayani satu negara setara dengan harga kopi harian seorang eksekutif (estimasi $100/bulan). Inilah kunci **0% Komisi** Jagoan: Infrastruktur yang tidak lagi menjadi beban biaya.
+*   **Crash-Proof:** Jaminan *Memory Safety* Rust memastikan server tidak akan mengalami *Null Pointer Exception* di tengah malam.
+
+### 3.2. Frontend Modern (Flutter + Riverpod + Dart)
+Kami menggunakan **Flutter 3+** dengan **Riverpod** untuk state management dan **Dart** sebagai bahasa pemrograman.
+*   **Native Mobile:** Aplikasi berjalan sebagai native app di Android/iOS dengan performa tinggi.
+*   **Dual Database Architecture:**
+  - **REST API (OpenAPI):** Untuk data persisten (PostgreSQL) - user profiles, transactions
+  - **SpacetimeDB Binary Protocol:** Untuk data real-time - job feed, GPS tracking, live notifications. Menggunakan community Dart SDK yang production-ready.
+*   **Type-Safe API:** Client Dart di-generate otomatis dari OpenAPI spec backend Rust.
+
+### 3.3. State-Sync Engine (Self-hosted SpacetimeDB)
+Kami menggunakan SpacetimeDB untuk menghapus latency antara worker dan customer.
+*   **In-Memory Speed:** Logika matching (jarak & rating) diproses di memori, bukan query database konvensional yang lambat.
+*   **ACID Persistence:** Meskipun kencang, data tetap aman tersimpan di disk.
+*   **Real-time Sync:** Perubahan data langsung terpropagasi ke semua client dalam milidetik tanpa polling.
+
+### 3.4. Jembatan Fiat (Xendit Escrow Integration)
+*   **In-App Display:** User hanya melihat saldo dalam bentuk Rupiah (IDR).
+*   **Escrow Reality:** Di belakang layar, **Xendit Escrow API** (berizin OJK sebagai payment gateway) menampung dana sementara. Saat penarikan (*withdraw*), proses langsung dieksekusi dalam hitungan detik.
+*   **Keuntungan:** SiapAja tidak perlu izin OJK karena dana tidak pernah menyentuh rekening perusahaan - Xendit sebagai第三方 escrow provider.
+
+---
+
+## BAB 4: Kecerdasan Buatan sebagai Pelindung Keselamatan (K3)
+Kami menggunakan kecerdasan buatan untuk menjamin standar keselamatan kerja (K3) dan keadilan harga. AI secara otomatis mengekstraksi parameter pekerjaan untuk mencegah eksploitasi fisik dan finansial.
+
+> **📋 Source of Truth:** Spesifikasi teknis AI dan parameter ekstraksi data tersedia di [docs/AI-SPECS.md](./docs/AI-SPECS.md).
+
+---
+
+## BAB 5: Model Ekonomi & Ekosistem Finansial
+
+> **📋 Source of Truth:** Untuk detail lengkap fee structure, revenue streams, dan tokenomics, lihat [ECONOMICS.md](./docs/ECONOMICS.md)
+
+Bagaimana *Founder*, Komunitas, dan Platform meraup keuntungan finansial jika komisi operasional adalah 0%? Ini adalah desain makroekonomi kita.
+
+### 5.1. Evolusi Permodalan: Partisipasi murni (Zero-Entry Fee)
+*   **Phase 1: Sertifikat Modal Digital (SMD)**
+    - Status hukum: Bukti partisipasi transaksi yang dikonversi menjadi unit penyertaan modal.
+*   **Phase 4: Global Tokenization ($SIAP)**
+    - Status hukum: Token tata kelola yang dirilis melalui *Offshore Foundation* untuk menarik modal global.
+    - Mekanisme: Pemegang SMD memiliki hak prioritas untuk konversi (swap) menjadi $SIAP Token saat infrastruktur *Dual-Entity* diaktifkan.
+
+### 5.2. Revenue Streams (Technology Service Model)
+Platform bukan hanya infrastruktur, tapi mesin ekonomi bagi para *Founder* dan Anggota.
+
+Koperasi SiapAja adalah pemilik ekosistem massa. Untuk menjalankan operasionalnya, Koperasi mengikat perjanjian dengan **Solidarity-ID** melalui *Technology Service Agreement*.
+*   **Kedaulatan Massa (100% Platform Fee):** Seluruh pendapatan dari fee transaksi dikuasai oleh Koperasi untuk kesejahteraan anggota (SHU).
+*   **Layanan Infrastruktur (SA-TEV):** Koperasi membayar Solidarity-ID berdasarkan biaya penggunaan komputasi (SA-TEV Execution Value) dan lisensi tahunan. 
+
+### 5.2.1 Insentif Optimasi
+Solidarity-ID didorong untuk menciptakan kode Rust paling efisien. Semakin efisien kodenya, semakin kecil biaya SA-TEV yang harus dibayar Koperasi, dan margin efisiensi tetap milik Solidarity-ID sebagai insentif inovasi.
+
+### 5.3. Demokrasi Digital Substantif (RAK-RAT)
+SiapAja.id menolak demokrasi dangkal. Kami menerapkan **Rapat Anggota Kelompok (RAK)** sebagai filter substantif. 
+
+Aspirasi tidak langsung dilempar ke jutaan orang, melainkan digodok di tingkat komunitas (Kecamatan/Profesi) untuk memastikan setiap suara didengar. Delegasi yang dikirim ke RAT Nasional adalah mereka yang memiliki **Pamor tinggi** dan **integritas teruji**, menjamin bahwa keputusan besar platform adalah hasil dialektika, bukan sekadar algoritma populer.
+
+### 5.4. Manajemen Likuiditas & Open Ledger (Transparansi Radikal)
+Dana IDR yang tersimpan di *Escrow* menghasilkan *Float* (dana mengendap) yang dikelola secara kolektif.
+*   **Auto-Yield Logic:** Dana diputar di instrumen berisiko rendah (SBN/Reksadana Pasar Uang). Hasilnya (Yield) 100% masuk ke kas Koperasi.
+*   **Open Ledger Policy:** Setiap Rupiah yang masuk ke kas (dari yield, fee makro, atau ads) bisa di-audit secara real-time oleh semua anggota via aplikasi. Tidak ada "biaya siluman".
+*   **Mekanisme SHU:** Sisa Hasil Usaha dibagikan secara otomatis via Virtual Ledger setiap akhir periode kepada anggota aktif (berdasarkan proporsi Pamor dan partisipasi), bukan cuma buat pemilik modal.
+
+---
+
+## BAB 6: Desentralisasi Keadilan (Pengadilan Netizen)
+
+> **📋 Source of Truth:** Untuk detail lengkap dispute resolution dan jury selection, lihat [GOVERNANCE.md](./docs/GOVERNANCE.md)
+
+Pusat panggilan (Call Center) yang berisi CS robot adalah sumber frustrasi terbesar di era modern. SiapAja.id menggantinya dengan **Decentralized Justice Protocol**.
+
+1.  **Trigger Sengketa:** *Pembuat Job* merasa pekerjaan tidak sesuai, menekan tombol "Dispute". Dana otomatis terkunci (*Frozen*).
+2.  **Jury Selection (Expertise-Based):** Sistem memilih 7 juri dari pool Jagoan yang punya **track record di kategori job yang sama**. Contoh: Sengketa "Tukang AC" → Juri adalah Jagoan rating tinggi di kategori "AC & Elektronik".
+3.  **Blind Voting:** Juri diberikan waktu 24 jam untuk meninjau bukti foto *Sebelum/Sesudah* tanpa mengetahui identitas pelapor. 
+4.  **Resolusi & Insentif:** Suara mayoritas (misal 4 vs 3) menjadi keputusan final yang dieksekusi oleh Virtual Ledger. Platform tidak intervensi. Keputusan juri adalah **FINAL**.
+
+---
+
+## BAB 7: Sistem Pamor (The Anti-Dystopian Social Credit)
+
+> **📋 Source of Truth:** Untuk detail lengkap Pamor calculation, voting power, dan tier system, lihat [GOVERNANCE.md](./docs/GOVERNANCE.md)
+
+Di SiapAja.id, kami memperkenalkan konsep **PAMOR** sebagai alternatif dari sistem Kredit Sosial yanghoror. Pamor bukan alat pengawasan negara, melainkan **sistem reputasi peer-to-peer** yang memberdayakan komunitas.
+
+### 7.1. Mekanisme Pamor
+*   **Akuisisi:** Pamor didapat dari penyelesaian tugas sukses, partisipasi juri, dan kontribusi kode (bagi *developer*).
+*   **Pengurangan:** Pembatalan mendadak, keterlambatan parah, atau membuang sampah sembarangan di lokasi *Pembuat Job*.
+*   **Decay Mechanism (Pengampunan):** Pamor buruk akan menyusut (hilang) dengan sendirinya sebesar 15% setiap bulan jika user kembali berkelakuan baik. Kami menghargai penebusan kesalahan, bukan menghukum seumur hidup.
+*   **Utilitas:** Pamor tinggi memberikan prioritas tayangan di *Feed*, hak suara (*Voting Power*) untuk menentukan regulasi harga di wilayahnya, dan syarat mutlak pembagian dividen *Treasury*.
+
+---
+
+## BAB 8: Kerangka Hukum & Platform Non-Liability
+
+### 8.1. Kemitraan Mandiri & Batasan Tanggung Jawab (Fase Rintisan)
+SiapAja.id adalah infrastruktur digital milik Koperasi. Hubungan Jagoan dengan Koperasi adalah **Hubungan Keanggotaan Mandiri (Non-Employment)**.
+
+*   **Pekerja Mandiri (BPU):** Jagoan berstatus Pekerja Bukan Penerima Upah (BPU). Segala kewajiban jaminan sosial negara (BPJS) adalah pilihan dan tanggung jawab pribadi masing-masing anggota. Koperasi tidak bertindak sebagai pemberi kerja (majikan).
+*   **Welfare Best-Effort:** Sesuai UU No. 25/1992, Koperasi mengupayakan kesejahteraan melalui *Solidarity Pool*. Namun, di fase rintisan dengan modal nol, perlindungan bersifat **"Best-Effort"** (sebatas ketersediaan kas pool). Platform tidak memberikan jaminan kompensasi jika kas pool kosong.
+*   **Jury-Led Resolution:** Semua sengketa diselesaikan secara *peer-to-peer* melalui sistem Juri Netizen. Keputusan juri adalah final dan mengikat secara algoritma.
+*   **User Autonomy:** User setuju bahwa penggunaan aplikasi ini adalah **atas resiko sendiri** (*Use at your own risk*).
+
+### 8.2. Struktur Koperasi Jasa Multi-Pihak
+SiapAja.id menolak bentuk Perseroan Terbatas (PT) yang murni kapitalis. Platform akan didaftarkan sebagai **Koperasi Jasa Multi-Pihak**. Pekerja di lapangan, pengembang perangkat lunak, dan dewan pengawas memiliki porsi kepemilikan yang sah secara hukum negara, tanpa dibebani setoran modal di awal.
+
+### 8.3. Strategi Lisensi Ganda (AGPL + SSPL)
+Kode sumber kami adalah senjata komersial yang dilindungi secara hukum:
+1.  **Untuk Rakyat (GNU AGPL v3):** Siapa pun (Universitas, LSM, RT/RW) bebas *fork* kode ini dan menjalankannya secara mandiri (gratis), selama mereka juga mempublikasikan modifikasinya ke ranah *open source*.
+2.  **Untuk Korporasi Rakus (SSPL):** Jika sebuah BUMN, perusahaan raksasa multinasional, atau *startup unicorn* mencoba mengambil kode kami, mengganti logonya, dan menutup *source code*-nya untuk bisnis komersial pribadi... **Mereka secara hukum wajib membayar Lisensi Enterprise kepada pemegang Pamor Shares dengan nilai kontrak yang kami tentukan.** Ini adalah jalan raya menuju valuasi triliunan tanpa harus menjual jiwa komunitas.
+
+---
+
+## BAB 9: Peta Jalan (Roadmap)
+
+*   **Fase 1: Asimilasi Kode (Q1 - Q2):** Penyelesaian inti Rust Axum, Flutter App, dan SpacetimeDB module. Uji coba integrasi Virtual Ledger.
+*   **Fase 2: Hyper-Local Beta (Q3):** Peluncuran *real-money* secara eksklusif di 1 Kecamatan di Jabodetabek. Menguji keandalan *Price Floor AI* dan stabilitas *Virtual Escrow*.
+*   **Fase 3: Kedaulatan Fiat & Ekspansi (Q4):** Integrasi BI-FAST untuk *bypass* biaya *Payment Gateway*. Ekspansi ke kota-kota lapis kedua.
+*   **Fase 4: Era Enterprise (Tahun ke-2):** Pembukaan API komersial untuk korporasi, pendirian Koperasi resmi berskala nasional, dan pembagian dividen *Treasury* pertama.
+
+---
+
+## BAB 10: Kesimpulan (Panggilan Beraksi)
+
+Monopoli *gig economy* saat ini bukan didasarkan pada teknologi yang mustahil dikalahkan, melainkan pada keengganan kita untuk bersatu membangun infrastruktur tandingan. 
+
+**SiapAja.id** mengundang para *Rustaceans*, *Flutter Devs*, penggiat hukum, aktivis pekerja, dan siapa saja yang muak melihat tetangga mereka kelelahan di jalan raya hanya demi potongan 30% yang masuk ke gedung kaca di SCBD.
+
+Kita tidak butuh miliaran Dolar dari investor asing untuk membuat sistem ini berjalan. Kita hanya butuh kompilasi kode yang bersih, konsensus algoritma yang adil, dan semangat gotong royong digital yang nyata.
+
+**Pilih senjata kalian. Buka Pull Request. Mari kita ambil alih ekonomi ini.** 
+---
+
+*(Dokumen ini merupakan properti intelektual komunitas terbuka SiapAja.id. Silakan ajukan Issue di GitHub untuk mengusulkan amendemen).*
+
+---
+
+**Dokumentasi Terkait:**
+- [README.md](./README.md) - Quick Start & Manifesto
+- [TECHNICAL.md](./TECHNICAL.md) - Arsitektur Teknis
+- [SCREEN-LIST.md](./SCREEN-LIST.md) - Spesifikasi UI/UX
 - [docs/ECONOMICS.md](./docs/ECONOMICS.md) - Model Ekonomi & Fee
 - [docs/GOVERNANCE.md](./docs/GOVERNANCE.md) - Sistem Keadilan & Voting
 - [docs/PAMOR-SYSTEM.md](./docs/PAMOR-SYSTEM.md) - Aturan Reputasi

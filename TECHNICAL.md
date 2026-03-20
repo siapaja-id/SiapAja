@@ -1522,6 +1522,79 @@ Berdasarkan benchmark Rust + SpacetimeDB, satu unit server tunggal sanggup menan
 - **RPO:** < 1 detik (via SpacetimeDB Write-Ahead Log).
 - **RTO:** < 10 menit (Cold boot Rust binary + SpacetimeDB recovery).
 
+### 11.4 Subscription & Quota Engine (Rust)
+
+#### 11.4.1 Quota Reset
+- **Daily Claim Reset:** Sistem mereset limit `daily_claim_count` setiap pukul 00:00 WIB menggunakan *Cron Job* di `sa-worker`.
+- **Monthly Quota Reset:** Job post quota untuk Pembuat Job VIP direset setiap tanggal 1 bulan baru.
+
+#### 11.4.2 Priority Logic (Real-Time)
+- **Early Access Broadcast:** SpacetimeDB mem-filter broadcast notifikasi job baru. User dengan status `is_pro = true` mendapatkan payload WebSocket 5 detik lebih awal dibanding user `Basic`.
+- **Feed Ranking:** Query ke SpacetimeDB menggunakan `is_pro` sebagai sorting weight untuk memprioritaskan user premium di hasil pencarian.
+
+#### 11.4.3 Guarantee Tracker
+- **Activity Logging:** Tabel `subscription_activity_logs` mencatat durasi online dan jumlah bid setiap hari.
+- **Monthly Trigger:** Di akhir bulan (T-1), sistem mengevaluasi:
+  - Total online hours ≥ 40 jam/minggu
+  - Total valid bid ≥ 10 job yang sesuai kualifikasi
+  - Total earnings = 0
+- **Refund Logic:** Jika semua syarat terpenuhi, trigger `refund_subscription_logic` - biaya bulan berikutnya gratis atau 100% refund ke Saldo Rupiah.
+
+#### 11.4.4 Anti-Gaming Detection
+- **Bid Rejection Pattern:** AI mendeteksi jika Jagoan menolak >80% job yang ditawarkan dalam 30 hari.
+- **Price Ceiling Violation:** Sistem mendeteksi jika offer_price > 200% dari AI Price Floor secara berulang.
+- **Auto-Flag:** User yang terdeteksi melakukan gaming garansi akan di-flag untuk review manual oleh admin.
+
+### 11.5 Pamor Decay Engine (Rust Worker)
+
+#### 11.5.1 Dual Pamor Storage
+```rust
+// Schema di PostgreSQL
+struct UserPamor {
+    user_id: Uuid,
+    pamor_abadi: i64,        // Lifetime score - tidak pernah berkurang
+    pamor_aktif: i64,        // Rolling 90 hari - undergoes decay
+    last_job_date: DateTime, // Untuk deteksi idle
+    updated_at: DateTime,
+}
+```
+
+#### 11.5.2 Daily Decay Job (Cron: 00:00 WIB Hari Pertama Bulan)
+```rust
+// Logic di sa-worker/src/jobs/pamor_decay.rs
+pub async fn apply_monthly_decay(db: &Pool<Postgres>) {
+    // 1. Identifikasi user yang tidak aktif 30 hari terakhir
+    let idle_users = db.query(
+        "SELECT user_id FROM users 
+         WHERE last_job_date < NOW() - INTERVAL '30 days'"
+    ).await?;
+
+    // 2. Kurangi Pamor Aktif sebesar 15%
+    for user in idle_users {
+        db.execute(
+            "UPDATE users SET pamor_aktif = pamor_aktif * 0.85 
+             WHERE user_id = $1",
+            &[&user.id]
+        ).await?;
+        
+        // 3. Kirim Push Notification
+        send_notification(
+            &user.id, 
+            "Pamor Aktifmu menyusut! Ambil job untuk pulih."
+        ).await?;
+    }
+}
+```
+
+#### 11.5.3 Freshness Reset (90-Day Window)
+- Query semua entry Pamor yang berumur > 90 hari dari tabel `pamor_history`
+- Kurangi `pamor_aktif` dengan jumlah poin expired tersebut
+- Poin tersebut TETAP tercatat di `pamor_abadi` (hanya tidak berkontribusi ke Tier)
+
+#### 11.5.4 Tier Recalculation
+- Setelah decay diterapkan, sistem recalculate Tier berdasarkan `pamor_aktif`
+- Jika user drop dari Gold ke Silver, feed priority di-update di SpacetimeDB secara real-time
+
 ---
 
 ## 12. Glossary
@@ -1576,6 +1649,8 @@ Berdasarkan benchmark Rust + SpacetimeDB, satu unit server tunggal sanggup menan
 **Changelog:**
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.4 | 2026-03-20 | Added section 11.5: Pamor Decay Engine - Dual Pamor storage (Abadi/Aktif), Daily Decay Job (15% idle), Freshness Reset (90-day), Tier Recalculation |
+| 2.3 | 2026-03-20 | Added section 11.4: Subscription & Quota Engine - Quota Reset (Cron Job), Priority Logic (Pro User 5s early access), Guarantee Tracker (Anti-Zonk), Anti-Gaming Detection |
 | 2.2 | 2026-03-19 | Schema updates: Removed deprecated transactions table, added local_ads table, renamed karma_history to pamor_history, added is_solidarity_pool_active flag. Terminology alignment: Replaced "Kopi" with "Koperasi". |
 | 2.1 | 2026-03-16 | Added Immutable Ledger implementation with Merkle-chained hash chain, audit API, and SpacetimeDB integration |
 | 2.0 | 2026-03-15 | Third-party escrow, OpenRouter AI, personalized feed, dual-role, workspace structure |
